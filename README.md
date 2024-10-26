@@ -1,4 +1,34 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## EinfachKunst
+
+Software Engineering I Projekt
+
+## Development
+
+Es gibt drei branches im Projekt, die immer vorhanden sind:
+- `main`
+- `deployment`
+- `development`
+
+Der `main`-branch ist immer der aktuelle Produktivstand.
+
+Der `deployment`-branch fungiert als Zwischenstage zum `main`-branch. Fertige Entwicklungsstände werden hier rein gemerged und in angemessenen Abständen in den `main`-branch zur Veröffentlichung gemerged. Jeder merge in `main`, bzw. jeder Release, soll in einem Release auf GitHub resultieren. Wie ein Release aussehen soll steht näher beschrieben unter [Release Management](##-release-management).
+
+Der `development`-branch ist der Entwicklungsbranch. Neue Featurebranches werden von hier ausgecheckt und später wieder nach hier gemerged. Stabile Stände können in den `deployment`-branch gemerged werden.
+
+Featurebranches werden immer vom `development`-branch ausgecheckt und sollten möglichst ein Issue referenzieren. Sie werden, wenn das Feature fertig ist, mit einer PR wieder in den `development`-branch gemerged. Diese PR muss von mind. einer anderen Person reviewed werden.
+
+## Release Management
+Für das Release Management werden [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) verwendet. So ist eine gute Organisation garantiert und Changelogs können einfach generiert werden.
+Ein Beispielhafter Commit sieht folgendermaßen aus:
+```
+git commit -m "feat(#12): added this new feature"
+```
+In den Klammern sollte immer, falls vorhanden, das entsprechende Issue referenziert werden. Diese werden dann praktischerweise in GitHub zu links zu den Issues.
+
+Neue branches werden mit einem [ähnlichen Schema](https://dev.to/varbsan/a-simplified-convention-for-naming-branches-and-commits-in-git-il4) benannt:
+```
+git branch feat/#12/add-this-new-feature"
+```
 
 ## Getting Started
 
