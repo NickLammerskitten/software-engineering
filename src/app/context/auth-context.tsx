@@ -2,7 +2,7 @@
 
 import { logout } from "@/src/app/(auth-pages)/login/actions";
 import { createClient } from "@/src/utils/supabase/client";
-import { User } from "@supabase/supabase-js";
+import { User, UserResponse } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
@@ -25,21 +25,32 @@ export const AuthProviderContext: React.FC<AuthContextProviderProps> = ({
 
     const [user, setUser] = useState<User | undefined>(undefined);
 
+    React.useEffect(() => {
+        supabase.auth.getUser().then((userResponse) => {
+            handleUserUpdate(userResponse);
+        });
+    }, [supabase.auth]);
+
     supabase.auth.onAuthStateChange(((event) => {
         setTimeout(async () => {
             if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
                 supabase.auth.getUser().then((user) => {
-                    setUser(user.data.user ?? undefined)
-
-                    if (!user) {
-                        router.push('/login')
-                    } else {
-                        router.push('/')
-                    }
+                    handleUserUpdate(user);
                 });
             }
         }, 0)
     }));
+
+    const handleUserUpdate = async (userResponse: UserResponse) => {
+        const user = userResponse.data.user ?? undefined
+        setUser(user ?? undefined)
+
+        if (!user) {
+            router.push('/login')
+        } else {
+            router.push('/')
+        }
+    }
 
     const logOut = async () => {
         await logout();
