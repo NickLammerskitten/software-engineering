@@ -1,5 +1,6 @@
 'use client';
 
+import { logout } from "@/src/app/(auth-pages)/login/actions";
 import { createClient } from "@/src/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
@@ -7,6 +8,7 @@ import React, { useState } from "react";
 
 interface AuthContextProps {
     user: User | undefined;
+    logOut: () => void;
 }
 
 interface AuthContextProviderProps {
@@ -23,23 +25,31 @@ export const AuthProviderContext: React.FC<AuthContextProviderProps> = ({
 
     const [user, setUser] = useState<User | undefined>(undefined);
 
-    React.useEffect(() => {
-        supabase.auth.getUser().then((user) => {
-            const userData = user.data.user ?? undefined;
-            setUser(userData)
+    supabase.auth.onAuthStateChange(((event) => {
+        setTimeout(async () => {
+            if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
+                supabase.auth.getUser().then((user) => {
+                    setUser(user.data.user ?? undefined)
 
-            if (!userData) {
-                router.push('/login')
-            } else {
-                router.push('/')
+                    if (!user) {
+                        router.push('/login')
+                    } else {
+                        router.push('/')
+                    }
+                });
             }
-        })
-    }, [supabase.auth])
+        }, 0)
+    }));
+
+    const logOut = async () => {
+        await logout();
+    }
 
     return (
         <AuthContextComp.Provider
             value={{
                 user: user,
+                logOut: logOut,
             }}
         >
             {children}
