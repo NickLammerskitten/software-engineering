@@ -1,3 +1,4 @@
+import { AuthProviderContext } from "@/src/app/context/auth-context";
 import theme from "@/src/app/theme/theme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
@@ -23,10 +24,12 @@ export default function RootLayout({
         <html lang="de">
         <body>
             <AppRouterCacheProvider>
-                <ThemeProvider theme={theme}>
-                    <CssBaseline/>
-                    {children}
-                </ThemeProvider>
+                <AuthProviderContext>
+                    <ThemeProvider theme={theme}>
+                        <CssBaseline />
+                        {children}
+                    </ThemeProvider>
+                </AuthProviderContext>
             </AppRouterCacheProvider>
         </body>
         </html>
