@@ -131,13 +131,6 @@ export default function Login() {
                                 color={passwordError ? 'error' : 'primary'}
                             />
                         </FormControl>
-                        <FormControlLabel
-                            control={<Checkbox
-                                value="remember"
-                                color="primary"
-                            />}
-                            label="Angemeldet bleiben"
-                        />
                         <Button
                             type="submit"
                             fullWidth
