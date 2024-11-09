@@ -26,7 +26,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=<supabase anon key>
 Die Werte der beiden Variablen müssen beim initialen Setup des Projekts aus der Supabase Web-Konsole kopiert und dann in der `.env`-Datei an der entsprechenden Stelle eingefügt werden.
 
 ## Release Management
-Für das Release Management werden [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) verwendet. So ist eine gute Organisation der Standart und Changelogs können einfach generiert werden.
+Für das Release Management werden [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) verwendet. So ist eine gute Organisation der Standard und Changelogs können einfach generiert werden.
 Ein Beispielhafter Commit sieht folgendermaßen aus:
 ```
 git commit -m "feat(#12): added this new feature"
