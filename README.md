@@ -44,6 +44,20 @@ PRs, die noch nicht gemerged oder reviewed werden sollen, müssen mit dem "Draft
 
 Reviews werden immer vom PR-Ersteller angefordert. Man weist sich nicht selber als Reviewer zu.
 
+## Release einer Version
+Der Release einer neuen Version von EinfachKunst erfolgt ganz einfach mit [release-it](https://github.com/release-it/release-it).
+```bash
+npm run release
+```
+Es folgt eine interaktive Führung durch den Release, wobei jede der Abfragen angenommen werden sollte. Also einfach jedes Mal Enter drücken.
+```bash
+? Commit (Release 0.2.0)? <Enter oder Y>
+? Tag (0.2.0)? <Enter oder Y>
+? Push? <Enter oder Y>
+? Create a release on GitHub (Release 0.2.0)? <Enter oder Y>
+```
+**Wichtig**: Releases werden nur vom aktuellen Stand im `main`-Branch erstellt!
+
 ## Getting Started
 
 First, install all required packages with
