@@ -4,6 +4,12 @@ Software Engineering I Projekt
 
 ## Development
 
+<div align="center">
+  
+![branches (1)](https://github.com/user-attachments/assets/4f35f75d-6c7d-474c-9061-97d7ef913fa9)
+  
+</div>
+
 Es gibt drei branches im Projekt, die immer vorhanden sind:
 - `main`
 - `deployment`
