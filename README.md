@@ -4,6 +4,12 @@ Software Engineering I Projekt
 
 ## Development
 
+<div align="center">
+  
+![branches (1)](https://github.com/user-attachments/assets/4f35f75d-6c7d-474c-9061-97d7ef913fa9)
+  
+</div>
+
 Es gibt drei branches im Projekt, die immer vorhanden sind:
 - `main`
 - `deployment`
@@ -43,6 +49,20 @@ Branches mit mehreren Commits sollten immer mit "Squash Commits" gemerged werden
 PRs, die noch nicht gemerged oder reviewed werden sollen, müssen mit dem "Draft: " previx im Titel gekennzeichnet werden. Außerdem sollten logischerweise noch keine Reviews angefordert werden.
 
 Reviews werden immer vom PR-Ersteller angefordert. Man weist sich nicht selber als Reviewer zu.
+
+## Release einer Version
+Der Release einer neuen Version von EinfachKunst erfolgt ganz einfach mit [release-it](https://github.com/release-it/release-it).
+```bash
+npm run release
+```
+Es folgt eine interaktive Führung durch den Release, wobei jede der Abfragen angenommen werden sollte. Also einfach jedes Mal Enter drücken.
+```bash
+? Commit (Release 0.2.0)? <Enter oder Y>
+? Tag (0.2.0)? <Enter oder Y>
+? Push? <Enter oder Y>
+? Create a release on GitHub (Release 0.2.0)? <Enter oder Y>
+```
+**Wichtig**: Releases werden nur vom aktuellen Stand im `main`-Branch erstellt!
 
 ## Getting Started
 
