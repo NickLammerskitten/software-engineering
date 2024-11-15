@@ -31,6 +31,49 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=<supabase anon key>
 ```
 Die Werte der beiden Variablen müssen beim initialen Setup des Projekts aus der Supabase Web-Konsole kopiert und dann in der `.env`-Datei an der entsprechenden Stelle eingefügt werden.
 
+### Local Supabase Setup
+
+Supabase ist ein Teil des lokalen Setups. Die Vorgehensweise ist dabei relevant. 
+
+#### [Supabase Setup](https://supabase.com/docs/guides/local-development)
+
+Installation der Supabase CLI:
+```bash
+npm install supabase --save-dev
+```
+
+Der 'npx supabase init' command wurde bereits durchgeführt in dem Repository.
+
+Führe diesen Befehl in dem Projektordner aus und führe das DB Seeding aus:
+
+```bash
+supabase link
+supabase db pull
+supabase start
+```
+
+#### [Supabase Migration](https://supabase.com/docs/guides/local-development/overview)
+
+```bash
+supabase migration new create_employees_table
+```
+
+Wird eine Änderung durchgeführt, muss eine Migrationsdatei angelegt werden und die Änderungen dort formuliert werden.
+Um ein sauberes DB Seeding weiter gewährleisten zu können, muss die seed.sql ebenfalls angepasst werden.
+
+Überprüfung der gemachten Änderungen. Dies gibt die Differenz des Db Schemas aus, zwischen Produktiv und Lokal:
+
+```bash
+supabase db diff
+```
+
+Die Ausgabe des oben genannten Befehls kann ebenso genutzt werden, um die Migration File auszufüllen.
+
+Ist die Migration-File fertig und funktionsfähig, so kann weiter mithilfe von Git gearbeitet werden, indem die Datei gepushed wird im Feature-Branch.
+
+Wichtig: führe niemals subabase db Push aus. Das führt zu einem Produktiven Deployment, was laut unseren CI/CD Vorschriften strengstens verboten ist aus einem feature Branch heraus. Dieser Befehl wird erst im Produktiven Deployment auf den main Branch durchgeführt!
+
+
 ## Release Management
 Für das Release Management werden [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) verwendet. So ist eine gute Organisation der Standard und Changelogs können einfach generiert werden.
 Ein Beispielhafter Commit sieht folgendermaßen aus:
