@@ -38,3 +38,6 @@ next-env.d.ts
 # ide
 /.vscode
 /.idea
+
+# environment variables with credentials
+.env

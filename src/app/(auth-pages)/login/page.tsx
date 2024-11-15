@@ -5,9 +5,7 @@ import {
     Box,
     Button,
     Card,
-    Checkbox,
     FormControl,
-    FormControlLabel,
     FormLabel,
     Stack,
     TextField,
@@ -51,18 +49,6 @@ export default function Login() {
     const [passwordError, setPasswordError] = React.useState(false);
     const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        if (emailError || passwordError) {
-            event.preventDefault();
-            return;
-        }
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
-    };
-
     const handleLogin = () => {
         const email = document.getElementById('email') as HTMLInputElement;
         const password = document.getElementById('password') as HTMLInputElement;
@@ -82,8 +68,6 @@ export default function Login() {
             setPasswordError(false);
             setPasswordErrorMessage('');
         }
-
-        console.log(email.value, password.value);
 
         return login(email.value, password.value);
     };
@@ -145,20 +129,13 @@ export default function Login() {
                                 color={passwordError ? 'error' : 'primary'}
                             />
                         </FormControl>
-                        <FormControlLabel
-                            control={<Checkbox
-                                value="remember"
-                                color="primary"
-                            />}
-                            label="Angemeldet bleiben"
-                        />
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
                             onClick={handleLogin}
                         >
-                            Sign in
+                            Anmelden
                         </Button>
                     </Box>
                 </StyledCard>

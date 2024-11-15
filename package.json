@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "release": "release-it"
   },
   "dependencies": {
     "@emotion/cache": "^11.13.1",
@@ -23,11 +24,13 @@
     "react-dom": "18.2.0"
   },
   "devDependencies": {
+    "@release-it/conventional-changelog": "^9.0.2",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.14",
+    "release-it": "^17.10.0",
     "typescript": "^5"
   }
 }
