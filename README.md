@@ -29,7 +29,9 @@ Die App braucht Zugangsdaten um auf Supabase zugreifen zu können. Diese werden 
 NEXT_PUBLIC_SUPABASE_URL=<supabase url>
 NEXT_PUBLIC_SUPABASE_ANON_KEY=<supabase anon key>
 ```
-Die Werte der beiden Variablen müssen beim initialen Setup des Projekts aus der Supabase Web-Konsole kopiert und dann in der `.env`-Datei an der entsprechenden Stelle eingefügt werden.
+**PROD**: Die Werte der beiden Variablen müssen beim initialen Setup des Projekts aus der Supabase Web-Konsole kopiert und dann in der `.env`-Datei an der entsprechenden Stelle eingefügt werden.
+
+**DEV**: Die Werte werden aus der Konsole kopiert, wenn der `npx supabase start` Befehl ausgeführt wurde. So wird die lokale supabase Instanz verwendet.
 
 ### Local Supabase Setup
 
@@ -37,7 +39,7 @@ Supabase ist ein Teil des lokalen Setups. Die Vorgehensweise ist dabei relevant.
 
 #### [Supabase Setup](https://supabase.com/docs/guides/local-development)
 
-Installation der Supabase CLI:
+Installation der Supabase CLI (wenn nicht schon durch `npm i` installiert):
 ```bash
 npm install supabase --save-dev
 ```
@@ -47,15 +49,18 @@ Der 'npx supabase init' command wurde bereits durchgeführt in dem Repository.
 Führe diesen Befehl in dem Projektordner aus und führe das DB Seeding aus:
 
 ```bash
-supabase link
-supabase db pull
-supabase start
+# (falls noch nicht angemeldet)
+npx supabase login
+
+npx supabase link
+npx supabase db pull
+npx supabase start
 ```
 
 #### [Supabase Migration](https://supabase.com/docs/guides/local-development/overview)
 
 ```bash
-supabase migration new create_employees_table
+npx supabase migration new create_employees_table
 ```
 
 Wird eine Änderung durchgeführt, muss eine Migrationsdatei angelegt werden und die Änderungen dort formuliert werden.
@@ -64,7 +69,7 @@ Um ein sauberes DB Seeding weiter gewährleisten zu können, muss die seed.sql e
 Überprüfung der gemachten Änderungen. Dies gibt die Differenz des Db Schemas aus, zwischen Produktiv und Lokal:
 
 ```bash
-supabase db diff
+npx supabase db diff
 ```
 
 Die Ausgabe des oben genannten Befehls kann ebenso genutzt werden, um die Migration File auszufüllen.
