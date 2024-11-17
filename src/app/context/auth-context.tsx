@@ -34,6 +34,7 @@ export const AuthProviderContext: React.FC<AuthContextProviderProps> = ({
     supabase.auth.onAuthStateChange(((event) => {
         setTimeout(async () => {
             if (event === 'SIGNED_IN' || event === 'SIGNED_OUT') {
+                console.log(event)
                 supabase.auth.getUser().then((user) => {
                     handleUserUpdate(user);
                 });
@@ -47,8 +48,6 @@ export const AuthProviderContext: React.FC<AuthContextProviderProps> = ({
 
         if (!user) {
             router.push('/login')
-        } else {
-            router.push('/')
         }
     }
 
@@ -72,7 +71,7 @@ export const useAuthContext = () => {
     const context = React.useContext(AuthContextComp);
 
     if (!context) {
-        throw new Error("useCurrencyContext must be used within a CurrencyProvider");
+        throw new Error("useAuthContext must be used within a AuthProviderContext");
     }
 
     return context;

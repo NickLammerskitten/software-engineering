@@ -9,6 +9,7 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+import ResponsiveAppBar from "./components/app-bar";
 
 export const metadata: Metadata = {
     title: "Create Next App",
@@ -22,16 +23,18 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="de">
-        <body>
-            <AppRouterCacheProvider>
-                <AuthProviderContext>
-                    <ThemeProvider theme={theme}>
-                        <CssBaseline />
-                        {children}
-                    </ThemeProvider>
-                </AuthProviderContext>
-            </AppRouterCacheProvider>
-        </body>
+            <body style={{ display: "flex", flexDirection: "column" }}>
+                <AppRouterCacheProvider>
+                        <ThemeProvider theme={theme}>
+                            <CssBaseline />
+                            {/* @ts-expect-error Async Server Component */}
+                            <ResponsiveAppBar />
+                            <div style={{ flex: "1" }}>
+                                {children}
+                            </div>
+                        </ThemeProvider>
+                </AppRouterCacheProvider>
+            </body>
         </html>
     );
 }
