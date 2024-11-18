@@ -5,9 +5,7 @@ import {
     Box,
     Button,
     Card,
-    Checkbox,
     FormControl,
-    FormControlLabel,
     FormLabel,
     Stack,
     TextField,
@@ -71,8 +69,6 @@ export default function Login() {
             setPasswordErrorMessage('');
         }
 
-        console.log(email.value, password.value);
-
         return login(email.value, password.value);
     };
 
@@ -133,20 +129,13 @@ export default function Login() {
                                 color={passwordError ? 'error' : 'primary'}
                             />
                         </FormControl>
-                        <FormControlLabel
-                            control={<Checkbox
-                                value="remember"
-                                color="primary"
-                            />}
-                            label="Angemeldet bleiben"
-                        />
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
                             onClick={handleLogin}
                         >
-                            Sign in
+                            Anmelden
                         </Button>
                     </Box>
                 </StyledCard>

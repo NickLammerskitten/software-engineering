@@ -1,38 +1,20 @@
 'use client';
 
-import AccountForm from "@/src/app/components/account-form";
-import { Link } from "@mui/material";
-import { type User } from '@supabase/supabase-js'
-import React, { useState } from "react";
-import { createClient } from "../utils/supabase/client";
+import { useAuthContext } from "@/src/app/context/auth-context";
+import { Button } from "@mui/material";
+import React from "react";
 
 export default function Home() {
-    const supabase = createClient()
-
-    const [user, setUser] = useState<User | undefined>(undefined)
-
-    React.useEffect(() => {
-        supabase.auth.getUser().then((user) => {
-            const userData = user.data.user ?? undefined;
-            setUser(userData)
-        })
-    }, [])
+    const { logOut } = useAuthContext();
 
     return (
         <div>
-            {user ? (
-                <AccountForm user={user} />
-            ) : (
-                <div>
-                    <h1>Home</h1>
-                    <p>
-                        You are not logged in.
-                    </p>
-                    <Link href={'/login'}>
-                        Login
-                    </Link>
-                </div>
-            )}
+            <Button
+                variant={"text"}
+                onClick={logOut}
+            >
+                Ausloggen
+            </Button>
         </div>
     )
 }
