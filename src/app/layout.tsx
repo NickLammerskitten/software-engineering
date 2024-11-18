@@ -1,4 +1,3 @@
-import { AuthProviderContext } from "@/src/app/context/auth-context";
 import theme from "@/src/app/theme/theme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
@@ -25,14 +24,14 @@ export default function RootLayout({
         <html lang="de">
             <body style={{ display: "flex", flexDirection: "column" }}>
                 <AppRouterCacheProvider>
-                        <ThemeProvider theme={theme}>
-                            <CssBaseline />
-                            {/* @ts-expect-error Async Server Component */}
-                            <ResponsiveAppBar />
-                            <div style={{ flex: "1" }}>
-                                {children}
-                            </div>
-                        </ThemeProvider>
+                    <ThemeProvider theme={theme}>
+                        <CssBaseline />
+                        {/* @ts-expect-error Async Server Component */}
+                        <ResponsiveAppBar />
+                        <div style={{ flex: "1" }}>
+                            {children}
+                        </div>
+                    </ThemeProvider>
                 </AppRouterCacheProvider>
             </body>
         </html>
