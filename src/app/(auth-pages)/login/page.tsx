@@ -1,6 +1,5 @@
 "use client";
 
-import { login } from "@/src/app/(auth-pages)/login/actions";
 import {
     Box,
     Button,
@@ -13,6 +12,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
+import { signInAction } from "../../actions";
 
 const StyledCard = styled(Card)(({ theme }) => ({
     display: 'flex',
@@ -20,7 +20,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
     alignSelf: 'center',
     width: '100%',
     padding: theme.spacing(4),
-    gap: theme.spacing(2),
+    gap: theme.spacing(4),
     margin: 'auto',
     [theme.breakpoints.up('sm')]: {
         maxWidth: '450px',
@@ -29,9 +29,10 @@ const StyledCard = styled(Card)(({ theme }) => ({
 
 const SignInContainer = styled(Stack)(({ theme }) => ({
     minHeight: '100%',
-    padding: theme.spacing(2),
+    height: '100%',
+    padding: theme.spacing(3),
     [theme.breakpoints.up('sm')]: {
-        padding: theme.spacing(4),
+        padding: theme.spacing(3),
     },
     '&::before': {
         content: '""',
@@ -44,36 +45,8 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function Login() {
-    const [emailError, setEmailError] = React.useState(false);
-    const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
-    const [passwordError, setPasswordError] = React.useState(false);
-    const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-
-    const handleLogin = () => {
-        const email = document.getElementById('email') as HTMLInputElement;
-        const password = document.getElementById('password') as HTMLInputElement;
-
-        if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-            setEmailError(true);
-            setEmailErrorMessage('Please enter a valid email address.');
-        } else {
-            setEmailError(false);
-            setEmailErrorMessage('');
-        }
-
-        if (!password.value || password.value.length < 6) {
-            setPasswordError(true);
-            setPasswordErrorMessage('Password must be at least 6 characters long.');
-        } else {
-            setPasswordError(false);
-            setPasswordErrorMessage('');
-        }
-
-        return login(email.value, password.value);
-    };
-
     return (
-        <div>
+        <>
             <SignInContainer
                 direction="column"
                 justifyContent="space-between"
@@ -86,60 +59,55 @@ export default function Login() {
                     >
                         Login
                     </Typography>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            width: '100%',
-                            gap: 2,
-                        }}
-                    >
-                        <FormControl>
-                            <FormLabel htmlFor="email">Email</FormLabel>
-                            <TextField
-                                error={emailError}
-                                helperText={emailErrorMessage}
-                                id="email"
-                                type="email"
-                                name="email"
-                                placeholder="your@email.com"
-                                autoFocus
-                                required
-                                fullWidth
-                                variant="outlined"
-                                color={emailError ? 'error' : 'primary'}
-                                sx={{ ariaLabel: 'email' }}
-                            />
-                        </FormControl>
-                        <FormControl>
-                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <FormLabel htmlFor="password">Password</FormLabel>
-                            </Box>
-                            <TextField
-                                error={passwordError}
-                                helperText={passwordErrorMessage}
-                                name="password"
-                                placeholder="••••••"
-                                type="password"
-                                id="password"
-                                autoFocus
-                                required
-                                fullWidth
-                                variant="outlined"
-                                color={passwordError ? 'error' : 'primary'}
-                            />
-                        </FormControl>
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            onClick={handleLogin}
+                    <form action={signInAction}>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                width: '100%',
+                                gap: 3,
+                            }}
                         >
-                            Anmelden
-                        </Button>
-                    </Box>
+                            <FormControl>
+                                <FormLabel htmlFor="email">Email</FormLabel>
+                                <TextField
+                                    id="email"
+                                    type="email"
+                                    name="email"
+                                    placeholder="yourname@example.com"
+                                    autoFocus
+                                    required
+                                    fullWidth
+                                    variant="outlined"
+                                    sx={{ ariaLabel: 'email' }}
+                                />
+                            </FormControl>
+                            <FormControl>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <FormLabel htmlFor="password">Password</FormLabel>
+                                </Box>
+                                <TextField
+                                    name="password"
+                                    placeholder="•••••••••••"
+                                    type="password"
+                                    id="password"
+                                    autoFocus
+                                    required
+                                    fullWidth
+                                    variant="outlined"
+                                />
+                            </FormControl>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                            >
+                                Anmelden
+                            </Button>
+                        </Box>
+                    </form>
                 </StyledCard>
             </SignInContainer>
-        </div>
+        </>
     );
 }

@@ -1,0 +1,19 @@
+.logo {
+    margin-right: var(--margin-normal) !important;;
+    font-family: monospace !important;
+    font-weight: 700 !important;;
+    letter-spacing: .3rem !important;;
+    color: var(--color-inherit);
+    text-decoration: none;
+}
+
+.header-link {
+    margin-bottom: var(--margin-normal);
+    margin-top: var(--margin-normal);
+    color: var(--color-inherit);
+    display: block;
+}
+
+.form-button {
+    color: var(--color-inherit);
+}
