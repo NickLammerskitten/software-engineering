@@ -10,6 +10,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { signOutAction } from '../actions';
+import styles from './app-bar.module.css';
 
 async function ResponsiveAppBar() {
     const supabase = await createClient();
@@ -40,20 +41,12 @@ async function ResponsiveAppBar() {
                         noWrap
                         component="a"
                         href="/"
-                        sx={{
-                            mr: 2,
-                            display: { xs: 'none', md: 'flex' },
-                            fontFamily: 'monospace',
-                            fontWeight: 700,
-                            letterSpacing: '.3rem',
-                            color: 'inherit',
-                            textDecoration: 'none',
-                        }}
+                        className={styles.logo}
                     >
                         EinfachKunst
                     </Typography>
 
-                    <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+                    <Box className={"display-flex display-none-md flex-grow-1"}>
                         <IconButton
                             size="large"
                             aria-label="account of current user"
@@ -64,25 +57,7 @@ async function ResponsiveAppBar() {
                             <MenuIcon />
                         </IconButton>
                     </Box>
-                    <Typography
-                        variant="h5"
-                        noWrap
-                        component="a"
-                        href="/"
-                        sx={{
-                            mr: 2,
-                            display: { xs: 'flex', md: 'none' },
-                            flexGrow: 1,
-                            fontFamily: 'monospace',
-                            fontWeight: 700,
-                            letterSpacing: '.3rem',
-                            color: 'inherit',
-                            textDecoration: 'none',
-                        }}
-                    >
-                        EinfachKunst
-                    </Typography>
-                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+                    <Box className={"display-flex display-none-md flex-grow-1"}>
                         {pages.map((page) => {
                             if (user?.role !== page.role && page.role !== null) {
                                 return;
@@ -92,7 +67,7 @@ async function ResponsiveAppBar() {
                                 <Button
                                     key={page.name}
                                     href={page.href}
-                                    sx={{ my: 2, color: 'white', display: 'block' }}
+                                    className={styles.headerLink}
                                 >
                                     {page.name}
                                 </Button>
@@ -103,13 +78,13 @@ async function ResponsiveAppBar() {
                         {user ?
                             <form action={signOutAction}>
                                 <Button
-                                    color="inherit"
+                                    className={styles.headerLink}
                                     type="submit"
                                 >Ausloggen</Button>
                             </form>
                             :
                             <Button
-                                color="inherit"
+                                className={styles.headerLink}
                                 href="/login"
                             >
                                 Einloggen
