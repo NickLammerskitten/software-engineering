@@ -7,13 +7,13 @@
     text-decoration: none;
 }
 
-.header-link {
+.header_link {
     margin-bottom: var(--margin-normal);
     margin-top: var(--margin-normal);
-    color: var(--color-inherit);
+    color: var(--color-inherit)!important;
     display: block;
 }
 
-.form-button {
-    color: var(--color-inherit);
+.pages_container {
+    flex-grow: 1;
 }
