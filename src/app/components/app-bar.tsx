@@ -1,17 +1,15 @@
 import { createClient } from '@/src/utils/supabase/server';
-import MenuIcon from '@mui/icons-material/Menu';
-import AppBar from '@mui/material/AppBar';
+import { AppBar as MUIAppBar } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import { signOutAction } from '../actions';
 import styles from './app-bar.module.css';
 
-async function ResponsiveAppBar() {
+async function AppBar() {
     const supabase = await createClient();
 
     const {
@@ -30,7 +28,7 @@ async function ResponsiveAppBar() {
     ];
 
     return (
-        <AppBar position="static">
+        <MUIAppBar position="static">
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     <Typography
@@ -42,42 +40,30 @@ async function ResponsiveAppBar() {
                     >
                         EinfachKunst
                     </Typography>
-
-                    <Box className={"display-flex display-none-md flex-grow-1"}>
-                        <IconButton
-                            size="large"
-                            aria-label="account of current user"
-                            aria-controls="menu-appbar"
-                            aria-haspopup="true"
-                            color="inherit"
-                        >
-                            <MenuIcon />
-                        </IconButton>
-                    </Box>
-                    <Box className={"display-flex display-none-md flex-grow-1"}>
+                    <Box className={styles.pages_container}>
                         {pages.map((page) => {
                             return (
                                 <Button
                                     key={page.name}
                                     href={page.href}
-                                    className={styles.headerLink}
+                                    className={styles.header_link}
                                 >
                                     {page.name}
                                 </Button>
                             );
                         })}
                     </Box>
-                    <Box sx={{ flexGrow: 0 }}>
+                    <Box>
                         {user ?
                             <form action={signOutAction}>
                                 <Button
-                                    className={styles.headerLink}
+                                    className={styles.header_link}
                                     type="submit"
                                 >Ausloggen</Button>
                             </form>
                             :
                             <Button
-                                className={styles.headerLink}
+                                className={styles.header_link}
                                 href="/login"
                             >
                                 Einloggen
@@ -85,8 +71,8 @@ async function ResponsiveAppBar() {
                     </Box>
                 </Toolbar>
             </Container>
-        </AppBar>
+        </MUIAppBar>
     );
 }
 
-export default ResponsiveAppBar;
+export default AppBar;
