@@ -7,25 +7,3 @@ html, body {
 
     --color-inherit: inherit;
 }
-
-.flex-grow-1 {
-    flex-grow: 1;
-}
-
-.display-none {
-    display: none;
-}
-
-.display-flex {
-    display: flex;
-}
-
-@media (min-width: 768px) {
-    .display-flex-md {
-        display: flex;
-    }
-
-    .display-none-md {
-        display: none;
-    }
-}
