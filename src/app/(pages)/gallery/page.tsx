@@ -1,10 +1,12 @@
 import { Add } from "@mui/icons-material";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 
 export default function Gallery() {
     return (
         <div>
-            Discover page
+            <Typography variant={"h1"}>
+                Discover page
+            </Typography>
 
             <Button startIcon={<Add/>}
                 href="/gallery/add"

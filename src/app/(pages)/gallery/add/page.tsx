@@ -1,6 +1,7 @@
 import { UserRole } from "@/src/app/models/userRole";
 import WrongUserRole from "@/src/app/utils/wrongUserRole";
 import { createClient } from "@/src/utils/supabase/server";
+import { Typography } from "@mui/material";
 
 export default async function AddImage() {
     const supabase = await createClient();
@@ -13,7 +14,9 @@ export default async function AddImage() {
         <div>
             {user?.role === UserRole.Trader ? (
                 <>
-                    Meine Bilder
+                    <Typography variant={"h1"}>
+                        Bild hinzufügen
+                    </Typography>
                 </>
             ) : (
                 <WrongUserRole />
