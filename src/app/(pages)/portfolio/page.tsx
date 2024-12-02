@@ -1,10 +1,13 @@
 import { UserRole } from "@/src/app/models/userRole";
 import WrongUserRole from "@/src/app/utils/wrongUserRole";
-import { User } from "@supabase/auth-js";
+import { createClient } from "@/src/utils/supabase/server";
 
-export default function Portfolio() {
-    // TODO: Get user
-    const user: User | null = null;
+export default async function Portfolio() {
+    const supabase = await createClient();
+
+    const {
+        data: { user },
+    } = await supabase.auth.getUser();
 
     return (
         <div>
