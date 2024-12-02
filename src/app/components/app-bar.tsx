@@ -67,7 +67,6 @@ async function AppBar() {
                     </Box>
 
                     <Box className={styles.secondary_pages_container}>
-
                         {user ?
                             <>
                                 {pageElements({ pages: secondaryPages, user: user })}

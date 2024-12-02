@@ -1,15 +1,6 @@
 "use client";
 
-import {
-    Box,
-    Button,
-    Card,
-    FormControl,
-    FormLabel,
-    Stack,
-    TextField,
-    Typography,
-} from '@mui/material';
+import { Box, Button, Card, FormControl, FormLabel, Stack, TextField, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import { signInAction } from "../../actions";
@@ -59,52 +50,44 @@ export default function Login() {
                     >
                         Login
                     </Typography>
-                    <form action={signInAction}>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                width: '100%',
-                                gap: 3,
-                            }}
-                        >
-                            <FormControl>
-                                <FormLabel htmlFor="email">Email</FormLabel>
-                                <TextField
-                                    id="email"
-                                    type="email"
-                                    name="email"
-                                    placeholder="yourname@example.com"
-                                    autoFocus
-                                    required
-                                    fullWidth
-                                    variant="outlined"
-                                    sx={{ ariaLabel: 'email' }}
-                                />
-                            </FormControl>
-                            <FormControl>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <FormLabel htmlFor="password">Password</FormLabel>
-                                </Box>
-                                <TextField
-                                    name="password"
-                                    placeholder="•••••••••••"
-                                    type="password"
-                                    id="password"
-                                    autoFocus
-                                    required
-                                    fullWidth
-                                    variant="outlined"
-                                />
-                            </FormControl>
-                            <Button
-                                type="submit"
+                    <form action={signInAction}
+                          className={"form_container"}>
+                        <FormControl>
+                            <FormLabel htmlFor="email">Email</FormLabel>
+                            <TextField
+                                id="email"
+                                type="email"
+                                name="email"
+                                placeholder="yourname@example.com"
+                                autoFocus
+                                required
                                 fullWidth
-                                variant="contained"
-                            >
-                                Anmelden
-                            </Button>
-                        </Box>
+                                variant="outlined"
+                                sx={{ ariaLabel: 'email' }}
+                            />
+                        </FormControl>
+                        <FormControl>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <FormLabel htmlFor="password">Password</FormLabel>
+                            </Box>
+                            <TextField
+                                name="password"
+                                placeholder="•••••••••••"
+                                type="password"
+                                id="password"
+                                autoFocus
+                                required
+                                fullWidth
+                                variant="outlined"
+                            />
+                        </FormControl>
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                        >
+                            Anmelden
+                        </Button>
                     </form>
                 </StyledCard>
             </SignInContainer>

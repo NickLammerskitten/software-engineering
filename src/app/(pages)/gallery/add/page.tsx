@@ -1,3 +1,6 @@
+"use server";
+
+import { AddImageForm } from "@/src/app/components/add-image-form";
 import { UserRole } from "@/src/app/models/userRole";
 import WrongUserRole from "@/src/app/utils/wrongUserRole";
 import { createClient } from "@/src/utils/supabase/server";
@@ -17,6 +20,8 @@ export default async function AddImage() {
                     <Typography variant={"h1"}>
                         Bild hinzufügen
                     </Typography>
+
+                    <AddImageForm />
                 </>
             ) : (
                 <WrongUserRole />
