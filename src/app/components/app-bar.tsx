@@ -1,3 +1,4 @@
+import { UserRole } from "@/src/app/models/userRole";
 import { createClient } from '@/src/utils/supabase/server';
 import { AppBar as MUIAppBar } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -19,11 +20,13 @@ async function AppBar() {
     const pages = [
         {
             name: "Galerie",
-            href: "/discover"
+            href: "/discover",
+            role: null,
         },
         {
             name: "Meine Mappe",
-            href: "/portfolio"
+            href: "/portfolio",
+            role: UserRole.Customer,
         },
     ];
 
@@ -42,6 +45,10 @@ async function AppBar() {
                     </Typography>
                     <Box className={styles.pages_container}>
                         {pages.map((page) => {
+                            if (user?.role !== page.role && page.role !== null) {
+                                return;
+                            }
+
                             return (
                                 <Button
                                     key={page.name}
