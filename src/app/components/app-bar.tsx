@@ -6,9 +6,16 @@ import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import { User } from "@supabase/auth-js";
 import * as React from 'react';
 import { signOutAction } from '../actions';
 import styles from './app-bar.module.css';
+
+interface PageProps {
+    name: string;
+    href: string;
+    role: UserRole | null;
+}
 
 async function AppBar() {
     const supabase = await createClient();
@@ -17,7 +24,7 @@ async function AppBar() {
         data: { user },
     } = await supabase.auth.getUser();
 
-    const pages = [
+    const pages: PageProps[] = [
         {
             name: "Galerie",
             href: "/discover",
@@ -27,6 +34,14 @@ async function AppBar() {
             name: "Meine Mappe",
             href: "/portfolio",
             role: UserRole.Customer,
+        },
+    ];
+
+    const secondaryPages: PageProps[] = [
+        {
+            name: "Bilder",
+            href: "/images",
+            role: UserRole.Trader,
         },
     ];
 
@@ -44,29 +59,20 @@ async function AppBar() {
                         EinfachKunst
                     </Typography>
                     <Box className={styles.pages_container}>
-                        {pages.map((page) => {
-                            if (user?.role !== page.role && page.role !== null) {
-                                return;
-                            }
-
-                            return (
-                                <Button
-                                    key={page.name}
-                                    href={page.href}
-                                    className={styles.header_link}
-                                >
-                                    {page.name}
-                                </Button>
-                            );
-                        })}
+                        {pageElements({ pages: pages, user: user })}
                     </Box>
-                    <Box>
+
+                    <Box className={styles.secondary_pages_container}>
+                        {pageElements({ pages: secondaryPages, user: user })}
+
                         {user ?
                             <form action={signOutAction}>
                                 <Button
                                     className={styles.header_link}
                                     type="submit"
-                                >Ausloggen</Button>
+                                >
+                                    Ausloggen
+                                </Button>
                             </form>
                             :
                             <Button
@@ -74,12 +80,35 @@ async function AppBar() {
                                 href="/login"
                             >
                                 Einloggen
-                            </Button>}
+                            </Button>
+                        }
                     </Box>
                 </Toolbar>
             </Container>
         </MUIAppBar>
     );
+}
+
+function pageElements({ pages, user }: { pages: PageProps[], user: User | null }) {
+    return (
+        <>
+            {pages.map((page) => {
+                if (user?.role !== page.role && page.role !== null) {
+                    return;
+                }
+
+                return (
+                    <Button
+                        key={page.name}
+                        href={page.href}
+                        className={styles.header_link}
+                    >
+                        {page.name}
+                    </Button>
+                );
+            })}
+        </>
+    )
 }
 
 export default AppBar;

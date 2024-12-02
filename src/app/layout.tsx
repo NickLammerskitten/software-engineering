@@ -9,6 +9,7 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import AppBar from "./components/app-bar";
+import styles from "./layout.module.css"
 
 export const metadata: Metadata = {
     title: "Create Next App",
@@ -26,9 +27,8 @@ export default function RootLayout({
                 <AppRouterCacheProvider>
                     <ThemeProvider theme={theme}>
                         <CssBaseline />
-                        {/* @ts-expect-error Async Server Component */}
                         <AppBar />
-                        <div style={{ flex: "1" }}>
+                        <div className={styles.content_container}>
                             {children}
                         </div>
                     </ThemeProvider>

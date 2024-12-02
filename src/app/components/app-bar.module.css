@@ -17,3 +17,9 @@
 .pages_container {
     flex-grow: 1;
 }
+
+.secondary_pages_container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
