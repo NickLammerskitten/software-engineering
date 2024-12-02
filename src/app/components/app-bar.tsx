@@ -27,7 +27,7 @@ async function AppBar() {
     const pages: PageProps[] = [
         {
             name: "Galerie",
-            href: "/discover",
+            href: "/gallery",
             role: null,
         },
         {
@@ -39,8 +39,8 @@ async function AppBar() {
 
     const secondaryPages: PageProps[] = [
         {
-            name: "Bilder",
-            href: "/images",
+            name: "+ Bild hinzufügen",
+            href: "/gallery/add",
             role: UserRole.Trader,
         },
     ];
@@ -59,21 +59,27 @@ async function AppBar() {
                         EinfachKunst
                     </Typography>
                     <Box className={styles.pages_container}>
-                        {pageElements({ pages: pages, user: user })}
+                        {user && (
+                            <>
+                                {pageElements({ pages: pages, user: user })}
+                            </>
+                        )}
                     </Box>
 
                     <Box className={styles.secondary_pages_container}>
-                        {pageElements({ pages: secondaryPages, user: user })}
 
                         {user ?
-                            <form action={signOutAction}>
-                                <Button
-                                    className={styles.header_link}
-                                    type="submit"
-                                >
-                                    Ausloggen
-                                </Button>
-                            </form>
+                            <>
+                                {pageElements({ pages: secondaryPages, user: user })}
+                                <form action={signOutAction}>
+                                    <Button
+                                        className={styles.header_link}
+                                        type="submit"
+                                    >
+                                        Ausloggen
+                                    </Button>
+                                </form>
+                            </>
                             :
                             <Button
                                 className={styles.header_link}
