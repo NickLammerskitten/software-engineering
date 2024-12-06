@@ -13,52 +13,16 @@ interface imageData {
     annotations: string;
 }
 
-interface getImagesRequest {
-    page: number;
-    pageSize: number;
-    filter: string;
-}
-
-export async function GET(request: Request) {
-    const requestParams = request.url.split("?")[1];
-    const params = new URLSearchParams(requestParams);
-    const page = parseInt(params.get("page") ?? "1");
-    const pageSize = parseInt(params.get("pageSize") ?? "10");
-    const filter = params.get("filter") ?? "";
-
-    const getImageRequestData = {
-        page,
-        pageSize,
-        filter,
-    } as getImagesRequest;
-
-    const { valid, errors } = validateGetImagesRequest(getImageRequestData);
-    if (!valid) {
-        return new NextResponse(errors.join("\n"), {
-            status: 400,
-        });
-    }
-
-    const supabaseClient = createClient();
-    const { data, error } = await supabaseClient
-        .from('images')
-        .select();
-
-    if (!data) {
-        return new NextResponse("Keine Bilder gefunden", {
-            status: 404,
-        });
-    }
-
-    if (error) {
-        return new NextResponse("Fehler beim Laden der Bilder", {
-            status: 500,
-        });
-    }
-
-    return NextResponse.json({
-        data: data,
-    });
+interface imageDatabaseData {
+    category_id: number;
+    title: string;
+    description: string | null;
+    image_height: number | null;
+    image_width: number | null;
+    paper_height: number | null;
+    paper_width: number | null;
+    price: number;
+    annotations: string | null;
 }
 
 export async function POST(request: Request) {
@@ -89,23 +53,7 @@ export async function POST(request: Request) {
     });
 }
 
-const validateGetImagesRequest = (data: getImagesRequest): { valid: boolean, errors: string[] } => {
-    const errors: string[] = [];
-
-    if (typeof data.page !== 'number' || data.page <= 0) {
-        errors.push("Seite muss eine positive Zahl sein.");
-    }
-    if (typeof data.pageSize !== 'number' || data.pageSize <= 0) {
-        errors.push("Seitengröße muss eine positive Zahl sein.");
-    }
-    if (typeof data.filter !== 'string') {
-        errors.push("Filter muss ein Text sein.");
-    }
-
-    return { valid: errors.length === 0, errors };
-}
-
-const parseData = (data: imageData) => {
+const parseData = (data: imageData): imageDatabaseData => {
     return {
         category_id: parseInt(data.categoryId as unknown as string),
         title: data.title as string,
@@ -119,10 +67,10 @@ const parseData = (data: imageData) => {
     }
 }
 
-const validateData = (data: Partial<imageData>): { valid: boolean, errors: string[] } => {
+const validateData = (data: Partial<imageDatabaseData>): { valid: boolean, errors: string[] } => {
     const errors: string[] = [];
 
-    if (typeof data.categoryId !== 'number' || data.categoryId <= 0) {
+    if (typeof data.category_id !== 'number' || data.category_id <= 0) {
         errors.push("Kategorieauswahl fehlerhaft.");
     }
     if (typeof data.title !== 'string' || data.title.trim() === "") {
@@ -131,16 +79,16 @@ const validateData = (data: Partial<imageData>): { valid: boolean, errors: strin
     if (typeof data.description !== 'string' && data.description !== undefined) {
         errors.push("Beschreibung muss ein Text oder leer sein.");
     }
-    if (typeof data.imageHeight !== 'number' || data.imageHeight <= 0) {
+    if (typeof data.image_height !== 'number' || data.image_height <= 0) {
         errors.push("Bildhöhe muss eine positive Zahl sein.");
     }
-    if (typeof data.imageWidth !== 'number' || data.imageWidth <= 0) {
+    if (typeof data.image_width !== 'number' || data.image_width <= 0) {
         errors.push("Bildbreite muss eine positive Zahl sein.");
     }
-    if (typeof data.paperHeight !== 'number' || data.paperHeight <= 0) {
+    if (typeof data.paper_height !== 'number' || data.paper_height <= 0) {
         errors.push("Papierhöhe muss eine positive Zahl sein.");
     }
-    if (typeof data.paperWidth !== 'number' || data.paperWidth <= 0) {
+    if (typeof data.paper_width !== 'number' || data.paper_width <= 0) {
         errors.push("Papierbreite muss eine positive Zahl sein.");
     }
     if (typeof data.price !== 'number' || data.price < 0) {
