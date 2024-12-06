@@ -1,26 +1,75 @@
 "use client"
 
-import { FormControl, FormLabel, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { Alert, Box, Button, FormControl, FormLabel, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import * as React from "react";
 import { useState } from "react";
 
+const successMessage: string = "Bild erfolgreich hinzugefügt!";
+const errorMessage: string = "Fehler beim Hinzufügen des Bildes!";
+
 export function AddImageForm() {
     // TODO: Fetch categories from database
-    const [categories, setCategories] = useState([
-        { value: 1, label: "Kategorie 1" },
-        { value: 2, label: "Kategorie 2" },
-        { value: 3, label: "Kategorie 3" },
+    const [categories] = useState([
+        { value: 1, label: "Original" },
+        { value: 2, label: "Replika" },
     ]);
 
     const [selectedCategory, setSelectedCategory] = useState(categories[0].value);
 
+    const [success, setSuccess] = useState<boolean | undefined>(undefined);
+
+    const handleSubmit = async (formData: FormData) => {
+        const data = {
+            category: formData.get("category-select"),
+            title: formData.get("title"),
+            description: formData.get("description"),
+            imageHeight: formData.get("imageHeight"),
+            imageWidth: formData.get("imageWidth"),
+            paperHeight: formData.get("paperHeight"),
+            paperWidth: formData.get("paperWidth"),
+            price: formData.get("price"),
+            annotations: formData.get("annotations"),
+        }
+
+        await fetch(`/api/gallery`, {
+            body: JSON.stringify({ formData: data }),
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }).then((response) => {
+            if (!response.ok) {
+                setSuccess(false);
+
+                return;
+            }
+
+            const form = document.getElementById("add-image-form") as HTMLFormElement;
+            form.reset();
+
+            setSuccess(true);
+
+            return response.json();
+        });
+    }
+
+    const handleChange = () => {
+        setSuccess(undefined);
+    }
+
     return (
-        <form className={"form_container"}>
+        <form
+            className={"form_container"}
+            action={(value) => handleSubmit(value)}
+            id={"add-image-form"}
+            onChange={handleChange}
+        >
             <FormControl fullWidth>
                 <InputLabel id="category-select">Kategorie</InputLabel>
                 <Select
                     label={"Kategorie"}
                     id={"category-select"}
+                    name={"category-select"}
                     autoFocus
                     fullWidth
                     required
@@ -53,7 +102,7 @@ export function AddImageForm() {
                 <TextField
                     id="description"
                     type="text"
-                    name="Beschreibung"
+                    name="description"
                     multiline
                     rows={4}
                     fullWidth
@@ -66,18 +115,18 @@ export function AddImageForm() {
                 <TextField
                     id="imageHeight"
                     type="number"
-                    name="Bildhöhe"
+                    name="imageHeight"
                     fullWidth
                     variant="outlined"
                 />
             </FormControl>
 
             <FormControl>
-                <FormLabel htmlFor="imageWidht">Bildbreite (in cm)</FormLabel>
+                <FormLabel htmlFor="imageWidth">Bildbreite (in cm)</FormLabel>
                 <TextField
-                    id="imageWidht"
+                    id="imageWidth"
                     type="number"
-                    name="Bildbreite"
+                    name="imageWidth"
                     fullWidth
                     variant="outlined"
                 />
@@ -88,7 +137,7 @@ export function AddImageForm() {
                 <TextField
                     id="paperHeight"
                     type="number"
-                    name="Papierhöhe"
+                    name="paperHeight"
                     fullWidth
                     variant="outlined"
                 />
@@ -99,7 +148,7 @@ export function AddImageForm() {
                 <TextField
                     id="paperWidth"
                     type="number"
-                    name="Papierbreite"
+                    name="paperWidth"
                     fullWidth
                     variant="outlined"
                 />
@@ -110,7 +159,7 @@ export function AddImageForm() {
                 <TextField
                     id="price"
                     type="number"
-                    name="Preis"
+                    name="price"
                     required
                     defaultValue={999.99}
                     fullWidth
@@ -123,13 +172,31 @@ export function AddImageForm() {
                 <TextField
                     id="annotations"
                     type="text"
-                    name="Anmerkungen"
+                    name="annotations"
                     multiline
                     rows={4}
                     fullWidth
                     variant="outlined"
                 />
             </FormControl>
+
+            {success === true && <Alert severity="success">{successMessage}</Alert>}
+            {success === false && <Alert severity="error">{errorMessage}</Alert>}
+
+            <Box className={"actions_container"}>
+                <Button
+                    variant={"text"}
+                    type={"reset"}
+                >
+                    Abbrechen
+                </Button>
+                <Button
+                    variant={"contained"}
+                    type={"submit"}
+                >
+                    Speichern
+                </Button>
+            </Box>
         </form>
     )
 }
