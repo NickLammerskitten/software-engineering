@@ -20,7 +20,7 @@ export function AddImageForm() {
 
     const handleSubmit = async (formData: FormData) => {
         const data = {
-            category: formData.get("category-select"),
+            categoryId: formData.get("category-select"),
             title: formData.get("title"),
             description: formData.get("description"),
             imageHeight: formData.get("imageHeight"),

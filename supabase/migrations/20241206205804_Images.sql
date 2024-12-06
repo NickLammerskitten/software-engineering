@@ -1,5 +1,5 @@
 create table "public"."images" (
-                                   "id" uuid not null,
+                                   "id" uuid not null default uuid_generate_v4(),
                                    "category_id" integer not null default 0,
                                    "title" text not null,
                                    "description" text,
@@ -7,7 +7,8 @@ create table "public"."images" (
                                    "image_width" double precision,
                                    "paper_height" double precision,
                                    "paper_width" double precision,
-                                   "annotations" text
+                                   "annotations" text,
+                                   "price" float not null default 0
 );
 
 
