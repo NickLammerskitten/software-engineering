@@ -31,16 +31,14 @@ export async function GET(request: Request) {
     const supabaseClient = createClient();
     const { data, error } = await supabaseClient
         .from('images')
-        .select();
-
+        .select()
+        .range(page*pageSize, page*pageSize+pageSize-1);
 
     if (!data) {
         return new NextResponse("Keine Bilder gefunden", {
             status: 404,
         });
     }
-    console.log("data: " + data);
-
 
     if (error) {
         return new NextResponse("Fehler beim Laden der Bilder", {
@@ -56,7 +54,7 @@ export async function GET(request: Request) {
 const validateGetImagesRequest = (data: getImagesRequest): { valid: boolean, errors: string[] } => {
     const errors: string[] = [];
 
-    if (typeof data.page !== 'number' || data.page <= 0) {
+    if (typeof data.page !== 'number' || data.page < 0) {
         errors.push("Seite muss eine positive Zahl sein.");
     }
     if (typeof data.pageSize !== 'number' || data.pageSize <= 0) {
