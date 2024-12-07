@@ -1,6 +1,6 @@
 "use server";
 
-import { AddImageForm } from "@/src/app/components/add-image-form";
+import AddImageForm from "@/src/app/components/add-image-form";
 import { UserRole } from "@/src/app/models/userRole";
 import WrongUserRole from "@/src/app/utils/wrongUserRole";
 import { createClient } from "@/src/utils/supabase/server";
