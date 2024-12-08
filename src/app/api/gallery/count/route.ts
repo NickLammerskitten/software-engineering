@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
     const supabaseClient = createClient();
     const { count, error } = await supabaseClient
-        .from('images')
+        .from('image')
         .select("*", { count: 'exact', head: true })
 
     if (error) {

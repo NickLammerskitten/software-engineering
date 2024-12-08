@@ -30,7 +30,7 @@ export async function GET(request: Request) {
 
     const supabaseClient = createClient();
     const { data, error } = await supabaseClient
-        .from('images')
+        .from('image')
         .select()
         .range(page*pageSize, page*pageSize+pageSize-1);
 

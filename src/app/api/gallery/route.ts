@@ -39,7 +39,7 @@ export async function POST(request: Request) {
     }
 
     const { error } = await supabaseClient
-        .from('images')
+        .from('image')
         .insert([parsedData]);
 
     if (error) {
