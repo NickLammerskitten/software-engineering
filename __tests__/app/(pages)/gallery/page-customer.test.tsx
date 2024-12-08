@@ -2,13 +2,13 @@ import Gallery from "@/src/app/(pages)/gallery/page";
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
-describe('Gallery Page for trader', () => {
+describe('Gallery Page for customer', () => {
     beforeEach(() => {
         vi.mock('@/src/utils/supabase/server', () => ({
             createClient: vi.fn().mockImplementation(() => ({
                 auth: {
                     getUser: vi.fn().mockResolvedValue({
-                        data: { user: { role: 'trader' } }
+                        data: { user: { role: 'authenticated' } }
                     }),
                 },
             })),
@@ -22,7 +22,7 @@ describe('Gallery Page for trader', () => {
         expect(screen.getByText('Discover page')).toBeDefined();
         expect(screen.getByRole('heading')).toBeDefined();
 
-        expect(screen.getByText('Bild hinzufügen')).toBeDefined();
-        expect(screen.getByRole('link')).toBeDefined();
+        expect(screen.queryByText('Bild hinzufügen')).toBeNull();
+        expect(screen.queryByRole('link')).toBeNull();
     })
 });
