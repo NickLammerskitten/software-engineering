@@ -7,7 +7,7 @@ import { useState } from "react";
 const successMessage: string = "Bild erfolgreich hinzugefügt!";
 const errorMessage: string = "Fehler beim Hinzufügen des Bildes!";
 
-export function AddImageForm() {
+export default function AddImageForm() {
     // TODO: Fetch categories from database
     const [categories] = useState([
         { value: 1, label: "Original" },
@@ -60,11 +60,12 @@ export function AddImageForm() {
     return (
         <form
             className={"form_container"}
-            action={(value) => handleSubmit(value)}
             id={"add-image-form"}
+            action={(value) => handleSubmit(value)}
             onChange={handleChange}
         >
-            <FormControl fullWidth>
+            <FormControl fullWidth
+            >
                 <InputLabel id="category-select">Kategorie</InputLabel>
                 <Select
                     label={"Kategorie"}
