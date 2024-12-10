@@ -8,10 +8,10 @@ test('renders', () => {
     expect(screen.getByText('Kategorie')).toBeDefined();
     expect(screen.getByText('Titel')).toBeDefined();
     expect(screen.getByText('Beschreibung')).toBeDefined();
-    expect(screen.getByText('Bildhöhe (in cm)')).toBeDefined();
-    expect(screen.getByText('Bildbreite (in cm)')).toBeDefined();
-    expect(screen.getByText('Papierhöhe (in cm)')).toBeDefined();
-    expect(screen.getByText('Papierbreite (in cm)')).toBeDefined();
-    expect(screen.getByText('Preis (in €)')).toBeDefined();
+    expect(screen.getByText('Bildhöhe')).toBeDefined();
+    expect(screen.getByText('Bildbreite')).toBeDefined();
+    expect(screen.getByText('Papierhöhe')).toBeDefined();
+    expect(screen.getByText('Papierbreite')).toBeDefined();
+    expect(screen.getByText('Preis')).toBeDefined();
     expect(screen.getByText('Anmerkungen')).toBeDefined();
 })

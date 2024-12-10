@@ -1,5 +1,5 @@
 import { createClient } from "@/src/utils/supabase/server";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 interface imageData {
     categoryId: number;
@@ -100,3 +100,69 @@ const validateData = (data: Partial<imageDatabaseData>): { valid: boolean, error
 
     return { valid: errors.length === 0, errors };
 };
+
+const DEFAULT_PAGE_SIZE = 10;
+
+interface GetImagesRequest {
+    page: number;
+    pageSize: number;
+}
+
+/*
+    GET request at /api/gallery with optional parameters page
+    and pageSize. Parameter page starts at 0, so that 0 is the
+    first page.
+    The default page is 0 and the default page size is 10.
+*/
+export async function GET(request: NextRequest) {
+    const searchParams = request.nextUrl.searchParams;
+    const page = Number(searchParams.get("page") ?? 0);
+    const pageSize = Number(searchParams.get("pageSize") ?? DEFAULT_PAGE_SIZE);
+
+    const getImagesRequest = {
+        page,
+        pageSize,
+    } as GetImagesRequest;
+
+    const { valid, errors } = validateGetImagesRequest(getImagesRequest);
+    if (!valid) {
+        return new NextResponse(errors.join("\n"), {
+            status: 400,
+        });
+    }
+
+    const supabaseClient = createClient();
+    const { data, error } = await supabaseClient
+        .from('image')
+        .select()
+        .range(page*pageSize, page*pageSize+pageSize-1);
+
+    if (!data) {
+        return new NextResponse("Keine Bilder gefunden", {
+            status: 404,
+        });
+    }
+
+    if (error) {
+        return new NextResponse("Fehler beim Laden der Bilder", {
+            status: 500,
+        });
+    }
+
+    return NextResponse.json({
+        data: data,
+    });
+}
+
+const validateGetImagesRequest = (data: GetImagesRequest): { valid: boolean, errors: string[] } => {
+    const errors: string[] = [];
+
+    if (data.page < 0) {
+        errors.push("Seite muss eine positive Zahl sein.");
+    }
+    if (data.pageSize <= 0) {
+        errors.push("Seitengröße muss eine positive Zahl sein.");
+    }
+
+    return { valid: errors.length === 0, errors };
+}

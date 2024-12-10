@@ -1,6 +1,6 @@
 "use client"
 
-import { Alert, Box, Button, FormControl, FormLabel, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { Alert, Box, Button, FormControl, FormLabel, InputAdornment, InputLabel, MenuItem, OutlinedInput, Select, TextField } from "@mui/material";
 import * as React from "react";
 import { useState } from "react";
 
@@ -112,59 +112,58 @@ export default function AddImageForm() {
             </FormControl>
 
             <FormControl>
-                <FormLabel htmlFor="imageHeight">Bildhöhe (in cm)</FormLabel>
-                <TextField
+                <FormLabel htmlFor="imageHeight">Bildhöhe</FormLabel>
+                <OutlinedInput 
                     id="imageHeight"
                     type="number"
                     name="imageHeight"
                     fullWidth
-                    variant="outlined"
+                    endAdornment={<InputAdornment position="end">cm</InputAdornment>}
                 />
             </FormControl>
 
             <FormControl>
-                <FormLabel htmlFor="imageWidth">Bildbreite (in cm)</FormLabel>
-                <TextField
+                <FormLabel htmlFor="imageWidth">Bildbreite</FormLabel>
+                <OutlinedInput 
                     id="imageWidth"
                     type="number"
                     name="imageWidth"
                     fullWidth
-                    variant="outlined"
+                    endAdornment={<InputAdornment position="end">cm</InputAdornment>}
                 />
             </FormControl>
 
             <FormControl>
-                <FormLabel htmlFor="paperHeight">Papierhöhe (in cm)</FormLabel>
-                <TextField
+                <FormLabel htmlFor="paperHeight">Papierhöhe</FormLabel>
+                <OutlinedInput 
                     id="paperHeight"
                     type="number"
                     name="paperHeight"
                     fullWidth
-                    variant="outlined"
+                    endAdornment={<InputAdornment position="end">cm</InputAdornment>}
                 />
             </FormControl>
 
             <FormControl>
-                <FormLabel htmlFor="paperWidth">Papierbreite (in cm)</FormLabel>
-                <TextField
+                <FormLabel htmlFor="paperWidth">Papierbreite</FormLabel>
+                <OutlinedInput 
                     id="paperWidth"
                     type="number"
                     name="paperWidth"
                     fullWidth
-                    variant="outlined"
+                    endAdornment={<InputAdornment position="end">cm</InputAdornment>}
                 />
             </FormControl>
 
             <FormControl>
-                <FormLabel htmlFor="price">Preis (in €)</FormLabel>
-                <TextField
+                <FormLabel htmlFor="price">Preis</FormLabel>
+                <OutlinedInput 
                     id="price"
                     type="number"
                     name="price"
                     required
-                    defaultValue={999.99}
                     fullWidth
-                    variant="outlined"
+                    endAdornment={<InputAdornment position="end">€</InputAdornment>}
                 />
             </FormControl>
 
