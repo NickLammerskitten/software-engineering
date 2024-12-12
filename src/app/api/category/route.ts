@@ -1,11 +1,11 @@
 import {createClient} from "@/src/utils/supabase/server";
-import {NextResponse} from "next/server";
+import {NextRequest, NextResponse} from "next/server";
 
 interface CategoryData {
     name: string;
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
     const supabaseClient = createClient()
 
     const data = (await request.json()).formData as CategoryData;
@@ -18,9 +18,13 @@ export async function POST(request: Request) {
         });
     }
 
+    console.log(parsedData);
+
     const { error } = await supabaseClient
         .from('category')
         .insert([parsedData]);
+
+    console.log(error);
 
     if (error) {
         return new NextResponse("Fehler beim Hinzufügen der Kategorie", {

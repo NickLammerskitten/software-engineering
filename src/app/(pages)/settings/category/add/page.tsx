@@ -1,14 +1,14 @@
-import {Typography} from "@mui/material";
 import {createClient} from "@/src/utils/supabase/server";
 import {UserRole} from "@/src/app/models/userRole";
+import {Typography} from "@mui/material";
 import WrongUserRole from "@/src/app/utils/wrongUserRole";
-import {CategoryList} from "@/src/app/components/category-list";
+import AddCategoryForm from "@/src/app/components/add-category-form";
 
-export default async function CategoriesPage() {
+export default async function AddCategory() {
     const supabase = await createClient();
 
     const {
-        data: {user},
+        data: { user },
     } = await supabase.auth.getUser();
 
     return (
@@ -16,14 +16,14 @@ export default async function CategoriesPage() {
             {user?.role === UserRole.Trader ? (
                 <>
                     <Typography variant={"h1"}>
-                        Kategorien verwalten
+                        Kategorie hinzufügen
                     </Typography>
 
-                    <CategoryList />
+                    <AddCategoryForm />
                 </>
             ) : (
-                <WrongUserRole/>
+                <WrongUserRole />
             )}
         </div>
-    )
+    );
 }
