@@ -21,18 +21,47 @@ export async function GET(request: NextRequest) {
         .single();
 
     if (!data) {
-        return new NextResponse("Keine Kategorien gefunden", {
+        return new NextResponse("Keine Kategorie gefunden", {
             status: 404,
         });
     }
 
     if (error) {
-        return new NextResponse("Fehler beim Laden der Kategorien", {
+        return new NextResponse("Fehler beim Laden der Kategorie", {
             status: 500,
         });
     }
 
     return NextResponse.json({
         data: data,
+    });
+}
+
+/*
+    DELETE request at /api/category with parameter id
+*/
+export async function DELETE(request: NextRequest) {
+    const requestParams = request.url.split("/");
+    const categoryId = requestParams[5];
+    if (!categoryId) {
+        return new NextResponse("Keine Categorie id angegeben.", {
+            status: 404
+        })
+    }
+
+    const supabaseClient = createClient();
+    const { error } = await supabaseClient
+        .from('category')
+        .delete()
+        .eq('id', categoryId)
+
+    if (error) {
+        return new NextResponse(`Fehler beim Löschen der Kategorie, ${error.details}`, {
+            status: 500,
+        });
+    }
+
+    return NextResponse.json({
+        success: true,
     });
 }

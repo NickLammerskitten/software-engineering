@@ -1,15 +1,19 @@
 "use client";
 
 import {useEffect, useState} from "react";
-import {Box, Button, Card, CircularProgress} from "@mui/material";
+import {Box, Card, CircularProgress, IconButton} from "@mui/material";
 import styles from "./category-list.module.css";
-import {Edit} from "@mui/icons-material";
+import {Delete, Edit} from "@mui/icons-material";
 
 export function CategoryList() {
     const [loading, setLoading] = useState<boolean>(false);
     const [categories, setCategories] = useState<Category[]>([]);
 
     useEffect(() => {
+        fetchCategories();
+    }, [])
+
+    const fetchCategories = async () => {
         setLoading(true);
         fetch(`/api/category`)
             .then((res) => {
@@ -23,7 +27,23 @@ export function CategoryList() {
                 setLoading(false);
                 setCategories(data.data);
             });
-    }, [])
+    }
+
+    const handleDelete = (id: number) => {
+        fetch(`/api/category/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        }).then(res => res.text())
+            .then((message: string | { success: boolean }) => {
+                if (typeof message === "string") {
+                    throw new Error(message);
+                }
+
+                fetchCategories();
+            })
+    }
 
     return (
         <div>
@@ -37,11 +57,14 @@ export function CategoryList() {
                         >
                             {category.name}
 
-                            <Button startIcon={<Edit/>}
-                                    href={`category/edit?id=${category.id}`}
-                            >
-                                Bearbeiten
-                            </Button>
+                            <Box>
+                                <IconButton href={`category/edit?id=${category.id}`}>
+                                    <Edit/>
+                                </IconButton>
+                                <IconButton onClick={() => handleDelete(category.id)}>
+                                    <Delete/>
+                                </IconButton>
+                            </Box>
                         </Card>
                     ))}
                 </Box>
