@@ -24,7 +24,7 @@ alter table "public"."category" add constraint "category_id_key" UNIQUE using in
 alter table "public"."category" add constraint "category_name_key" UNIQUE using index "category_name_key";
 
 /* Check for length between 3 and 30 */
-alter table "public"."category" add constraint "check_name" CHECK ((name ~* '^[a-zA-Z]{3,30}$'::text)) not valid;
+alter table "public"."category" add constraint "check_name" CHECK ((name ~* '^[\u00C0-\u017Fa-zA-Z0-9 ]{3,30}$'::text)) not valid;
 
 alter table "public"."category" validate constraint "check_name";
 

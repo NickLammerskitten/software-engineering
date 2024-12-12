@@ -42,6 +42,7 @@ const parsePostData = (data: CategoryPostData): CategoryPostData => {
 interface CategoryPutData {
     id: number;
     name: string;
+    updated_at: Date
 }
 
 export async function PUT(request: NextRequest) {
@@ -62,8 +63,6 @@ export async function PUT(request: NextRequest) {
         .update([parsedData])
         .eq('id', parsedData.id);
 
-    console.log(error)
-
     if (error) {
         return new NextResponse("Fehler beim Bearbeiten der Kategorie", {
             status: 500,
@@ -79,6 +78,7 @@ const parsePutData = (data: CategoryPutData): CategoryPutData => {
     return {
         id: data.id as number,
         name: data.name.trim() as string,
+        updated_at: new Date(),
     }
 }
 
