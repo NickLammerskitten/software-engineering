@@ -14,6 +14,13 @@ values ('00000000-0000-0000-0000-000000000000', 'aabc22aa-68ba-425c-9888-d5e77ad
         '{"provider":"email","providers":["email"]}', '{}',
         timezone('utc'::text, now()), timezone('utc'::text, now()), timezone('utc'::text, now()), '', '', '', '');
 
+insert into public.category (name)
+values ('Original');
+
+insert into public.category (name)
+values ('Kopie');
+
+
 insert into public.image(category_id, title, description, image_height, image_width, paper_height, paper_width, annotations, price)
 values (1, 'Image 1', 'Image 1 description', 1000, 1000, 1000, 1000, 'Annotation', 100.00);
 
