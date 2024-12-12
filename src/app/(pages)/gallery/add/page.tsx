@@ -1,9 +1,12 @@
+"use server";
+
+import AddImageForm from "@/src/app/components/add-image-form";
 import { UserRole } from "@/src/app/models/userRole";
 import WrongUserRole from "@/src/app/utils/wrongUserRole";
 import { createClient } from "@/src/utils/supabase/server";
 import { Typography } from "@mui/material";
 
-export default async function Portfolio() {
+export default async function AddImage() {
     const supabase = await createClient();
 
     const {
@@ -12,11 +15,13 @@ export default async function Portfolio() {
 
     return (
         <div>
-            {user?.role === UserRole.Customer ? (
+            {user?.role === UserRole.Trader ? (
                 <>
                     <Typography variant={"h1"}>
-                        Meine Mappe
+                        Bild hinzufügen
                     </Typography>
+
+                    <AddImageForm />
                 </>
             ) : (
                 <WrongUserRole />

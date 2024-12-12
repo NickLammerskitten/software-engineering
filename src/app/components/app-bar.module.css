@@ -1,5 +1,5 @@
 .logo {
-    margin-right: var(--margin-normal) !important;;
+    margin-right: var(--margin-normal) !important;
     font-family: monospace !important;
     font-weight: 700 !important;;
     letter-spacing: .3rem !important;;
@@ -16,4 +16,10 @@
 
 .pages_container {
     flex-grow: 1;
+}
+
+.secondary_pages_container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }

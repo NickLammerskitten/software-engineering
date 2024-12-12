@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 
-const protectedRoutes = ["/discover", "/portfolio"];
+const protectedRoutes = ["/gallery", "/portfolio"];
 
 export const updateSession = async (request: NextRequest) => {
   // Create an unmodified response
@@ -45,7 +45,7 @@ export const updateSession = async (request: NextRequest) => {
   }
 
   if (request.nextUrl.pathname === "/" && !user.error) {
-    return NextResponse.redirect(new URL("/discover", request.url));
+    return NextResponse.redirect(new URL("/gallery", request.url));
   }
 
   return response;

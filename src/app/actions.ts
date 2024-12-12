@@ -17,7 +17,7 @@ export const signInAction = async (formData: FormData) => {
     return redirect("/login");
   }
 
-  return redirect("/discover");
+  return redirect("/gallery");
 };
 
 export const signOutAction = async () => {

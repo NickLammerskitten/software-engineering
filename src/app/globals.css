@@ -1,9 +1,29 @@
 html, body {
+    display: flex;
+    flex-direction: column;
     height: 100%;
 }
 
 :root {
     --margin-normal: 1rem;
-
     --color-inherit: inherit;
+}
+
+.form_container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 0.313rem;
+}
+
+.actions_container {
+    display: flex;
+    margin-top: 1rem;
+    gap: 1rem;
+    justify-content: flex-end;
+
+    p {
+        display: flex;
+        align-items: center;
+    }
 }
