@@ -101,3 +101,8 @@ for update
                to trader
                using (true)
     with check (true);
+
+
+alter table "public"."image" add constraint "image_category_id_fk" FOREIGN KEY (category_id) REFERENCES category(id) not valid;
+
+alter table "public"."image" validate constraint "image_category_id_fk";
