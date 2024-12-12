@@ -2,6 +2,7 @@ import {Typography} from "@mui/material";
 import {createClient} from "@/src/utils/supabase/server";
 import {UserRole} from "@/src/app/models/userRole";
 import WrongUserRole from "@/src/app/utils/wrongUserRole";
+import {CategoryList} from "@/src/app/components/category-list";
 
 export default async function CategoriesPage() {
     const supabase = await createClient();
@@ -17,6 +18,8 @@ export default async function CategoriesPage() {
                     <Typography variant={"h1"}>
                         Kategorien verwalten
                     </Typography>
+
+                    <CategoryList />
                 </>
             ) : (
                 <WrongUserRole/>
