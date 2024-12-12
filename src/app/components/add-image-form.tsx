@@ -66,7 +66,7 @@ export default function AddImageForm() {
         >
             <FormControl fullWidth
             >
-                <InputLabel id="category-select">Kategorie</InputLabel>
+                <InputLabel id="category-select">Kategorie *</InputLabel>
                 <Select
                     label={"Kategorie"}
                     id={"category-select"}
@@ -87,7 +87,7 @@ export default function AddImageForm() {
             </FormControl>
 
             <FormControl>
-                <FormLabel htmlFor="title">Titel</FormLabel>
+                <FormLabel htmlFor="title">Titel *</FormLabel>
                 <TextField
                     id="title"
                     type="text"
@@ -117,6 +117,7 @@ export default function AddImageForm() {
                     id="imageHeight"
                     type="number"
                     name="imageHeight"
+                    inputProps={{ step: "any" }}
                     fullWidth
                     endAdornment={<InputAdornment position="end">cm</InputAdornment>}
                 />
@@ -128,6 +129,7 @@ export default function AddImageForm() {
                     id="imageWidth"
                     type="number"
                     name="imageWidth"
+                    inputProps={{ step: "any" }}
                     fullWidth
                     endAdornment={<InputAdornment position="end">cm</InputAdornment>}
                 />
@@ -139,6 +141,7 @@ export default function AddImageForm() {
                     id="paperHeight"
                     type="number"
                     name="paperHeight"
+                    inputProps={{ step: "any" }}
                     fullWidth
                     endAdornment={<InputAdornment position="end">cm</InputAdornment>}
                 />
@@ -146,22 +149,24 @@ export default function AddImageForm() {
 
             <FormControl>
                 <FormLabel htmlFor="paperWidth">Papierbreite</FormLabel>
-                <OutlinedInput 
+                <OutlinedInput
                     id="paperWidth"
                     type="number"
                     name="paperWidth"
+                    inputProps={{ step: "any" }}
                     fullWidth
                     endAdornment={<InputAdornment position="end">cm</InputAdornment>}
                 />
             </FormControl>
 
             <FormControl>
-                <FormLabel htmlFor="price">Preis</FormLabel>
+                <FormLabel htmlFor="price">Preis *</FormLabel>
                 <OutlinedInput 
                     id="price"
                     type="number"
                     name="price"
                     required
+                    inputProps={{ step: "any" }}
                     fullWidth
                     endAdornment={<InputAdornment position="end">€</InputAdornment>}
                 />
