@@ -1,7 +1,9 @@
 "use client";
 
 import {useEffect, useState} from "react";
-import {CircularProgress} from "@mui/material";
+import {Box, Button, Card, CircularProgress} from "@mui/material";
+import styles from "./category-list.module.css";
+import {Edit} from "@mui/icons-material";
 
 export function CategoryList() {
     const [loading, setLoading] = useState<boolean>(false);
@@ -28,13 +30,21 @@ export function CategoryList() {
             {loading && (<CircularProgress/>)}
 
             {!loading && categories.length > 0 && (
-                <>
+                <Box className={styles.category_list}>
                     {categories.map((category) => (
-                        <div key={category.id}>
+                        <Card key={category.id}
+                              className={styles.category_list_item}
+                        >
                             {category.name}
-                        </div>
+
+                            <Button startIcon={<Edit/>}
+                                    href={`category/edit?id=${category.id}`}
+                            >
+                                Bearbeiten
+                            </Button>
+                        </Card>
                     ))}
-                </>
+                </Box>
             )}
         </div>
     )

@@ -22,6 +22,7 @@ export default async function CategoriesPage() {
 
                     <Button startIcon={<Add/>}
                             href="/settings/category/add"
+                            className={"top_action_buttons"}
                     >
                         Kategorie hinzufügen
                     </Button>
