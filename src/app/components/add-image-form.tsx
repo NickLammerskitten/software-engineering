@@ -68,7 +68,7 @@ export default function AddImageForm() {
             >
                 <InputLabel id="category-select">Kategorie *</InputLabel>
                 <Select
-                    label={"Kategorie"}
+                    label={"Kategorie *"}
                     id={"category-select"}
                     name={"category-select"}
                     autoFocus
