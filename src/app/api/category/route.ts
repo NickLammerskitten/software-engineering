@@ -5,6 +5,8 @@ interface CategoryPostData {
     name: string;
 }
 
+const nameRegEx = new RegExp('^[\u00C0-\u017Fa-zA-Z0-9 ]{3,30}$')
+
 export async function POST(request: NextRequest) {
     const supabaseClient = createClient()
 
@@ -85,7 +87,7 @@ const parsePutData = (data: CategoryPutData): CategoryPutData => {
 const validateData = (data: Partial<CategoryPostData | CategoryPutData>): { valid: boolean, errors: string[] } => {
     const errors: string[] = [];
 
-    if (data.name === undefined || data.name?.length < 3 || data.name.length > 30) {
+    if (data.name === undefined || !nameRegEx.test(data.name)) {
         errors.push("Name entspricht nicht den Anforderungen.");
     }
 

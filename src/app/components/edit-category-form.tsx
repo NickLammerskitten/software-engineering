@@ -7,12 +7,15 @@ import {Alert, Box, Button, CircularProgress, FormControl, FormLabel, TextField,
 const successMessage: string = "Kategorie erfolgreich bearbeitet!";
 const errorMessage: string = "Fehler beim Bearbeiten der Kategorie!";
 
+const nameRegEx = new RegExp('^[\u00C0-\u017Fa-zA-Z0-9 ]{3,30}$')
+
 export function EditCategoryForm() {
     const searchParams = useSearchParams();
 
     const [loading, setLoading] = useState(true);
     const [categoryId, setCategoryId] = useState<number | null>(null);
     const [categoryName, setCategoryName] = useState<string | null>(null)
+    const [categoryNameValid, setCategoryNameValid] = useState<boolean>(true)
 
     const [success, setSuccess] = useState<boolean | undefined>(undefined);
 
@@ -42,6 +45,16 @@ export function EditCategoryForm() {
                 setCategoryName(data.data.name);
             });
     }, [searchParams]);
+
+    useEffect(() => {
+        if (categoryName == null || categoryName == "") {
+            setCategoryNameValid(true);
+            return;
+        }
+
+        const valid = nameRegEx.test(categoryName);
+        setCategoryNameValid(valid);
+    }, [categoryName]);
 
     const handleSubmit = async (formData: FormData) => {
         const data = {
@@ -95,6 +108,8 @@ export function EditCategoryForm() {
                                 variant="outlined"
                                 value={categoryName}
                                 onChange={(e) => setCategoryName(e.target.value)}
+                                helperText={categoryNameValid ? "" : "Der Name muss zwischen 3 und 30 Zeichen lang sein und darf Zeichen von a bis z, sowie Zahlen von 0 bis 9 enthalten."}
+                                error={!categoryNameValid}
                             />
                         </FormControl>
 
