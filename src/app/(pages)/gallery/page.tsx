@@ -13,7 +13,7 @@ export default async function Gallery() {
     return (
         <div>
             <Typography variant={"h1"}>
-                Discover page
+                Galerie
             </Typography>
 
             {user?.role === UserRole.Trader && (

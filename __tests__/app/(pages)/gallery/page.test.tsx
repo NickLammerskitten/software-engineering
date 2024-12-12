@@ -15,11 +15,11 @@ describe('Gallery Page for trader', () => {
         }));
     });
 
-    test('Discover Page', async () => {
+    test('Galerie Page', async () => {
         const Result = await Gallery();
         render(Result);
 
-        expect(screen.getByText('Discover page')).toBeDefined();
+        expect(screen.getByText('Galerie')).toBeDefined();
         expect(screen.getByRole('heading')).toBeDefined();
 
         expect(screen.getByText('Bild hinzufügen')).toBeDefined();
