@@ -19,7 +19,6 @@ export function CategoryList() {
             })
             .then((data: { data: Category[] }) => {
                 setLoading(false);
-                console.log(data.data);
                 setCategories(data.data);
             });
     }, [])
@@ -31,7 +30,7 @@ export function CategoryList() {
             {!loading && categories.length > 0 && (
                 <>
                     {categories.map((category) => (
-                        <div>
+                        <div key={category.id}>
                             {category.name}
                         </div>
                     ))}
