@@ -18,13 +18,9 @@ export async function POST(request: NextRequest) {
         });
     }
 
-    console.log(parsedData);
-
     const { error } = await supabaseClient
         .from('category')
         .insert([parsedData]);
-
-    console.log(error);
 
     if (error) {
         return new NextResponse("Fehler beim Hinzufügen der Kategorie", {
