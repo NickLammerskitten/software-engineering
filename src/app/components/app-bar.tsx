@@ -1,4 +1,4 @@
-import {UserRole} from "@/src/app/models/userRole";
+import {UserRole} from "@/src/app/models/user-role";
 import {createClient} from '@/src/utils/supabase/server';
 import {AppBar as MUIAppBar} from '@mui/material';
 import Box from '@mui/material/Box';

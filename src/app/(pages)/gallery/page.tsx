@@ -1,4 +1,4 @@
-import {UserRole} from "@/src/app/models/userRole";
+import {UserRole} from "@/src/app/models/user-role";
 import {createClient} from "@/src/utils/supabase/server";
 import {Add} from "@mui/icons-material";
 import {Button, Typography} from "@mui/material";
