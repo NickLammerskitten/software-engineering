@@ -9,9 +9,9 @@ const errorMessage: string = "Fehler beim Hinzufügen der Kategorie!";
 const nameRegEx = new RegExp('^[\u00C0-\u017Fa-zA-Z0-9 ]{3,30}$')
 
 export default function AddCategoryForm() {
-    const [categoryNameValid, setCategoryNameValid] = useState<boolean>(true)
+    const [categoryNameValid, setCategoryNameValid] = useState<boolean>(true);
     const [success, setSuccess] = useState<boolean | undefined>(undefined);
-    const [categoryName, setCategoryName] = useState<string | null>(null)
+    const [categoryName, setCategoryName] = useState<string>("");
 
     useEffect(() => {
         if (categoryName == null || categoryName == "") {
