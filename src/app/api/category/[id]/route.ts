@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     const categoryId = requestParams[5];
     if (!categoryId) {
         return new NextResponse("Keine Categorie id angegeben.", {
-            status: 404
+            status: 400
         })
     }
 
@@ -45,7 +45,7 @@ export async function DELETE(request: NextRequest) {
     const categoryId = requestParams[5];
     if (!categoryId) {
         return new NextResponse("Keine Categorie id angegeben.", {
-            status: 404
+            status: 400
         })
     }
 

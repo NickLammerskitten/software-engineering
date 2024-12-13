@@ -1,6 +1,6 @@
 import {Button, Typography} from "@mui/material";
 import {createClient} from "@/src/utils/supabase/server";
-import {UserRole} from "@/src/app/models/userRole";
+import {UserRole} from "@/src/app/models/user-role";
 import WrongUserRole from "@/src/app/utils/wrong-user-role";
 
 export default async function Settings() {
