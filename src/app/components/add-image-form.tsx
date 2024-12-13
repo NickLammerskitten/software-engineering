@@ -22,6 +22,7 @@ export default function AddImageForm() {
         const data = {
             categoryId: formData.get("category-select"),
             title: formData.get("title"),
+            artist: formData.get("artist"),
             description: formData.get("description"),
             imageHeight: formData.get("imageHeight"),
             imageWidth: formData.get("imageWidth"),
@@ -64,8 +65,7 @@ export default function AddImageForm() {
             action={(value) => handleSubmit(value)}
             onChange={handleChange}
         >
-            <FormControl fullWidth
-            >
+            <FormControl fullWidth>
                 <InputLabel id="category-select">Kategorie *</InputLabel>
                 <Select
                     label={"Kategorie *"}
@@ -92,6 +92,18 @@ export default function AddImageForm() {
                     id="title"
                     type="text"
                     name="title"
+                    required
+                    fullWidth
+                    variant="outlined"
+                />
+            </FormControl>
+
+            <FormControl>
+                <FormLabel htmlFor="title">Künstler *</FormLabel>
+                <TextField
+                    id="artist"
+                    type="text"
+                    name="artist"
                     required
                     fullWidth
                     variant="outlined"
