@@ -1,11 +1,11 @@
-import AddImageForm from "@/src/app/components/add-image-form";
+import { EditCategoryForm } from "@/src/app/components/edit-category-form";
 import { render, screen } from "@testing-library/react";
 import { http } from "msw";
 import { setupServer } from "msw/node";
 import { NextResponse } from "next/server";
 import { afterAll, beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
 
-describe('add image form', () => {
+describe('edit category form', () => {
     const categories: Category[] = [
         {
             id: 1,
@@ -18,8 +18,8 @@ describe('add image form', () => {
     ]
 
     const restHandlers = [
-        http.get('api/category', () => {
-            return NextResponse.json({ data: categories })
+        http.get('api/category/1', () => {
+            return NextResponse.json({ data: categories[0] })
         }),
     ]
 
@@ -37,21 +37,19 @@ describe('add image form', () => {
                 },
             })),
         }));
+
+        vi.mock("next/navigation", () => ({
+            useSearchParams: vi.fn().mockReturnValue({
+                get: vi.fn().mockReturnValue(1),
+            }),
+        }));
     });
 
     afterAll(() => server.close())
 
     test('renders', () => {
-        render(<AddImageForm/>)
+        render(<EditCategoryForm />)
 
-        expect(screen.findByText('Kategorie *')).toBeDefined();
-        expect(screen.getByText('Titel *')).toBeDefined();
-        expect(screen.getByText('Beschreibung')).toBeDefined();
-        expect(screen.getByText('Bildhöhe')).toBeDefined();
-        expect(screen.getByText('Bildbreite')).toBeDefined();
-        expect(screen.getByText('Papierhöhe')).toBeDefined();
-        expect(screen.getByText('Papierbreite')).toBeDefined();
-        expect(screen.getByText('Preis *')).toBeDefined();
-        expect(screen.getByText('Anmerkungen')).toBeDefined();
-    })
+        expect(screen.findByText('Name *')).toBeDefined();
+    });
 })

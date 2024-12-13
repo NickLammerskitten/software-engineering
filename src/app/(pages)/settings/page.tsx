@@ -3,7 +3,7 @@ import {createClient} from "@/src/utils/supabase/server";
 import {UserRole} from "@/src/app/models/userRole";
 import WrongUserRole from "@/src/app/utils/wrongUserRole";
 
-export default async function SettingsPage() {
+export default async function Settings() {
     const supabase = await createClient();
 
     const {

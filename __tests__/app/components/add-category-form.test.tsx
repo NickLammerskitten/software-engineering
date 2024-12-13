@@ -1,11 +1,11 @@
-import AddImageForm from "@/src/app/components/add-image-form";
+import AddCategoryForm from "@/src/app/components/add-category-form";
 import { render, screen } from "@testing-library/react";
 import { http } from "msw";
 import { setupServer } from "msw/node";
 import { NextResponse } from "next/server";
 import { afterAll, beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
 
-describe('add image form', () => {
+describe('add category form', () => {
     const categories: Category[] = [
         {
             id: 1,
@@ -42,16 +42,8 @@ describe('add image form', () => {
     afterAll(() => server.close())
 
     test('renders', () => {
-        render(<AddImageForm/>)
+        render(<AddCategoryForm />)
 
-        expect(screen.findByText('Kategorie *')).toBeDefined();
-        expect(screen.getByText('Titel *')).toBeDefined();
-        expect(screen.getByText('Beschreibung')).toBeDefined();
-        expect(screen.getByText('Bildhöhe')).toBeDefined();
-        expect(screen.getByText('Bildbreite')).toBeDefined();
-        expect(screen.getByText('Papierhöhe')).toBeDefined();
-        expect(screen.getByText('Papierbreite')).toBeDefined();
-        expect(screen.getByText('Preis *')).toBeDefined();
-        expect(screen.getByText('Anmerkungen')).toBeDefined();
-    })
+        expect(screen.getByText('Name *')).toBeDefined();
+    });
 })

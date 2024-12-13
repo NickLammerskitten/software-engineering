@@ -1,11 +1,12 @@
-import AddImageForm from "@/src/app/components/add-image-form";
+import { CategoryList } from "@/src/app/components/category-list";
 import { render, screen } from "@testing-library/react";
 import { http } from "msw";
-import { setupServer } from "msw/node";
+import { setupServer } from 'msw/node'
 import { NextResponse } from "next/server";
-import { afterAll, beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
+import { expect, test, afterAll, beforeAll, beforeEach, describe, vi } from "vitest";
 
-describe('add image form', () => {
+// Read is for every user role allowed. Delete for trader, but this is secured by RLS.
+describe('Display categories for trader', () => {
     const categories: Category[] = [
         {
             id: 1,
@@ -41,17 +42,10 @@ describe('add image form', () => {
 
     afterAll(() => server.close())
 
-    test('renders', () => {
-        render(<AddImageForm/>)
+    test('Category Page', () => {
+        render(<CategoryList/>)
 
-        expect(screen.findByText('Kategorie *')).toBeDefined();
-        expect(screen.getByText('Titel *')).toBeDefined();
-        expect(screen.getByText('Beschreibung')).toBeDefined();
-        expect(screen.getByText('Bildhöhe')).toBeDefined();
-        expect(screen.getByText('Bildbreite')).toBeDefined();
-        expect(screen.getByText('Papierhöhe')).toBeDefined();
-        expect(screen.getByText('Papierbreite')).toBeDefined();
-        expect(screen.getByText('Preis *')).toBeDefined();
-        expect(screen.getByText('Anmerkungen')).toBeDefined();
-    })
+        expect(screen.findByText('Original')).toBeDefined();
+        expect(screen.findByText('Reproduktion')).toBeDefined();
+    });
 })

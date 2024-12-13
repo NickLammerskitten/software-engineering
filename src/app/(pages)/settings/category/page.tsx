@@ -5,7 +5,7 @@ import WrongUserRole from "@/src/app/utils/wrongUserRole";
 import {CategoryList} from "@/src/app/components/category-list";
 import {Add} from "@mui/icons-material";
 
-export default async function CategoriesPage() {
+export default async function Categories() {
     const supabase = await createClient();
 
     const {
