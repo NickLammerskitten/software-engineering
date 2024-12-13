@@ -2,7 +2,7 @@
 
 import AddImageForm from "@/src/app/components/add-image-form";
 import { UserRole } from "@/src/app/models/userRole";
-import WrongUserRole from "@/src/app/utils/wrongUserRole";
+import WrongUserRole from "@/src/app/utils/wrong-user-role";
 import { createClient } from "@/src/utils/supabase/server";
 import { Typography } from "@mui/material";
 

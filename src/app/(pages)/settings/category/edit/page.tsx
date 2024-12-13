@@ -3,7 +3,7 @@
 import {createClient} from "@/src/utils/supabase/server";
 import {UserRole} from "@/src/app/models/userRole";
 import {Typography} from "@mui/material";
-import WrongUserRole from "@/src/app/utils/wrongUserRole";
+import WrongUserRole from "@/src/app/utils/wrong-user-role";
 import {EditCategoryForm} from "@/src/app/components/edit-category-form";
 
 export default async function EditCategory() {
