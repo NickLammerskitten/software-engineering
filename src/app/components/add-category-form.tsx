@@ -1,6 +1,6 @@
 "use client"
 
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {Alert, Box, Button, FormControl, FormLabel, TextField} from "@mui/material";
 
 const successMessage: string = "Kategorie erfolgreich hinzugefügt!";
@@ -12,6 +12,7 @@ export default function AddCategoryForm() {
     const [categoryNameValid, setCategoryNameValid] = useState<boolean>(true);
     const [success, setSuccess] = useState<boolean | undefined>(undefined);
     const [categoryName, setCategoryName] = useState<string>("");
+    const formRef = useRef<HTMLFormElement>(null);
 
     useEffect(() => {
         if (categoryName == null || categoryName == "") {
@@ -37,12 +38,10 @@ export default function AddCategoryForm() {
         }).then((response) => {
             if (!response.ok) {
                 setSuccess(false);
-
                 return;
             }
 
-            const form = document.getElementById("add-category-form") as HTMLFormElement;
-            form.reset();
+            formRef.current?.reset();
 
             setSuccess(true);
             return response.json();
@@ -59,6 +58,7 @@ export default function AddCategoryForm() {
             id={"add-category-form"}
             action={(value) => handleSubmit(value)}
             onChange={handleChange}
+            ref={formRef}
         >
             <FormControl fullWidth>
                 <FormLabel htmlFor="title">Name *</FormLabel>
