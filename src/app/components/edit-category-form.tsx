@@ -120,6 +120,7 @@ export function EditCategoryForm() {
                             <Button
                                 variant={"text"}
                                 type={"reset"}
+                                href="/settings/category"
                             >
                                 Abbrechen
                             </Button>

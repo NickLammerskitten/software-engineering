@@ -83,6 +83,7 @@ export default function AddCategoryForm() {
                 <Button
                     variant={"text"}
                     type={"reset"}
+                    href="/settings/category"
                 >
                     Abbrechen
                 </Button>

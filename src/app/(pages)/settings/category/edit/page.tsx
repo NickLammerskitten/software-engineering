@@ -2,9 +2,10 @@
 
 import {createClient} from "@/src/utils/supabase/server";
 import {UserRole} from "@/src/app/models/user-role";
-import {Typography} from "@mui/material";
+import {Button, Typography} from "@mui/material";
 import WrongUserRole from "@/src/app/utils/wrongUserRole";
 import {EditCategoryForm} from "@/src/app/components/edit-category-form";
+import { ArrowBack } from "@mui/icons-material";
 
 export default async function EditCategory() {
     const supabase = await createClient();
@@ -15,6 +16,7 @@ export default async function EditCategory() {
 
     return (
         <div>
+            <Button href="/settings/category" startIcon={<ArrowBack />} variant={"text"} style={{marginBottom: "5px"}}>Zurück</Button>
             {user?.role === UserRole.Trader ? (
                 <>
                     <Typography variant={"h1"}>
