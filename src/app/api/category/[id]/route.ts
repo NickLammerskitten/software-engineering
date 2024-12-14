@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
     const requestParams = request.url.split("/");
     const categoryId = requestParams[5];
     if (!categoryId) {
-        return new NextResponse("Keine Categorie id angegeben.", {
+        return NextResponse.json({message: "Keine Categorie id angegeben."}, {
             status: 400
         })
     }
@@ -21,13 +21,13 @@ export async function GET(request: NextRequest) {
         .single();
 
     if (!data) {
-        return new NextResponse("Keine Kategorie gefunden", {
+        return NextResponse.json({message: "Keine Kategorie gefunden"}, {
             status: 404,
         });
     }
 
     if (error) {
-        return new NextResponse("Fehler beim Laden der Kategorie", {
+        return NextResponse.json({message: "Fehler beim Laden der Kategorie"}, {
             status: 500,
         });
     }
@@ -44,7 +44,7 @@ export async function DELETE(request: NextRequest) {
     const requestParams = request.url.split("/");
     const categoryId = requestParams[5];
     if (!categoryId) {
-        return new NextResponse("Keine Categorie id angegeben.", {
+        return NextResponse.json({message: "Keine Categorie id angegeben."}, {
             status: 400
         })
     }
@@ -56,7 +56,7 @@ export async function DELETE(request: NextRequest) {
         .eq('id', categoryId)
 
     if (error) {
-        return new NextResponse(`Fehler beim Löschen der Kategorie, ${error.details}`, {
+        return NextResponse.json({message: `Fehler beim Löschen der Kategorie, ${error.details}`}, {
             status: 500,
         });
     }
