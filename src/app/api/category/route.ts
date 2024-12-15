@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
         .insert([parsedData]);
 
     if (error) {
-        return new NextResponse("Fehler beim Hinzufügen der Kategorie", {
+        return NextResponse.json({message: "Fehler beim Hinzufügen der Kategorie"}, {
             status: 500,
         });
     }
@@ -66,7 +66,7 @@ export async function PUT(request: NextRequest) {
         .eq('id', parsedData.id);
 
     if (error) {
-        return new NextResponse("Fehler beim Bearbeiten der Kategorie", {
+        return NextResponse.json({message: "Fehler beim Bearbeiten der Kategorie"}, {
             status: 500,
         });
     }
@@ -105,13 +105,13 @@ export async function GET() {
         .order('id');
 
     if (!data) {
-        return new NextResponse("Keine Kategorien gefunden", {
+        return NextResponse.json({message: "Keine Kategorien gefunden"}, {
             status: 404,
         });
     }
 
     if (error) {
-        return new NextResponse("Fehler beim Laden der Kategorien", {
+        return NextResponse.json({message: "Fehler beim Laden der Kategorien"}, {
             status: 500,
         });
     }

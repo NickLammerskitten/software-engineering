@@ -1,49 +1,63 @@
 "use client";
 
 import ConfirmDialog from "@/src/app/utils/confirm-dialog";
-import { Edit } from "@mui/icons-material";
-import { Box, Card, CircularProgress, IconButton } from "@mui/material";
 import { useEffect, useState } from "react";
+import { Alert, Box, Card, CircularProgress, IconButton } from "@mui/material";
 import styles from "./category-list.module.css";
+import { Edit } from "@mui/icons-material";
 
 export function CategoryList() {
     const [loading, setLoading] = useState<boolean>(false);
     const [categories, setCategories] = useState<Category[]>([]);
+    const [errorMessages, setErrorMessages] = useState<{ [id: number]: string }>({});
+    const [categoryListError, setCategoryListError] = useState<string>("");
 
     useEffect(() => {
+        setErrorMessages({});
+        setCategoryListError("");
         fetchCategories();
-    }, [])
+    }, []);
 
     const fetchCategories = async () => {
         setLoading(true);
-        fetch(`/api/category`)
-            .then((res) => {
-                if (!res.ok) {
-                    throw new Error("Error fetching categories");
-                }
 
-                return res.json();
-            })
-            .then((data: { data: Category[] }) => {
-                setLoading(false);
-                setCategories(data.data);
-            });
-    }
+        const response = await fetch(`/api/category`);
 
-    const handleDelete = (id: number): Promise<void> => {
-        return fetch(`/api/category/${id}`, {
+        const json = await response.json();
+
+        if (!response.ok) {
+            setCategoryListError(`Error while fetching categories (${response.status}): ${json["message"]}`);
+            return;
+        }
+
+        setLoading(false);
+        setCategories(json["data"]);
+    };
+
+    const handleDelete = async (id: number) => {
+        const response = await fetch(`/api/category/${id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
-            },
-        }).then(async res => {
-            if (!res.ok) {
-                throw new Error(await res.text());
             }
-
-            fetchCategories();
         });
-    }
+
+        const json = await response.json();
+
+        if (!response.ok) {
+            errorMessages[id] = `Error ${response.status}: ${json["message"]}`;
+            setErrorMessages({ ...errorMessages });
+            return;
+        }
+
+        if (!json["success"]) {
+            errorMessages[id] = `Unexpected error when deleting category`;
+            setErrorMessages({ ...errorMessages });
+            return;
+        }
+
+        await fetchCategories();
+    };
 
     return (
         <div>
@@ -52,23 +66,34 @@ export function CategoryList() {
             {!loading && categories.length > 0 && (
                 <Box className={styles.category_list}>
                     {categories.map((category) => (
-                        <Card
-                            key={category.id}
-                            className={styles.category_list_item}
-                        >
-                            {category.name}
+                        <>
+                            <Card key={category.id}
+                                className={styles.category_list_item}
+                            >
+                                {category.name}
 
-                            <Box>
-                                <IconButton href={`category/edit?id=${category.id}`}>
-                                    <Edit />
-                                </IconButton>
-
-                                <ConfirmDialog onConfirm={() => handleDelete(category.id)} />
-                            </Box>
-                        </Card>
+                                <Box>
+                                    <IconButton href={`category/edit?id=${category.id}`}>
+                                        <Edit />
+                                    </IconButton>
+                                    <ConfirmDialog onConfirm={() => handleDelete(category.id)} />
+                                </Box>
+                            </Card>
+                            {errorMessages[category.id] &&
+                                <Alert severity="error">
+                                    {errorMessages[category.id]}
+                                </Alert>
+                            }
+                        </>
                     ))}
                 </Box>
             )}
+
+            {categoryListError !== "" && 
+            <Alert severity="error">
+                {categoryListError}
+            </Alert>
+            }
         </div>
     )
 }
