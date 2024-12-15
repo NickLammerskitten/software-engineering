@@ -1,22 +1,51 @@
 "use client"
 
-import { Alert, Box, Button, FormControl, FormLabel, InputAdornment, InputLabel, MenuItem, OutlinedInput, Select, TextField } from "@mui/material";
+import {
+    Alert,
+    Box,
+    Button,
+    CircularProgress,
+    FormControl,
+    FormLabel,
+    InputAdornment,
+    InputLabel,
+    MenuItem,
+    OutlinedInput,
+    Select,
+    TextField
+} from "@mui/material";
 import * as React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const successMessage: string = "Bild erfolgreich hinzugefügt!";
 const errorMessage: string = "Fehler beim Hinzufügen des Bildes!";
 
 export default function AddImageForm() {
-    // TODO: Fetch categories from database
-    const [categories] = useState([
-        { value: 1, label: "Original" },
-        { value: 2, label: "Replika" },
-    ]);
-
-    const [selectedCategory, setSelectedCategory] = useState(categories[0].value);
+    const [loadingCategories, setLoadingCategories] = useState<boolean>(true);
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [selectedCategory, setSelectedCategory] = useState<number | undefined>(undefined);
 
     const [success, setSuccess] = useState<boolean | undefined>(undefined);
+
+    useEffect(() => {
+        setLoadingCategories(true);
+        fetch(`/api/category`)
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error("Error fetching categories");
+                }
+
+                return res.json();
+            })
+            .then((data: { data: Category[] }) => {
+                setCategories(data.data);
+                if (data.data.length > 0) {
+                    setSelectedCategory(data.data[0].id)
+                }
+
+                setLoadingCategories(false);
+            });
+    }, []);
 
     const handleSubmit = async (formData: FormData) => {
         const data = {
@@ -65,26 +94,31 @@ export default function AddImageForm() {
             action={(value) => handleSubmit(value)}
             onChange={handleChange}
         >
-            <FormControl fullWidth>
-                <InputLabel id="category-select">Kategorie *</InputLabel>
-                <Select
-                    label={"Kategorie *"}
-                    id={"category-select"}
-                    name={"category-select"}
-                    autoFocus
-                    fullWidth
-                    required
-                    value={selectedCategory}
-                    onChange={(event => setSelectedCategory(event.target.value as number))}
-                >
-                    {categories.map((category) => (
-                        <MenuItem
-                            key={category.value}
-                            value={category.value}
-                        >{category.label}</MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
+            {loadingCategories ? (<CircularProgress />)
+                : (
+                    <>
+                        <FormControl fullWidth>
+                            <InputLabel id="category-select">Kategorie *</InputLabel>
+                            <Select
+                                label={"Kategorie *"}
+                                id={"category-select"}
+                                name={"category-select"}
+                                autoFocus
+                                fullWidth
+                                required
+                                value={selectedCategory}
+                                onChange={(event => setSelectedCategory(event.target.value as number))}
+                            >
+                                {categories.map((category) => (
+                                    <MenuItem
+                                        key={category.id}
+                                        value={category.id}
+                                    >{category.name}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </>
+                )}
 
             <FormControl>
                 <FormLabel htmlFor="title">Titel *</FormLabel>
@@ -125,7 +159,7 @@ export default function AddImageForm() {
 
             <FormControl>
                 <FormLabel htmlFor="imageHeight">Bildhöhe</FormLabel>
-                <OutlinedInput 
+                <OutlinedInput
                     id="imageHeight"
                     type="number"
                     name="imageHeight"
@@ -137,7 +171,7 @@ export default function AddImageForm() {
 
             <FormControl>
                 <FormLabel htmlFor="imageWidth">Bildbreite</FormLabel>
-                <OutlinedInput 
+                <OutlinedInput
                     id="imageWidth"
                     type="number"
                     name="imageWidth"
@@ -149,7 +183,7 @@ export default function AddImageForm() {
 
             <FormControl>
                 <FormLabel htmlFor="paperHeight">Papierhöhe</FormLabel>
-                <OutlinedInput 
+                <OutlinedInput
                     id="paperHeight"
                     type="number"
                     name="paperHeight"
@@ -173,7 +207,7 @@ export default function AddImageForm() {
 
             <FormControl>
                 <FormLabel htmlFor="price">Preis *</FormLabel>
-                <OutlinedInput 
+                <OutlinedInput
                     id="price"
                     type="number"
                     name="price"
