@@ -1,4 +1,4 @@
-import ConfirmDialog from "@/src/app/utils/confirm-dialog";
+import { ConfirmDialog } from "@/src/app/utils/confirm-dialog";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, test, vi } from "vitest";
 
@@ -11,15 +11,16 @@ describe('confirm dialog', () => {
     })
 
     test('confirm dialog submit', () => {
-        render(<ConfirmDialog onConfirm={() => {
-            mockOnConfirm();
-            return Promise.resolve();
-        }}/>);
-
-        const openButton = screen.getByRole("button");
-        expect(openButton).toBeDefined()
-
-        fireEvent.click(openButton);
+        render(<ConfirmDialog 
+                    open={true} 
+                    title={"Möchtest du diese Aktion wirklich ausführen?"}
+                    onCancel={() => {}} 
+                    onConfirm={() => {
+                        mockOnConfirm();
+                        return Promise.resolve();
+                    }}
+                />
+        );
 
         expect(screen.getByText('Möchtest du diese Aktion wirklich ausführen?')).toBeDefined();
         expect(screen.getByText('Abbrechen')).toBeDefined();
@@ -35,15 +36,16 @@ describe('confirm dialog', () => {
 
     test('confirm dialog cancel', () => {
 
-        render(<ConfirmDialog onConfirm={() => {
-            mockOnConfirm();
-            return Promise.resolve();
-        }}/>);
-
-        const openButton = screen.getByRole("button");
-        expect(openButton).toBeDefined()
-
-        fireEvent.click(openButton);
+        render(<ConfirmDialog 
+                    open={true} 
+                    title={"Möchtest du diese Aktion wirklich ausführen?"}
+                    onCancel={() => {}} 
+                    onConfirm={() => {
+                        mockOnConfirm();
+                        return Promise.resolve();
+                    }}
+                />
+        );
 
         expect(screen.getByText('Möchtest du diese Aktion wirklich ausführen?')).toBeDefined();
         expect(screen.getByText('Abbrechen')).toBeDefined();

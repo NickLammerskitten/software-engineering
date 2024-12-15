@@ -1,56 +1,48 @@
-import { Delete } from "@mui/icons-material";
-import { Button, Dialog, DialogActions, DialogTitle, IconButton } from "@mui/material";
-import React, { JSX } from "react";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 
 interface ConfirmDialogProps {
-    onConfirm: () => Promise<void>;
+    open: boolean;
     title?: string;
+    message?: string;
+    onConfirm: () => void;
+    onCancel: () => void;
     confirmButtonText?: string;
     cancelButtonText?: string;
-    icon?: JSX.Element;
 }
 
-export default function ConfirmDialog({
+export function ConfirmDialog({
+    open,
+    title,
+    message,
     onConfirm,
-    title = "Möchtest du diese Aktion wirklich ausführen?",
+    onCancel,
     confirmButtonText = "Bestätigen",
-    cancelButtonText = "Abbrechen",
-    icon = <Delete/>
+    cancelButtonText = "Abbrechen"
 }: ConfirmDialogProps) {
-    const [open, setOpen] = React.useState(false);
-
-    const onClose = () => {
-        setOpen(false);
-    }
-
-    const handleConfirm = () => {
-        onConfirm().then(() => {
-            setOpen(false);
-        });
-    }
-
     return (
-        <React.Fragment>
-            <IconButton onClick={() => setOpen(true)}>
-                {icon}
-            </IconButton>
+        <Dialog
+            open={open}
+            onClose={onCancel}
+            aria-labelledby="confirm-dialog-title"
+        >
 
-            <Dialog
-                open={open}
-                onClose={onClose}
-                aria-labelledby="confirm-dialog-title"
-            >
-                <DialogTitle id="confirm-dialog-title">{title}</DialogTitle>
-                <DialogActions>
-                    <Button onClick={onClose}>{cancelButtonText}</Button>
-                    <Button
-                        onClick={handleConfirm}
-                        autoFocus
-                    >
-                        {confirmButtonText}
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </React.Fragment>
+            <DialogTitle id="confirm-dialog-title">{title}</DialogTitle>
+
+            {message !== "" && 
+                <DialogContent>
+                    <p>{message}</p>
+                </DialogContent>
+            }
+
+            <DialogActions>
+                <Button onClick={onCancel}>
+                    {cancelButtonText}
+                </Button>
+                <Button onClick={onConfirm} autoFocus variant={"contained"}>
+                    {confirmButtonText}
+                </Button>
+            </DialogActions>
+            
+        </Dialog>
     );
 }
