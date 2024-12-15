@@ -1,11 +1,11 @@
-import AddImage from "@/src/app/(pages)/gallery/add/page";
+import { EditCategoryForm } from "@/src/app/components/edit-category-form";
 import { render, screen } from "@testing-library/react";
 import { http } from "msw";
 import { setupServer } from "msw/node";
 import { NextResponse } from "next/server";
 import { afterAll, beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
 
-describe('Add Image Page for trader', () => {
+describe('edit category form', () => {
     const categories: Category[] = [
         {
             id: 1,
@@ -18,8 +18,8 @@ describe('Add Image Page for trader', () => {
     ]
 
     const restHandlers = [
-        http.get('api/category', () => {
-            return NextResponse.json({ data: categories })
+        http.get('api/category/1', () => {
+            return NextResponse.json({ data: categories[0] })
         }),
     ]
 
@@ -37,15 +37,19 @@ describe('Add Image Page for trader', () => {
                 },
             })),
         }));
+
+        vi.mock("next/navigation", () => ({
+            useSearchParams: vi.fn().mockReturnValue({
+                get: vi.fn().mockReturnValue(1),
+            }),
+        }));
     });
 
     afterAll(() => server.close())
 
-    test('renders form for authenticated trader', async () => {
-        const result = await AddImage();
-        render(result);
+    test('renders', () => {
+        render(<EditCategoryForm />)
 
-        expect(screen.getByText('Bild hinzufügen')).toBeDefined();
+        expect(screen.findByText('Name *')).toBeDefined();
     });
-});
-
+})

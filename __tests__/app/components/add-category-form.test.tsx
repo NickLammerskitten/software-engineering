@@ -1,11 +1,11 @@
-import AddImage from "@/src/app/(pages)/gallery/add/page";
+import AddCategoryForm from "@/src/app/components/add-category-form";
 import { render, screen } from "@testing-library/react";
 import { http } from "msw";
 import { setupServer } from "msw/node";
 import { NextResponse } from "next/server";
 import { afterAll, beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
 
-describe('Add Image Page for trader', () => {
+describe('add category form', () => {
     const categories: Category[] = [
         {
             id: 1,
@@ -41,11 +41,9 @@ describe('Add Image Page for trader', () => {
 
     afterAll(() => server.close())
 
-    test('renders form for authenticated trader', async () => {
-        const result = await AddImage();
-        render(result);
+    test('renders', () => {
+        render(<AddCategoryForm />)
 
-        expect(screen.getByText('Bild hinzufügen')).toBeDefined();
+        expect(screen.getByText('Name *')).toBeDefined();
     });
-});
-
+})

@@ -1,11 +1,12 @@
-import AddImage from "@/src/app/(pages)/gallery/add/page";
+import { CategoryList } from "@/src/app/components/category-list";
 import { render, screen } from "@testing-library/react";
 import { http } from "msw";
-import { setupServer } from "msw/node";
+import { setupServer } from 'msw/node'
 import { NextResponse } from "next/server";
-import { afterAll, beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
+import { expect, test, afterAll, beforeAll, beforeEach, describe, vi } from "vitest";
 
-describe('Add Image Page for trader', () => {
+// Read is for every user role allowed. Delete for trader, but this is secured by RLS.
+describe('Display categories for trader', () => {
     const categories: Category[] = [
         {
             id: 1,
@@ -41,11 +42,10 @@ describe('Add Image Page for trader', () => {
 
     afterAll(() => server.close())
 
-    test('renders form for authenticated trader', async () => {
-        const result = await AddImage();
-        render(result);
+    test('Category Page', () => {
+        render(<CategoryList/>)
 
-        expect(screen.getByText('Bild hinzufügen')).toBeDefined();
+        expect(screen.findByText('Original')).toBeDefined();
+        expect(screen.findByText('Reproduktion')).toBeDefined();
     });
-});
-
+})
