@@ -1,6 +1,6 @@
 import {createClient} from "@/src/utils/supabase/server";
 import {UserRole} from "@/src/app/models/user-role";
-import {Button, IconButton, Typography} from "@mui/material";
+import {Button, Typography} from "@mui/material";
 import WrongUserRole from "@/src/app/utils/wrongUserRole";
 import AddCategoryForm from "@/src/app/components/add-category-form";
 import { ArrowBack } from "@mui/icons-material";
