@@ -1,0 +1,15 @@
+.container {
+    display: flex;
+    width: 100%;
+    gap: 1rem;
+
+    .container__image {
+        width: 50%;
+        height: 100%;
+    }
+
+    .container__info {
+        width: 50%;
+        height: 100%;
+    }
+}
