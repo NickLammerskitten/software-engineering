@@ -1,10 +1,10 @@
 "use client"
 
+import styles from "@/src/app/components/detailed-image.module.css";
 import { Image } from "@/src/app/models/image.model";
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, CircularProgress, Divider, Typography } from "@mui/material";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import styles from "@/src/app/components/detailed-image.module.css";
 
 export function DetailedImage() {
     const searchParams = useSearchParams();
@@ -53,52 +53,78 @@ export function DetailedImage() {
             annotations: 'Test Anmerkung',
             price: 1.99,
             artist: 'Test Künstler',
-            imagePath: null
+            imagePath: null,
         })
         setLoading(false);
     }, [searchParams]);
 
     return (
         <div>
-            {loading && (<CircularProgress/>)}
+            {loading && (<CircularProgress />)}
 
             {!loading && image && (
-                <Box className={styles.container}>
-                    {image.imagePath ? (
-                        <img src={image.imagePath} alt={image.title}/>
-                    ) : (
-                        <Box className={styles.container__image}>
-                            <Typography>
-                                No image found
+                <Box>
+                    <Box className={styles.container}>
+
+                        <Box className={styles.container__left}>
+                            <img
+                                className={styles.img}
+                                src={'https://www.planet-schule.de/mm/nie-wieder-keine-ahnung/malerei/img/da_vinci_mona_lisa.jpg'}
+                                alt={image.title}
+                            />
+                        </Box>
+
+                        <Box className={styles.container__right}>
+
+                            <Typography variant={"h1"}>
+                                {image.title}
+                            </Typography>
+
+                            <Typography variant={"subtitle1"}>
+                                Künstler: {image.artist}
+                            </Typography>
+
+                            <Typography variant={"h4"}>
+                                {image.price + " €"}
                             </Typography>
                         </Box>
-                    )}
+                    </Box>
 
-                    <Box className={styles.container__info}>
+                    <Divider className={styles.divider_spacing} />
 
-                        <Typography variant={"h1"}>
-                            {image.title}
-                        </Typography>
+                    <Box className={styles.container}>
 
-                        <Typography variant={"subtitle1"}>
-                            Künstler: {image.artist}
-                        </Typography>
+                        <Box className={styles.container__left}>
+                            <Typography variant={"body1"}>
+                                {image.description}
+                            </Typography>
 
-                        <Typography variant={"body1"}>
-                            {image.price}
-                        </Typography>
+                            <Typography variant={"body1"}>
+                                {image.annotations && "Anmerkungen: " + image.annotations}
+                            </Typography>
 
-                        <Typography variant={"body1"}>
-                            {image.description}
-                        </Typography>
+                            <Typography variant={"body1"}>
+                                {"Kennung: " + image.id}
+                            </Typography>
+                        </Box>
 
-                        <Typography variant={"body1"}>
-                            {image.annotations && "Anmerkungen: " + image.annotations}
-                        </Typography>
+                        <Box className={styles.container__right}>
+                            <Typography variant={"body1"}>
+                                {image.imageHeight && "Höhe: " + image.imageHeight + " cm"}
+                            </Typography>
 
-                        <Typography variant={"body1"}>
-                            {"Kennung: " + image.id}
-                        </Typography>
+                            <Typography variant={"body1"}>
+                                {image.imageWidth && "Breite: " + image.imageWidth + " cm"}
+                            </Typography>
+
+                            <Typography variant={"body1"}>
+                                {image.paperHeight && "Papierhöhe: " + image.paperHeight + " cm"}
+                            </Typography>
+
+                            <Typography variant={"body1"}>
+                                {image.paperWidth && "Papierbreite: " + image.paperWidth + " cm"}
+                            </Typography>
+                        </Box>
                     </Box>
 
                 </Box>
