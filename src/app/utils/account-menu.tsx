@@ -1,19 +1,29 @@
 "use client"
 
 import { signOutAction } from "@/src/app/actions";
+import { AccountInitials } from "@/src/app/utils/account-initials";
 import { Logout } from "@mui/icons-material";
 import { Avatar, Box, Divider, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
+import { User } from "@supabase/auth-js";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-export function AccountMenu() {
+export function AccountMenu({ user }: { user: User }) {
     const router = useRouter();
 
+    const [userInitials, setUserInitials] = useState<string | null>();
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+
+    useEffect(() => {
+        const accountInitials = AccountInitials(user);
+        setUserInitials(accountInitials);
+    }, [user]);
+
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
+
     const handleClose = () => {
         setAnchorEl(null);
     };
@@ -35,7 +45,9 @@ export function AccountMenu() {
                         aria-haspopup="true"
                         aria-expanded={open ? 'true' : undefined}
                     >
-                        <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+                        <Avatar sx={{ width: 32, height: 32 }}>
+                            {userInitials}
+                        </Avatar>
                     </IconButton>
                 </Tooltip>
             </Box>
