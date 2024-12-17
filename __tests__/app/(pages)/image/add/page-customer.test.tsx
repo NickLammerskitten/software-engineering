@@ -1,4 +1,4 @@
-import AddImage from "@/src/app/(pages)/gallery/add/page";
+import AddImage from "@/src/app/(pages)/image/add/page";
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
