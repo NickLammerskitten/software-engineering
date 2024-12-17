@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 
-const protectedRoutes = ["/gallery", "/portfolio"];
+const protectedRoutes = ["/gallery", "/portfolio", "/profile", "/settings"];
 
 export const updateSession = async (request: NextRequest) => {
   // Create an unmodified response
