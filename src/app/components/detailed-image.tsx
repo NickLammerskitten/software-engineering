@@ -26,7 +26,7 @@ export function DetailedImage() {
             return;
         }
 
-        /*fetch(`/api/gallery/${imageId}`)
+        /*fetch(`/api/image/${imageId}`)
             .then((res) => {
                 if (!res.ok) {
                     setLoading(false);

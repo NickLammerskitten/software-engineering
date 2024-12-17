@@ -61,7 +61,7 @@ export default function AddImageForm() {
             annotations: formData.get("annotations"),
         }
 
-        await fetch(`/api/gallery`, {
+        await fetch(`/api/image`, {
             body: JSON.stringify({ formData: data }),
             method: "POST",
             headers: {
