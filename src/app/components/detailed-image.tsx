@@ -3,11 +3,11 @@
 import styles from "@/src/app/components/detailed-image.module.css";
 import { Image } from "@/src/app/models/image.model";
 import { Box, CircularProgress, Divider, Typography } from "@mui/material";
-import { useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export function DetailedImage() {
-    const searchParams = useSearchParams();
+    const pathname = usePathname();
 
     const [loading, setLoading] = useState(true);
     const [imageId, setImageId] = useState<string | null>(null);
@@ -17,7 +17,7 @@ export function DetailedImage() {
     useEffect(() => {
         setLoading(true);
 
-        const imageId = searchParams.get('id') as string | null;
+        const imageId = pathname.split('/').pop() as string;
         setImageId(imageId);
 
         if (imageId == null) {
@@ -56,7 +56,7 @@ export function DetailedImage() {
             imagePath: null,
         })
         setLoading(false);
-    }, [searchParams]);
+    }, [pathname]);
 
     return (
         <div>
@@ -104,7 +104,7 @@ export function DetailedImage() {
                             </Typography>
 
                             <Typography variant={"body1"}>
-                                {"Kennung: " + image.id}
+                                {"Kennung: " + imageId}
                             </Typography>
                         </Box>
 
