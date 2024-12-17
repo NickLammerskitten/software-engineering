@@ -1,15 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Alert, Box, Card, CircularProgress, IconButton } from "@mui/material";
 import styles from "./category-list.module.css";
 import { Delete, Edit } from "@mui/icons-material";
+import { useConfirmDialog } from "../utils/confirm-dialog-hook";
 
 export function CategoryList() {
     const [loading, setLoading] = useState<boolean>(false);
     const [categories, setCategories] = useState<Category[]>([]);
     const [errorMessages, setErrorMessages] = useState<{ [id: number]: string }>({});
     const [categoryListError, setCategoryListError] = useState<string>("");
+    const {showConfirm, ConfirmDialogComponent} = useConfirmDialog();
 
     useEffect(() => {
         setErrorMessages({});
@@ -33,7 +35,7 @@ export function CategoryList() {
         setCategories(json["data"]);
     };
 
-    const handleDelete = async (id: number) => {
+    const deleteCategory = async (id: number) => {
         const response = await fetch(`/api/category/${id}`, {
             method: "DELETE",
             headers: {
@@ -58,6 +60,16 @@ export function CategoryList() {
         await fetchCategories();
     };
 
+    const handleDelete = (id: number) => {
+        showConfirm(
+            "Möchtest du diese Kategorie wirklich löschen?",
+            "",
+            () => {
+                deleteCategory(id);
+            }
+        );
+    };
+
     return (
         <div>
             {loading && (<CircularProgress />)}
@@ -65,7 +77,7 @@ export function CategoryList() {
             {!loading && categories.length > 0 && (
                 <Box className={styles.category_list}>
                     {categories.map((category) => (
-                        <>
+                        <Fragment key={category.id}>
                             <Card key={category.id}
                                 className={styles.category_list_item}
                             >
@@ -85,7 +97,7 @@ export function CategoryList() {
                                     {errorMessages[category.id]}
                                 </Alert>
                             }
-                        </>
+                        </Fragment>
                     ))}
                 </Box>
             )}
@@ -95,6 +107,8 @@ export function CategoryList() {
                 {categoryListError}
             </Alert>
             }
+
+            {ConfirmDialogComponent}
         </div>
     )
 }

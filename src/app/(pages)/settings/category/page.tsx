@@ -1,7 +1,7 @@
 import {Button, Typography} from "@mui/material";
 import {createClient} from "@/src/utils/supabase/server";
 import {UserRole} from "@/src/app/models/user-role";
-import WrongUserRole from "@/src/app/utils/wrongUserRole";
+import WrongUserRole from "@/src/app/utils/wrong-user-role";
 import {CategoryList} from "@/src/app/components/category-list";
 import {Add} from "@mui/icons-material";
 
