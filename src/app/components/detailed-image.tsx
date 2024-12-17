@@ -13,6 +13,7 @@ export function DetailedImage() {
     const [imageId, setImageId] = useState<string | null>(null);
 
     const [image, setImage] = useState<Image | null>(null);
+    const [category, setCategory] = useState<Category | null>(null);
 
     useEffect(() => {
         setLoading(true);
@@ -55,14 +56,34 @@ export function DetailedImage() {
             artist: 'Test Künstler',
             imagePath: null,
         })
+
         setLoading(false);
     }, [pathname]);
+
+    useEffect(() => {
+        if (image == null) {
+            return;
+        }
+
+        fetch(`/api/category/${image.categoryId}`)
+            .then((res) => {
+                if (!res.ok) {
+                    setLoading(false);
+                    throw new Error("Error fetching image");
+                }
+
+                return res.json();
+            })
+            .then((data: { data: Category }) => {
+                setCategory(data.data);
+            });
+    }, [image]);
 
     return (
         <div>
             {loading && (<CircularProgress />)}
 
-            {!loading && image && (
+            {!loading && image && category && (
                 <Box>
                     <Box className={styles.container}>
 
@@ -75,26 +96,70 @@ export function DetailedImage() {
                         </Box>
 
                         <Box className={styles.container__right}>
-
                             <Typography variant={"h1"}>
                                 {image.title}
                             </Typography>
 
-                            <Typography variant={"subtitle1"}>
+                            <Typography
+                                variant={"subtitle1"}
+                                sx={{ fontWeight: 'bold' }}
+                            >
                                 Künstler: {image.artist}
                             </Typography>
 
-                            <Typography variant={"h4"}>
+                            <Typography
+                                variant={"body1"}
+                                sx={{ mb: '1rem' }}
+                            >
+                                {"Kategorie: " + category.name}
+                            </Typography>
+
+                            <Box className={styles.container__right}>
+                                <Box className={styles.container}>
+                                    <Typography
+                                        variant={"body1"}
+                                        className={styles.container__left}
+                                    >
+                                        {image.imageHeight && "Höhe: " + image.imageHeight + " cm"}
+                                    </Typography>
+
+                                    <Typography
+                                        variant={"body1"}
+                                        className={styles.container__right}
+                                    >
+                                        {image.imageWidth && "Breite: " + image.imageWidth + " cm"}
+                                    </Typography>
+                                </Box>
+
+                                <Box
+                                    className={styles.container}
+                                    sx={{ mb: '1rem' }}
+                                >
+                                    <Typography
+                                        variant={"body1"}
+                                        className={styles.container__left}
+                                    >
+                                        {image.paperHeight && "Papierhöhe: " + image.paperHeight + " cm"}
+                                    </Typography>
+
+                                    <Typography
+                                        variant={"body1"}
+                                        className={styles.container__right}
+                                    >
+                                        {image.paperWidth && "Papierbreite: " + image.paperWidth + " cm"}
+                                    </Typography>
+                                </Box>
+                            </Box>
+
+                            <Typography
+                                variant={"h4"}
+                                sx={{ mb: '1rem' }}
+                            >
                                 {image.price + " €"}
                             </Typography>
-                        </Box>
-                    </Box>
 
-                    <Divider className={styles.divider_spacing} />
+                            <Divider className={styles.divider_spacing} />
 
-                    <Box className={styles.container}>
-
-                        <Box className={styles.container__left}>
                             <Typography variant={"body1"}>
                                 {image.description}
                             </Typography>
@@ -107,26 +172,7 @@ export function DetailedImage() {
                                 {"Kennung: " + imageId}
                             </Typography>
                         </Box>
-
-                        <Box className={styles.container__right}>
-                            <Typography variant={"body1"}>
-                                {image.imageHeight && "Höhe: " + image.imageHeight + " cm"}
-                            </Typography>
-
-                            <Typography variant={"body1"}>
-                                {image.imageWidth && "Breite: " + image.imageWidth + " cm"}
-                            </Typography>
-
-                            <Typography variant={"body1"}>
-                                {image.paperHeight && "Papierhöhe: " + image.paperHeight + " cm"}
-                            </Typography>
-
-                            <Typography variant={"body1"}>
-                                {image.paperWidth && "Papierbreite: " + image.paperWidth + " cm"}
-                            </Typography>
-                        </Box>
                     </Box>
-
                 </Box>
             )}
         </div>
