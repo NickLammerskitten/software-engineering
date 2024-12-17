@@ -5,11 +5,10 @@ import { useEffect, useState } from "react";
 import * as React from "react";
 
 interface ImageUploadProps {
-    imageUrl: string | undefined;
     setImageUrl: (url: string | undefined) => void;
 }
 
-export function ImageUpload({ imageUrl, setImageUrl }: ImageUploadProps) {
+export function ImageUpload({ setImageUrl }: ImageUploadProps) {
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [uploading, setUploading] = useState<boolean>(false);
     const [uploadSuccess, setUploadSuccess] = useState<boolean | undefined>(undefined);

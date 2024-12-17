@@ -1,6 +1,5 @@
 "use client"
 
-import { ToBase64 } from "@/src/app/utils/file-to-base64";
 import { ImageUpload } from "@/src/app/utils/image-upload";
 import {
     Alert,
@@ -238,7 +237,7 @@ export default function AddImageForm() {
                 />
             </FormControl>
 
-            <ImageUpload imageUrl={image_url} setImageUrl={setImageUrl} />
+            <ImageUpload setImageUrl={setImageUrl} />
 
             {success === true && <Alert severity="success">{successMessage}</Alert>}
             {success === false && <Alert severity="error">{errorMessage}</Alert>}
