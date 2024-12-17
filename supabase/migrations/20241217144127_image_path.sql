@@ -1,0 +1,1 @@
+alter table public.image add column image_path text;
