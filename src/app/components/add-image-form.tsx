@@ -1,5 +1,7 @@
 "use client"
 
+import { ToBase64 } from "@/src/app/utils/file-to-base64";
+import { ImageUpload } from "@/src/app/utils/image-upload";
 import {
     Alert,
     Box,
@@ -12,7 +14,7 @@ import {
     MenuItem,
     OutlinedInput,
     Select,
-    TextField
+    TextField,
 } from "@mui/material";
 import * as React from "react";
 import { useEffect, useState } from "react";
@@ -24,6 +26,8 @@ export default function AddImageForm() {
     const [loadingCategories, setLoadingCategories] = useState<boolean>(true);
     const [categories, setCategories] = useState<Category[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<number | undefined>(undefined);
+
+    const [image_url, setImageUrl] = useState<string | undefined>(undefined);
 
     const [success, setSuccess] = useState<boolean | undefined>(undefined);
 
@@ -47,6 +51,8 @@ export default function AddImageForm() {
             });
     }, []);
 
+
+
     const handleSubmit = async (formData: FormData) => {
         const data = {
             categoryId: formData.get("category-select"),
@@ -59,6 +65,7 @@ export default function AddImageForm() {
             paperWidth: formData.get("paperWidth"),
             price: formData.get("price"),
             annotations: formData.get("annotations"),
+            image_url: image_url,
         }
 
         await fetch(`/api/gallery`, {
@@ -230,6 +237,8 @@ export default function AddImageForm() {
                     variant="outlined"
                 />
             </FormControl>
+
+            <ImageUpload imageUrl={image_url} setImageUrl={setImageUrl} />
 
             {success === true && <Alert severity="success">{successMessage}</Alert>}
             {success === false && <Alert severity="error">{errorMessage}</Alert>}
