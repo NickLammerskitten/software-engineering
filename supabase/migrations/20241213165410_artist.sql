@@ -1,0 +1,1 @@
+alter table public.image add column artist text not null;

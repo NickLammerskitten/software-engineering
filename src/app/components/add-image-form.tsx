@@ -15,7 +15,7 @@ import {
     TextField
 } from "@mui/material";
 import * as React from "react";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
 const successMessage: string = "Bild erfolgreich hinzugefügt!";
 const errorMessage: string = "Fehler beim Hinzufügen des Bildes!";
@@ -51,6 +51,7 @@ export default function AddImageForm() {
         const data = {
             categoryId: formData.get("category-select"),
             title: formData.get("title"),
+            artist: formData.get("artist"),
             description: formData.get("description"),
             imageHeight: formData.get("imageHeight"),
             imageWidth: formData.get("imageWidth"),
@@ -61,7 +62,7 @@ export default function AddImageForm() {
         }
 
         await fetch(`/api/gallery`, {
-            body: JSON.stringify({formData: data}),
+            body: JSON.stringify({ formData: data }),
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -93,7 +94,7 @@ export default function AddImageForm() {
             action={(value) => handleSubmit(value)}
             onChange={handleChange}
         >
-            {loadingCategories ? (<CircularProgress/>)
+            {loadingCategories ? (<CircularProgress />)
                 : (
                     <>
                         <FormControl fullWidth>
@@ -132,6 +133,18 @@ export default function AddImageForm() {
             </FormControl>
 
             <FormControl>
+                <FormLabel htmlFor="title">Künstler *</FormLabel>
+                <TextField
+                    id="artist"
+                    type="text"
+                    name="artist"
+                    required
+                    fullWidth
+                    variant="outlined"
+                />
+            </FormControl>
+
+            <FormControl>
                 <FormLabel htmlFor="description">Beschreibung</FormLabel>
                 <TextField
                     id="description"
@@ -150,7 +163,7 @@ export default function AddImageForm() {
                     id="imageHeight"
                     type="number"
                     name="imageHeight"
-                    inputProps={{step: "any"}}
+                    inputProps={{ step: "any" }}
                     fullWidth
                     endAdornment={<InputAdornment position="end">cm</InputAdornment>}
                 />
@@ -162,7 +175,7 @@ export default function AddImageForm() {
                     id="imageWidth"
                     type="number"
                     name="imageWidth"
-                    inputProps={{step: "any"}}
+                    inputProps={{ step: "any" }}
                     fullWidth
                     endAdornment={<InputAdornment position="end">cm</InputAdornment>}
                 />
@@ -174,7 +187,7 @@ export default function AddImageForm() {
                     id="paperHeight"
                     type="number"
                     name="paperHeight"
-                    inputProps={{step: "any"}}
+                    inputProps={{ step: "any" }}
                     fullWidth
                     endAdornment={<InputAdornment position="end">cm</InputAdornment>}
                 />
@@ -186,7 +199,7 @@ export default function AddImageForm() {
                     id="paperWidth"
                     type="number"
                     name="paperWidth"
-                    inputProps={{step: "any"}}
+                    inputProps={{ step: "any" }}
                     fullWidth
                     endAdornment={<InputAdornment position="end">cm</InputAdornment>}
                 />
@@ -199,7 +212,7 @@ export default function AddImageForm() {
                     type="number"
                     name="price"
                     required
-                    inputProps={{step: "any"}}
+                    inputProps={{ step: "any" }}
                     fullWidth
                     endAdornment={<InputAdornment position="end">€</InputAdornment>}
                 />

@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 interface imageData {
     categoryId: number;
     title: string;
+    artist: string;
     description: string;
     imageHeight: number;
     imageWidth: number;
@@ -16,6 +17,7 @@ interface imageData {
 interface imageDatabaseData {
     category_id: number;
     title: string;
+    artist: string;
     description: string | null;
     image_height: number | null;
     image_width: number | null;
@@ -57,6 +59,7 @@ const parseData = (data: imageData): imageDatabaseData => {
     return {
         category_id: parseInt(data.categoryId as unknown as string),
         title: data.title as string,
+        artist: data.artist as string,
         description: data.description as string ?? null,
         image_height: parseFloat(data.imageHeight as unknown as string) ?? null,
         image_width: parseFloat(data.imageWidth as unknown as string) ?? null,
@@ -75,6 +78,9 @@ const validateData = (data: Partial<imageDatabaseData>): { valid: boolean, error
     }
     if (typeof data.title !== 'string' || data.title.trim() === "") {
         errors.push("Der Titel muss ein nicht-leerer Text sein.");
+    }
+    if (typeof data.artist !== 'string' || data.artist.trim() === "") {
+        errors.push("Der Künstler muss ein nicht-leerer Text sein.");
     }
     if (typeof data.description !== 'string' && data.description !== undefined) {
         errors.push("Beschreibung muss ein Text oder leer sein.");

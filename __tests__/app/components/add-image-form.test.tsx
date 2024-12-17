@@ -46,6 +46,7 @@ describe('add image form', () => {
 
         expect(screen.findByText('Kategorie *')).toBeDefined();
         expect(screen.getByText('Titel *')).toBeDefined();
+        expect(screen.getByText('Künstler *')).toBeDefined();
         expect(screen.getByText('Beschreibung')).toBeDefined();
         expect(screen.getByText('Bildhöhe')).toBeDefined();
         expect(screen.getByText('Bildbreite')).toBeDefined();
