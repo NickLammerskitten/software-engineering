@@ -1,3 +1,3 @@
-export const TimestampToDate = (timestamp: string) => {
+export const timestampToDate = (timestamp: string) => {
     return new Date(timestamp).toLocaleDateString("de-DE");
 }
