@@ -1,12 +1,14 @@
 "use client"
 
 import { signOutAction } from "@/src/app/actions";
+import { UserRole } from "@/src/app/models/user-role";
 import { AccountInitials } from "@/src/app/utils/account-initials";
-import { Logout } from "@mui/icons-material";
+import { Logout, Settings } from "@mui/icons-material";
 import { Avatar, Box, Divider, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 import { User } from "@supabase/auth-js";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import styles from "./account-menu.module.css";
 
 export function AccountMenu({ user }: { user: User }) {
     const router = useRouter();
@@ -35,17 +37,16 @@ export function AccountMenu({ user }: { user: User }) {
 
     return (
         <React.Fragment>
-            <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+            <Box className={styles.account_menu_wrapper}>
                 <Tooltip title="Account settings">
                     <IconButton
                         onClick={handleClick}
                         size="small"
-                        sx={{ ml: 2 }}
                         aria-controls={open ? 'account-menu' : undefined}
                         aria-haspopup="true"
                         aria-expanded={open ? 'true' : undefined}
                     >
-                        <Avatar sx={{ width: 32, height: 32 }}>
+                        <Avatar className={styles.avatar}>
                             {userInitials}
                         </Avatar>
                     </IconButton>
@@ -58,13 +59,25 @@ export function AccountMenu({ user }: { user: User }) {
                 onClose={handleClose}
                 onClick={handleClose}
             >
-                <MenuItem onClick={() => handleNavigate("/profile")}>
-                    <Avatar /> Profil
+                <MenuItem onClick={() => handleNavigate("/profile")}
+                          className={styles.menu_item}
+                >
+                    <Avatar className={styles.avatar}>{userInitials}</Avatar> Profil
                 </MenuItem>
 
                 <Divider />
 
-                <MenuItem onClick={() => signOutAction()}>
+                {user.role === UserRole.Trader && (
+                    <MenuItem onClick={() => handleNavigate("/settings")}
+                              className={styles.menu_item}
+                    >
+                        <Settings /> Einstellungen
+                    </MenuItem>
+                )}
+
+                <MenuItem onClick={() => signOutAction()}
+                          className={styles.menu_item}
+                >
                     <Logout /> Ausloggen
                 </MenuItem>
             </Menu>

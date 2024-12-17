@@ -42,12 +42,7 @@ async function AppBar() {
             name: "Bild hinzufügen",
             href: "/gallery/add",
             role: UserRole.Trader,
-        },
-        {
-            name: "Einstellungen",
-            href: "/settings",
-            role: UserRole.Trader,
-        },
+        }
     ];
 
     return (
