@@ -1,4 +1,4 @@
-import { databaseDataToResponseData } from "@/src/app/api/image/parser";
+import { databaseDataToResponseData } from "@/src/app/api/image/data-parser";
 import { createClient } from "@/src/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
