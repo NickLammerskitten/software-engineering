@@ -1,4 +1,5 @@
-import { ImageData, ImageDatabaseData } from "@/src/app/api/models/image.model";
+import { databaseDataToResponseData, postRequestDataToDatabaseData } from "@/src/app/api/image/parser";
+import { ImageData, ImageDatabaseData, ImageDatabaseResponseData } from "@/src/app/api/models/image.model";
 import { createClient } from "@/src/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -6,7 +7,7 @@ export async function POST(request: Request) {
     const supabaseClient = createClient()
 
     const data = (await request.json()).formData as ImageData;
-    const parsedData = parseData(data);
+    const parsedData = postRequestDataToDatabaseData(data);
 
     const { valid, errors } = validateData(parsedData);
     if (!valid) {
@@ -28,21 +29,6 @@ export async function POST(request: Request) {
     return NextResponse.json({
         message: "Bild erfolgreich hinzugefügt",
     });
-}
-
-const parseData = (data: ImageData): ImageDatabaseData => {
-    return {
-        category_id: parseInt(data.categoryId as unknown as string),
-        title: data.title as string,
-        artist: data.artist as string,
-        description: data.description as string ?? null,
-        image_height: parseFloat(data.imageHeight as unknown as string) ?? null,
-        image_width: parseFloat(data.imageWidth as unknown as string) ?? null,
-        paper_height: parseFloat(data.paperHeight as unknown as string) ?? null,
-        paper_width: parseFloat(data.paperWidth as unknown as string) ?? null,
-        price: parseFloat(data.price as unknown as string),
-        annotations: data.annotations as string ?? null,
-    }
 }
 
 const validateData = (data: Partial<ImageDatabaseData>): { valid: boolean, errors: string[] } => {
@@ -124,6 +110,10 @@ export async function GET(request: NextRequest) {
         });
     }
 
+    const parsedData = data.map((image: ImageDatabaseResponseData) => {
+        return databaseDataToResponseData(image);
+    });
+
     if (error) {
         return new NextResponse("Fehler beim Laden der Bilder", {
             status: 500,
@@ -131,7 +121,7 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json({
-        data: data,
+        data: parsedData,
     });
 }
 

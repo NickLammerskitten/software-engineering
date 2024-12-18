@@ -1,4 +1,4 @@
-import { ImageDatabaseResponseData, ImageResponseData } from "@/src/app/api/models/image.model";
+import { databaseDataToResponseData } from "@/src/app/api/image/parser";
 import { createClient } from "@/src/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -9,8 +9,8 @@ export async function GET(request: NextRequest) {
     const requestParams = request.url.split("/");
     const imageId = requestParams[5];
     if (!imageId) {
-        return NextResponse.json({message: "Keine Bild id angegeben."}, {
-            status: 400
+        return NextResponse.json({ message: "Keine Bild id angegeben." }, {
+            status: 400,
         })
     }
 
@@ -22,15 +22,15 @@ export async function GET(request: NextRequest) {
         .single();
 
     if (!data) {
-        return NextResponse.json({message: "Kein Bild gefunden"}, {
+        return NextResponse.json({ message: "Kein Bild gefunden" }, {
             status: 404,
         });
     }
 
-    const parsedData = parseData(data);
+    const parsedData = await databaseDataToResponseData(data);
 
     if (error) {
-        return NextResponse.json({message: "Fehler beim Laden des Bildes"}, {
+        return NextResponse.json({ message: "Fehler beim Laden des Bildes" }, {
             status: 500,
         });
     }
@@ -38,20 +38,4 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
         data: parsedData,
     });
-}
-
-const parseData = (data: ImageDatabaseResponseData): ImageResponseData => {
-    return {
-        id: data.id,
-        categoryId: data.category_id,
-        title: data.title,
-        artist: data.artist,
-        description: data.description,
-        imageHeight: data.image_height,
-        imageWidth: data.image_width,
-        paperHeight: data.paper_height,
-        paperWidth: data.paper_width,
-        price: data.price,
-        annotations: data.annotations
-    }
 }
