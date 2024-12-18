@@ -37,3 +37,9 @@ values (1, 'Image 1', 'Image 1 description', 1000, 1000, 1000, 1000, 'Annotation
 insert into public.image(category_id, title, description, image_height, image_width, paper_height, paper_width,
                          annotations, price, artist)
 values (2, 'Image 2', 'Image 2 description', 100, 100, 120, 120, 'Annotation 2', 999.95, 'Künstler 2');
+
+
+
+insert into storage.buckets (id, name, public, avif_autodetection)
+values
+('images', 'images', true, true);

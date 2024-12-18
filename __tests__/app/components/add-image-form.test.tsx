@@ -48,11 +48,12 @@ describe('add image form', () => {
         expect(screen.getByText('Titel *')).toBeDefined();
         expect(screen.getByText('Künstler *')).toBeDefined();
         expect(screen.getByText('Beschreibung')).toBeDefined();
-        expect(screen.getByText('Bildhöhe')).toBeDefined();
-        expect(screen.getByText('Bildbreite')).toBeDefined();
+        expect(screen.getByText('Motivhöhe')).toBeDefined();
+        expect(screen.getByText('Motivbreite')).toBeDefined();
         expect(screen.getByText('Papierhöhe')).toBeDefined();
         expect(screen.getByText('Papierbreite')).toBeDefined();
         expect(screen.getByText('Preis *')).toBeDefined();
+        expect(screen.getByText('Bild *')).toBeDefined();
         expect(screen.getByText('Anmerkungen')).toBeDefined();
     })
 })

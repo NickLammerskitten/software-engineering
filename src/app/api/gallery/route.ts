@@ -12,6 +12,7 @@ interface imageData {
     paperWidth: number;
     price: number;
     annotations: string;
+    image_url: string;
 }
 
 interface imageDatabaseData {
@@ -25,12 +26,14 @@ interface imageDatabaseData {
     paper_width: number | null;
     price: number;
     annotations: string | null;
+    image_path: string | null;
 }
 
 export async function POST(request: Request) {
     const supabaseClient = createClient()
 
     const data = (await request.json()).formData as imageData;
+
     const parsedData = parseData(data);
 
     const { valid, errors } = validateData(parsedData);
@@ -67,6 +70,7 @@ const parseData = (data: imageData): imageDatabaseData => {
         paper_width: parseFloat(data.paperWidth as unknown as string) ?? null,
         price: parseFloat(data.price as unknown as string),
         annotations: data.annotations as string ?? null,
+        image_path: data.image_url,
     }
 }
 
@@ -102,6 +106,9 @@ const validateData = (data: Partial<imageDatabaseData>): { valid: boolean, error
     }
     if (typeof data.annotations !== 'string' && data.annotations !== undefined) {
         errors.push("Anmerkungen müssen ein Text oder leer sein.");
+    }
+    if (typeof data.image_path !== 'string' && data.image_path !== undefined) {
+        errors.push("Bild URL muss ein Text oder leer sein.");
     }
 
     return { valid: errors.length === 0, errors };
