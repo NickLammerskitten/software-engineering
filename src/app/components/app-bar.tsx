@@ -1,14 +1,14 @@
-import {UserRole} from "@/src/app/models/user-role";
-import {createClient} from '@/src/utils/supabase/server';
-import {AppBar as MUIAppBar} from '@mui/material';
+import { UserRole } from "@/src/app/models/user-role";
+import { AccountMenu } from "@/src/app/utils/account-menu";
+import { createClient } from '@/src/utils/supabase/server';
+import { AppBar as MUIAppBar } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import {User} from "@supabase/auth-js";
+import { User } from "@supabase/auth-js";
 import * as React from 'react';
-import {signOutAction} from '../actions';
 import styles from './app-bar.module.css';
 
 interface PageProps {
@@ -42,11 +42,6 @@ async function AppBar() {
             name: "Bild hinzufügen",
             href: "/gallery/add",
             role: UserRole.Trader,
-        },
-        {
-            name: "Einstellungen",
-            href: "/settings",
-            role: UserRole.Trader
         }
     ];
 
@@ -75,14 +70,8 @@ async function AppBar() {
                         {user ?
                             <>
                                 {pageElements({ pages: secondaryPages, user: user })}
-                                <form action={signOutAction}>
-                                    <Button
-                                        className={styles.header_link}
-                                        type="submit"
-                                    >
-                                        Ausloggen
-                                    </Button>
-                                </form>
+
+                                <AccountMenu user={user} />
                             </>
                             :
                             <Button
