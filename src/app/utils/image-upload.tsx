@@ -18,7 +18,9 @@ export function ImageUpload({ setImageUrl }: ImageUploadProps) {
     useEffect(() => {
         setUploading(false);
         setUploadSuccess(undefined);
-        setImageUrl(undefined);
+        if (!imageFile) {
+            setImageUrl(undefined);
+        }
     }, [imageFile, setImageFile, setImageUrl]);
 
     const handleRemoveImage = () => {
