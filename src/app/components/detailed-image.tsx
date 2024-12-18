@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 export function DetailedImage() {
     const pathname = usePathname();
 
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState<boolean>(true);
     const [imageId, setImageId] = useState<string | null>(null);
 
     const [image, setImage] = useState<Image | null>(null);
@@ -27,7 +27,7 @@ export function DetailedImage() {
             return;
         }
 
-        /*fetch(`/api/image/${imageId}`)
+        fetch(`/api/image/${imageId}`)
             .then((res) => {
                 if (!res.ok) {
                     setLoading(false);
@@ -39,25 +39,7 @@ export function DetailedImage() {
             .then((data: { data: Image }) => {
                 setImage(data.data);
                 setLoading(false);
-            });*/
-
-        // TODO: Remove this when the fetch is implemented
-        setImage({
-            id: imageId,
-            categoryId: 1,
-            title: 'Test Titel',
-            description: 'Test Beschreibung',
-            imageHeight: 1,
-            imageWidth: 1,
-            paperHeight: 1,
-            paperWidth: 1,
-            annotations: 'Test Anmerkung',
-            price: 1.99,
-            artist: 'Test Künstler',
-            imagePath: null,
-        })
-
-        setLoading(false);
+            });
     }, [pathname]);
 
     useEffect(() => {
