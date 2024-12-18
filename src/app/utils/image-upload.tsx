@@ -24,10 +24,12 @@ export function ImageUpload({ setImageUrl }: ImageUploadProps) {
     const handleRemoveImage = () => {
         setImageUrl(undefined);
         setImageFile(null);
+        if (inputRef.current !== null) {
+            inputRef.current.value = "";
+        }
     };
 
     const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        // setImageFile(event.target.files?.item(0) ?? null)
         if (event.target.files?.length === 0 || event.target.files?.length === undefined) {
             return;
         }
@@ -80,7 +82,7 @@ export function ImageUpload({ setImageUrl }: ImageUploadProps) {
 
     return (
         <FormControl>
-            <FormLabel htmlFor="imageFile">Bild</FormLabel>
+            <FormLabel htmlFor="imageFile">Bild *</FormLabel>
             <Box>
                 <input
                     ref={inputRef}
@@ -90,6 +92,7 @@ export function ImageUpload({ setImageUrl }: ImageUploadProps) {
                     name={"imageFile"}
                     style={{ visibility: "hidden", position: "absolute" }}
                     onChange={handleImageChange}
+                    required
                 />
             </Box>
 
@@ -103,7 +106,7 @@ export function ImageUpload({ setImageUrl }: ImageUploadProps) {
                             <IconButton style={{ position: "absolute", right: "0", margin: "5px 5px 0 0" }} onClick={handleRemoveImage}><Close /></IconButton>
                         </Tooltip>
                         <img
-                            style={{ maxWidth: "100%" }}
+                            style={{ maxWidth: "100%", maxHeight: "500px" }}
                             src={URL.createObjectURL(imageFile)}
                             alt={"Preview"}
                         />
