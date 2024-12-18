@@ -73,7 +73,7 @@ export function DetailedImage() {
                         <Box className={styles.container__left}>
                             <img
                                 className={styles.img}
-                                src={image.imagePath || "/images/no-photo.jpg"}
+                                src={image.image_url || "/images/no-photo.jpg"}
                                 alt={image.title}
                             />
                         </Box>

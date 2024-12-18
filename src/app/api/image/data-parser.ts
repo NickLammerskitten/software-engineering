@@ -24,7 +24,7 @@ export const databaseDataToResponseData = async (data: ImageDatabaseResponseData
         paperWidth: data.paper_width,
         price: data.price,
         annotations: data.annotations,
-        imagePath: publicImageUrl,
+        image_url: publicImageUrl,
     }
 }
 
@@ -40,6 +40,6 @@ export const postRequestDataToDatabaseData = (data: ImageData): ImageDatabaseDat
         paper_width: parseFloat(data.paperWidth as unknown as string) ?? null,
         price: parseFloat(data.price as unknown as string),
         annotations: data.annotations as string ?? null,
-        image_path: data.imagePath as string ?? null,
+        image_path: data.image_url as string ?? null,
     }
 }

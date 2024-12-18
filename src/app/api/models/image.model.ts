@@ -9,7 +9,7 @@ export interface ImageData {
     paperWidth: number | null;
     price: number;
     annotations: string | null;
-    imagePath: string | null;
+    image_url: string | null;
 }
 
 export interface ImageResponseData extends ImageData {

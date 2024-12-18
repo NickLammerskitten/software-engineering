@@ -10,5 +10,5 @@ export interface Image {
     annotations: string | null;
     price: number;
     artist: string | null;
-    imagePath: string | null;
+    image_url: string | null;
 }
