@@ -1,5 +1,6 @@
 .image_preview {
-    max-width: 200px;
-    max-height: 200px;
-    margin: 10px;
+    display: flex;
+    justify-content: center;
+    border: 1px solid #4b4b4b;
+    border-radius: 4px;
 }

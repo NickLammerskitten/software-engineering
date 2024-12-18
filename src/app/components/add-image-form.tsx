@@ -164,24 +164,24 @@ export default function AddImageForm() {
             </FormControl>
 
             <FormControl>
-                <FormLabel htmlFor="imageHeight">Bildhöhe</FormLabel>
+                <FormLabel htmlFor="imageHeight">Motivhöhe</FormLabel>
                 <OutlinedInput
                     id="imageHeight"
                     type="number"
                     name="imageHeight"
-                    inputProps={{ step: "any" }}
+                    inputProps={{ step: "any", min: 0 }}
                     fullWidth
                     endAdornment={<InputAdornment position="end">cm</InputAdornment>}
                 />
             </FormControl>
 
             <FormControl>
-                <FormLabel htmlFor="imageWidth">Bildbreite</FormLabel>
+                <FormLabel htmlFor="imageWidth">Motivbreite</FormLabel>
                 <OutlinedInput
                     id="imageWidth"
                     type="number"
                     name="imageWidth"
-                    inputProps={{ step: "any" }}
+                    inputProps={{ step: "any", min: 0 }}
                     fullWidth
                     endAdornment={<InputAdornment position="end">cm</InputAdornment>}
                 />
@@ -193,7 +193,7 @@ export default function AddImageForm() {
                     id="paperHeight"
                     type="number"
                     name="paperHeight"
-                    inputProps={{ step: "any" }}
+                    inputProps={{ step: "any", min: 0 }}
                     fullWidth
                     endAdornment={<InputAdornment position="end">cm</InputAdornment>}
                 />
@@ -205,7 +205,7 @@ export default function AddImageForm() {
                     id="paperWidth"
                     type="number"
                     name="paperWidth"
-                    inputProps={{ step: "any" }}
+                    inputProps={{ step: "any", min: 0 }}
                     fullWidth
                     endAdornment={<InputAdornment position="end">cm</InputAdornment>}
                 />
@@ -218,7 +218,7 @@ export default function AddImageForm() {
                     type="number"
                     name="price"
                     required
-                    inputProps={{ step: "any" }}
+                    inputProps={{ step: "any", min: 0 }}
                     fullWidth
                     endAdornment={<InputAdornment position="end">€</InputAdornment>}
                 />
@@ -246,6 +246,7 @@ export default function AddImageForm() {
                 <Button
                     variant={"text"}
                     type={"reset"}
+                    href="/gallery"
                 >
                     Abbrechen
                 </Button>

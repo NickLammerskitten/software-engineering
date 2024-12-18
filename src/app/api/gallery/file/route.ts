@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     const parsedData = parseData(requestData);
     const { valid, errors } = validateData(parsedData);
     if (!valid) {
-        return new NextResponse(errors.join("\n"), {
+        return NextResponse.json({message: errors.join("\n")}, {
             status: 400,
         });
     }
@@ -42,7 +42,7 @@ export async function POST(request: Request) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     if (error && error.statusCode !== '409') {
-        return new NextResponse("Fehler beim Hinzufügen des Bildes", {
+        return NextResponse.json({message: "Fehler beim Hinzufügen des Bildes"}, {
             status: 500,
         });
     }
