@@ -2,6 +2,7 @@
 
 import styles from "@/src/app/components/detailed-image.module.css";
 import { Image } from "@/src/app/models/image.model";
+import { numberToCurrency } from "@/src/app/utils/number-to-currency";
 import { Box, CircularProgress, Divider, Typography } from "@mui/material";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -72,7 +73,7 @@ export function DetailedImage() {
                         <Box className={styles.container__left}>
                             <img
                                 className={styles.img}
-                                src={'https://www.planet-schule.de/mm/nie-wieder-keine-ahnung/malerei/img/da_vinci_mona_lisa.jpg'}
+                                src={image.imagePath || "/images/no-photo.jpg"}
                                 alt={image.title}
                             />
                         </Box>
@@ -82,21 +83,23 @@ export function DetailedImage() {
                                 {image.title}
                             </Typography>
 
-                            <Typography
-                                variant={"subtitle1"}
-                                sx={{ fontWeight: 'bold' }}
-                            >
-                                Künstler: {image.artist}
-                            </Typography>
-
-                            <Typography
-                                variant={"body1"}
-                                sx={{ mb: '1rem' }}
-                            >
-                                {"Kategorie: " + category.name}
-                            </Typography>
-
                             <Box className={styles.container__right}>
+                                <Box className={styles.container}>
+                                    <Typography
+                                        variant={"body1"}
+                                        className={styles.container__left}
+                                    >
+                                        Künstler: {image.artist}
+                                    </Typography>
+
+                                    <Typography
+                                        variant={"body1"}
+                                        className={styles.container__right}
+                                    >
+                                        {"Kategorie: " + category.name}
+                                    </Typography>
+                                </Box>
+
                                 <Box className={styles.container}>
                                     <Typography
                                         variant={"body1"}
@@ -114,8 +117,7 @@ export function DetailedImage() {
                                 </Box>
 
                                 <Box
-                                    className={styles.container}
-                                    sx={{ mb: '1rem' }}
+                                    className={styles.container + " bottom_space"}
                                 >
                                     <Typography
                                         variant={"body1"}
@@ -135,9 +137,9 @@ export function DetailedImage() {
 
                             <Typography
                                 variant={"h4"}
-                                sx={{ mb: '1rem' }}
+                                className={"bottom_space"}
                             >
-                                {image.price + " €"}
+                                {numberToCurrency(image.price)}
                             </Typography>
 
                             <Divider className={styles.divider_spacing} />
