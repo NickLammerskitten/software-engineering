@@ -1,36 +1,11 @@
+import { ImageData, ImageDatabaseData } from "@/src/app/api/models/image.model";
 import { createClient } from "@/src/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
-
-interface imageData {
-    categoryId: number;
-    title: string;
-    artist: string;
-    description: string;
-    imageHeight: number;
-    imageWidth: number;
-    paperHeight: number;
-    paperWidth: number;
-    price: number;
-    annotations: string;
-}
-
-interface imageDatabaseData {
-    category_id: number;
-    title: string;
-    artist: string;
-    description: string | null;
-    image_height: number | null;
-    image_width: number | null;
-    paper_height: number | null;
-    paper_width: number | null;
-    price: number;
-    annotations: string | null;
-}
 
 export async function POST(request: Request) {
     const supabaseClient = createClient()
 
-    const data = (await request.json()).formData as imageData;
+    const data = (await request.json()).formData as ImageData;
     const parsedData = parseData(data);
 
     const { valid, errors } = validateData(parsedData);
@@ -55,7 +30,7 @@ export async function POST(request: Request) {
     });
 }
 
-const parseData = (data: imageData): imageDatabaseData => {
+const parseData = (data: ImageData): ImageDatabaseData => {
     return {
         category_id: parseInt(data.categoryId as unknown as string),
         title: data.title as string,
@@ -70,7 +45,7 @@ const parseData = (data: imageData): imageDatabaseData => {
     }
 }
 
-const validateData = (data: Partial<imageDatabaseData>): { valid: boolean, errors: string[] } => {
+const validateData = (data: Partial<ImageDatabaseData>): { valid: boolean, errors: string[] } => {
     const errors: string[] = [];
 
     if (typeof data.category_id !== 'number' || data.category_id <= 0) {
