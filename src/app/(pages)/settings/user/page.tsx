@@ -4,7 +4,7 @@ import WrongUserRole from "@/src/app/utils/wrong-user-role";
 import { createClient } from "@/src/utils/supabase/server";
 import { Typography } from "@mui/material";
 
-export default async function User() {
+export default async function Users() {
     const supabase = await createClient();
 
     const { data: { user} } = await supabase.auth.getUser();
