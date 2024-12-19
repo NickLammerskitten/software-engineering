@@ -67,7 +67,7 @@ export default function AddImageForm() {
             image_url: image_url,
         }
 
-        await fetch(`/api/gallery`, {
+        await fetch(`/api/image`, {
             body: JSON.stringify({ formData: data }),
             method: "POST",
             headers: {

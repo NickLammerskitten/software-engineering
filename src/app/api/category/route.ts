@@ -1,16 +1,13 @@
+import { CategoryData } from "@/src/app/api/models/category.model";
 import {createClient} from "@/src/utils/supabase/server";
 import {NextRequest, NextResponse} from "next/server";
-
-interface CategoryPostData {
-    name: string;
-}
 
 const nameRegEx = new RegExp('^[\u00C0-\u017Fa-zA-Z0-9 ]{3,30}$')
 
 export async function POST(request: NextRequest) {
     const supabaseClient = createClient()
 
-    const data = (await request.json()).formData as CategoryPostData;
+    const data = (await request.json()).formData as CategoryData;
     const parsedData = parsePostData(data);
 
     const {valid, errors} = validateData(parsedData);
@@ -35,7 +32,7 @@ export async function POST(request: NextRequest) {
     });
 }
 
-const parsePostData = (data: CategoryPostData): CategoryPostData => {
+const parsePostData = (data: CategoryData): CategoryData => {
     return {
         name: data.name.trim() as string,
     }
@@ -84,7 +81,7 @@ const parsePutData = (data: CategoryPutData): CategoryPutData => {
     }
 }
 
-const validateData = (data: Partial<CategoryPostData | CategoryPutData>): { valid: boolean, errors: string[] } => {
+const validateData = (data: Partial<CategoryData | CategoryPutData>): { valid: boolean, errors: string[] } => {
     const errors: string[] = [];
 
     if (data.name === undefined || !nameRegEx.test(data.name)) {

@@ -40,7 +40,7 @@ async function AppBar() {
     const secondaryPages: PageProps[] = [
         {
             name: "Bild hinzufügen",
-            href: "/gallery/add",
+            href: "/image/add",
             role: UserRole.Trader,
         }
     ];
