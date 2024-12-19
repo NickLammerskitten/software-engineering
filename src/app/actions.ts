@@ -25,3 +25,20 @@ export const signOutAction = async () => {
   await supabase.auth.signOut();
   return redirect("/login");
 };
+
+export const getGalleryAction = async (page: number | undefined = 0, pageSize: number | undefined = 10) => {
+  const response = await fetch("http://localhost:3000/api/image", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    }
+  });
+
+  const json = await response.json();
+
+  if (!response.ok) {
+    return json["message"];
+  }
+
+  return json["data"];
+};
