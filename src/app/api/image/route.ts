@@ -46,16 +46,16 @@ const validateData = (data: Partial<ImageDatabaseData>): { valid: boolean, error
     if (typeof data.description !== 'string' && data.description !== undefined) {
         errors.push("Beschreibung muss ein Text oder leer sein.");
     }
-    if (typeof data.image_height !== 'number' || data.image_height <= 0) {
+    if ((typeof data.image_height !== 'number' || data.image_height <= 0) && data.image_height !== null) {
         errors.push("Bildhöhe muss eine positive Zahl sein.");
     }
-    if (typeof data.image_width !== 'number' || data.image_width <= 0) {
+    if ((typeof data.image_width !== 'number' || data.image_width <= 0) && data.image_width !== null) {
         errors.push("Bildbreite muss eine positive Zahl sein.");
     }
-    if (typeof data.paper_height !== 'number' || data.paper_height <= 0) {
+    if ((typeof data.paper_height !== 'number' || data.paper_height <= 0) && data.paper_height !== null) {
         errors.push("Papierhöhe muss eine positive Zahl sein.");
     }
-    if (typeof data.paper_width !== 'number' || data.paper_width <= 0) {
+    if ((typeof data.paper_width !== 'number' || data.paper_width <= 0) && data.paper_width !== null) {
         errors.push("Papierbreite muss eine positive Zahl sein.");
     }
     if (typeof data.price !== 'number' || data.price < 0) {

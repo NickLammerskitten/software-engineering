@@ -3,7 +3,7 @@ import { createClient } from "@/src/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
 /*
-    GET request at /api/category with parameter id
+    GET request at /api/image with parameter id
 */
 export async function GET(request: NextRequest) {
     const requestParams = request.url.split("/");
@@ -21,6 +21,12 @@ export async function GET(request: NextRequest) {
         .eq('id', imageId)
         .single();
 
+    if (error) {
+        return NextResponse.json({ message: "Fehler beim Laden des Bildes" }, {
+            status: 500,
+        });
+    }
+
     if (!data) {
         return NextResponse.json({ message: "Kein Bild gefunden" }, {
             status: 404,
@@ -28,12 +34,6 @@ export async function GET(request: NextRequest) {
     }
 
     const parsedData = await databaseDataToResponseData(data);
-
-    if (error) {
-        return NextResponse.json({ message: "Fehler beim Laden des Bildes" }, {
-            status: 500,
-        });
-    }
 
     return NextResponse.json({
         data: parsedData,

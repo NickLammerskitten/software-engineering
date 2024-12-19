@@ -29,13 +29,15 @@ export function DetailedImage() {
         }
 
         fetch(`/api/image/${imageId}`)
-            .then((res) => {
-                if (!res.ok) {
+            .then(async (response) => {
+                const json = await response.json();
+
+                if (!response.ok) {
                     setLoading(false);
-                    throw new Error("Error fetching image");
+                    throw new Error(`Error while fetching image (${response.status}): ${json["message"]}`);
                 }
 
-                return res.json();
+                return json;
             })
             .then((data: { data: Image }) => {
                 setImage(data.data);
@@ -49,13 +51,15 @@ export function DetailedImage() {
         }
 
         fetch(`/api/category/${image.categoryId}`)
-            .then((res) => {
-                if (!res.ok) {
+            .then(async (response) => {
+                const json = await response.json();
+
+                if (!response.ok) {
                     setLoading(false);
-                    throw new Error("Error fetching image");
+                    throw new Error(`Error while fetching category (${response.status}): ${json["message"]}`);
                 }
 
-                return res.json();
+                return json;
             })
             .then((data: { data: Category }) => {
                 setCategory(data.data);

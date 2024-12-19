@@ -53,7 +53,7 @@ export function ImageUpload({ setImageUrl }: ImageUploadProps) {
 
         const base64Data = await toBase64(image);
 
-        const response = await fetch(`/api/gallery/file`, {
+        const response = await fetch(`/api/image/file`, {
             method: "POST",
             body: JSON.stringify({
                 file: {

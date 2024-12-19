@@ -1,4 +1,4 @@
-import { getSignedUrl } from "@/src/app/api/image/public-image-url-fetcher";
+import { getSignedUrl } from "@/src/utils/supabase/public-image-url-fetcher";
 import {
     ImageData,
     ImageDatabaseData,
@@ -30,16 +30,16 @@ export const databaseDataToResponseData = async (data: ImageDatabaseResponseData
 
 export const postRequestDataToDatabaseData = (data: ImageData): ImageDatabaseData => {
     return {
-        category_id: parseInt(data.categoryId as unknown as string),
-        title: data.title as string,
-        artist: data.artist as string,
-        description: data.description as string ?? null,
-        image_height: parseFloat(data.imageHeight as unknown as string) ?? null,
-        image_width: parseFloat(data.imageWidth as unknown as string) ?? null,
-        paper_height: parseFloat(data.paperHeight as unknown as string) ?? null,
-        paper_width: parseFloat(data.paperWidth as unknown as string) ?? null,
-        price: parseFloat(data.price as unknown as string),
-        annotations: data.annotations as string ?? null,
-        image_path: data.image_url as string ?? null,
+        category_id: parseInt(data.categoryId.toString()),
+        title: data.title,
+        artist: data.artist,
+        description: data.description,
+        image_height: data.imageHeight ? parseFloat(data.imageHeight.toString()) : null,
+        image_width: data.imageWidth ? parseFloat(data.imageWidth.toString()) : null,
+        paper_height: data.paperHeight ? parseFloat(data.paperHeight.toString()) : null,
+        paper_width: data.paperWidth ? parseFloat(data.paperWidth.toString()) : null,
+        price: parseFloat(data.price.toString()),
+        annotations: data.annotations,
+        image_path: data.image_url,
     }
 }
