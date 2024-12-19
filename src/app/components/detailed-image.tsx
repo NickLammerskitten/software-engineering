@@ -105,7 +105,7 @@ export function DetailedImage() {
                                         variant={"body1"}
                                         className={styles.container__left}
                                     >
-                                        {image.imageHeight && "Höhe: " + image.imageHeight + " cm"}
+                                        {image.imageHeight && "Motivhöhe: " + image.imageHeight + " cm"}
                                     </Typography>
 
                                     <Typography
