@@ -2,7 +2,6 @@
 
 import { Fragment, useEffect, useState } from "react";
 import { Alert, Box, Card, CircularProgress, IconButton } from "@mui/material";
-import styles from "./category-list.module.css";
 import { Delete, Edit } from "@mui/icons-material";
 import { useConfirmDialog } from "../utils/confirm-dialog-hook";
 
@@ -75,11 +74,11 @@ export function CategoryList() {
             {loading && (<CircularProgress />)}
 
             {!loading && categories.length > 0 && (
-                <Box className={styles.category_list}>
+                <Box className={"items_list"}>
                     {categories.map((category) => (
                         <Fragment key={category.id}>
                             <Card key={category.id}
-                                className={styles.category_list_item}
+                                className={"item"}
                             >
                                 {category.name}
 
