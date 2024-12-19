@@ -1,5 +1,5 @@
 import { databaseDataToResponseData, postRequestDataToDatabaseData } from "@/src/app/api/image/data-parser";
-import { ImageData, ImageDatabaseData, ImageDatabaseResponseData } from "@/src/app/api/models/image.model";
+import { ImageData, ImageDatabaseData } from "@/src/app/api/models/image.model";
 import { createClient } from "@/src/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -104,8 +104,14 @@ export async function GET(request: NextRequest) {
     const supabaseClient = createClient();
     const { data, error } = await supabaseClient
         .from('image')
-        .select()
+        .select("*")
         .range(page*pageSize, page*pageSize+pageSize-1);
+
+        if (error) {
+        return new NextResponse("Fehler beim Laden der Bilder", {
+            status: 500,
+        });
+    }
 
     if (!data) {
         return new NextResponse("Keine Bilder gefunden", {
@@ -113,14 +119,9 @@ export async function GET(request: NextRequest) {
         });
     }
 
-    const parsedData = data.map((image: ImageDatabaseResponseData) => {
-        return databaseDataToResponseData(image);
-    });
-
-    if (error) {
-        return new NextResponse("Fehler beim Laden der Bilder", {
-            status: 500,
-        });
+    const parsedData = [];
+    for (const image of data) {
+        parsedData.push(await databaseDataToResponseData(image));
     }
 
     return NextResponse.json({
