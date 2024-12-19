@@ -1,5 +1,6 @@
 "use client"
 
+import { ImageUpload } from "@/src/app/utils/image-upload";
 import {
     Alert,
     Box,
@@ -12,7 +13,7 @@ import {
     MenuItem,
     OutlinedInput,
     Select,
-    TextField
+    TextField,
 } from "@mui/material";
 import * as React from "react";
 import { useEffect, useState } from "react";
@@ -24,6 +25,8 @@ export default function AddImageForm() {
     const [loadingCategories, setLoadingCategories] = useState<boolean>(true);
     const [categories, setCategories] = useState<Category[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<number | undefined>(undefined);
+
+    const [image_url, setImageUrl] = useState<string | undefined>(undefined);
 
     const [success, setSuccess] = useState<boolean | undefined>(undefined);
 
@@ -47,6 +50,8 @@ export default function AddImageForm() {
             });
     }, []);
 
+
+
     const handleSubmit = async (formData: FormData) => {
         const data = {
             categoryId: formData.get("category-select"),
@@ -59,6 +64,7 @@ export default function AddImageForm() {
             paperWidth: formData.get("paperWidth"),
             price: formData.get("price"),
             annotations: formData.get("annotations"),
+            image_url: image_url,
         }
 
         await fetch(`/api/image`, {
@@ -158,24 +164,24 @@ export default function AddImageForm() {
             </FormControl>
 
             <FormControl>
-                <FormLabel htmlFor="imageHeight">Bildhöhe</FormLabel>
+                <FormLabel htmlFor="imageHeight">Motivhöhe</FormLabel>
                 <OutlinedInput
                     id="imageHeight"
                     type="number"
                     name="imageHeight"
-                    inputProps={{ step: "any" }}
+                    inputProps={{ step: "any", min: 0 }}
                     fullWidth
                     endAdornment={<InputAdornment position="end">cm</InputAdornment>}
                 />
             </FormControl>
 
             <FormControl>
-                <FormLabel htmlFor="imageWidth">Bildbreite</FormLabel>
+                <FormLabel htmlFor="imageWidth">Motivbreite</FormLabel>
                 <OutlinedInput
                     id="imageWidth"
                     type="number"
                     name="imageWidth"
-                    inputProps={{ step: "any" }}
+                    inputProps={{ step: "any", min: 0 }}
                     fullWidth
                     endAdornment={<InputAdornment position="end">cm</InputAdornment>}
                 />
@@ -187,7 +193,7 @@ export default function AddImageForm() {
                     id="paperHeight"
                     type="number"
                     name="paperHeight"
-                    inputProps={{ step: "any" }}
+                    inputProps={{ step: "any", min: 0 }}
                     fullWidth
                     endAdornment={<InputAdornment position="end">cm</InputAdornment>}
                 />
@@ -199,7 +205,7 @@ export default function AddImageForm() {
                     id="paperWidth"
                     type="number"
                     name="paperWidth"
-                    inputProps={{ step: "any" }}
+                    inputProps={{ step: "any", min: 0 }}
                     fullWidth
                     endAdornment={<InputAdornment position="end">cm</InputAdornment>}
                 />
@@ -212,7 +218,7 @@ export default function AddImageForm() {
                     type="number"
                     name="price"
                     required
-                    inputProps={{ step: "any" }}
+                    inputProps={{ step: "any", min: 0 }}
                     fullWidth
                     endAdornment={<InputAdornment position="end">€</InputAdornment>}
                 />
@@ -231,6 +237,8 @@ export default function AddImageForm() {
                 />
             </FormControl>
 
+            <ImageUpload setImageUrl={setImageUrl} />
+
             {success === true && <Alert severity="success">{successMessage}</Alert>}
             {success === false && <Alert severity="error">{errorMessage}</Alert>}
 
@@ -238,6 +246,7 @@ export default function AddImageForm() {
                 <Button
                     variant={"text"}
                     type={"reset"}
+                    href="/gallery"
                 >
                     Abbrechen
                 </Button>

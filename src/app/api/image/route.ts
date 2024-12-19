@@ -64,6 +64,9 @@ const validateData = (data: Partial<ImageDatabaseData>): { valid: boolean, error
     if (typeof data.annotations !== 'string' && data.annotations !== undefined) {
         errors.push("Anmerkungen müssen ein Text oder leer sein.");
     }
+    if (typeof data.image_path !== 'string' && data.image_path !== undefined) {
+        errors.push("Bild URL muss ein Text oder leer sein.");
+    }
 
     return { valid: errors.length === 0, errors };
 };
