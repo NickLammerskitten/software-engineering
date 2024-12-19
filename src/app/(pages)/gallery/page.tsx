@@ -3,7 +3,7 @@ import { Button, Typography } from "@mui/material";
 import { Gallery } from "../../components/gallery";
 import { TraderOnly } from "../../components/trader-only";
 
-export default async function GalleryPage() {
+export default function GalleryPage() {
     return (
         <div>
             <Typography variant={"h1"}>
