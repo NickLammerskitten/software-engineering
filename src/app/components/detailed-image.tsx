@@ -112,7 +112,7 @@ export function DetailedImage() {
                                         variant={"body1"}
                                         className={styles.container__right}
                                     >
-                                        {image.imageWidth && "Breite: " + image.imageWidth + " cm"}
+                                        {image.imageWidth && "Motivbreite: " + image.imageWidth + " cm"}
                                     </Typography>
                                 </Box>
 
