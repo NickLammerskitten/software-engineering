@@ -2,7 +2,7 @@ import Profile from "@/src/app/(pages)/profile/page";
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
-describe('Settings Page for customer', () => {
+describe('Profile Page for customer', () => {
     beforeEach(() => {
         vi.mock('@/src/utils/supabase/server', () => ({
             createClient: vi.fn().mockImplementation(() => ({
