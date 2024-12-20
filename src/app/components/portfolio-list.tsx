@@ -44,10 +44,7 @@ export function PortfolioList() {
                                 key={portfolio.id}
                                 className={"item"}
                             >
-                                <Box>
-                                    {portfolio.name}
-                                    <p>{portfolio.description}</p>
-                                </Box>
+                                {portfolio.name}
 
                                 <Box>
                                     <IconButton href={`portfolio/${portfolio.id}/edit`}>
