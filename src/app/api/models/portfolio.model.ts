@@ -16,5 +16,4 @@ export interface PortfolioDatabaseData {
 
 export interface PortfolioDatabaseResponseData extends PortfolioDatabaseData {
     id: string;
-    owner_id: string;
 }

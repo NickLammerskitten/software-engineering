@@ -1,3 +1,4 @@
+import { PortfolioList } from "@/src/app/components/portfolio-list";
 import { TraderOnly } from "@/src/app/components/trader-only";
 import { Add } from "@mui/icons-material";
 import { Button, Typography } from "@mui/material";
@@ -17,6 +18,8 @@ export default async function Portfolio() {
                     Themenmappe hinzufügen
                 </Button>
             </TraderOnly>
+
+            <PortfolioList />
         </div>
     );
 }
