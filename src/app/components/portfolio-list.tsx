@@ -17,7 +17,7 @@ export function PortfolioList() {
     const fetchPortfolios = async () => {
         setLoading(true);
 
-        const response = await fetch(`/api/portfolio`);
+        const response = await fetch(`/api/portfolio/my`);
 
         const json = await response.json();
 
