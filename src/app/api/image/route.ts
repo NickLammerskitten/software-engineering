@@ -1,40 +1,13 @@
+import { databaseDataToResponseData, postRequestDataToDatabaseData } from "@/src/app/api/image/data-parser";
+import { ImageData, ImageDatabaseData, ImageDatabaseResponseData } from "@/src/app/api/models/image.model";
 import { createClient } from "@/src/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
-
-interface imageData {
-    categoryId: number;
-    title: string;
-    artist: string;
-    description: string;
-    imageHeight: number;
-    imageWidth: number;
-    paperHeight: number;
-    paperWidth: number;
-    price: number;
-    annotations: string;
-    image_url: string;
-}
-
-interface imageDatabaseData {
-    category_id: number;
-    title: string;
-    artist: string;
-    description: string | null;
-    image_height: number | null;
-    image_width: number | null;
-    paper_height: number | null;
-    paper_width: number | null;
-    price: number;
-    annotations: string | null;
-    image_path: string | null;
-}
 
 export async function POST(request: Request) {
     const supabaseClient = createClient()
 
-    const data = (await request.json()).formData as imageData;
-
-    const parsedData = parseData(data);
+    const data = (await request.json()).formData as ImageData;
+    const parsedData = postRequestDataToDatabaseData(data);
 
     const { valid, errors } = validateData(parsedData);
     if (!valid) {
@@ -58,23 +31,7 @@ export async function POST(request: Request) {
     });
 }
 
-const parseData = (data: imageData): imageDatabaseData => {
-    return {
-        category_id: parseInt(data.categoryId as unknown as string),
-        title: data.title as string,
-        artist: data.artist as string,
-        description: data.description as string ?? null,
-        image_height: parseFloat(data.imageHeight as unknown as string) ?? null,
-        image_width: parseFloat(data.imageWidth as unknown as string) ?? null,
-        paper_height: parseFloat(data.paperHeight as unknown as string) ?? null,
-        paper_width: parseFloat(data.paperWidth as unknown as string) ?? null,
-        price: parseFloat(data.price as unknown as string),
-        annotations: data.annotations as string ?? null,
-        image_path: data.image_url,
-    }
-}
-
-const validateData = (data: Partial<imageDatabaseData>): { valid: boolean, errors: string[] } => {
+const validateData = (data: Partial<ImageDatabaseData>): { valid: boolean, errors: string[] } => {
     const errors: string[] = [];
 
     if (typeof data.category_id !== 'number' || data.category_id <= 0) {
@@ -89,16 +46,16 @@ const validateData = (data: Partial<imageDatabaseData>): { valid: boolean, error
     if (typeof data.description !== 'string' && data.description !== undefined) {
         errors.push("Beschreibung muss ein Text oder leer sein.");
     }
-    if (typeof data.image_height !== 'number' || data.image_height <= 0) {
+    if ((typeof data.image_height !== 'number' || data.image_height <= 0) && data.image_height !== null) {
         errors.push("Bildhöhe muss eine positive Zahl sein.");
     }
-    if (typeof data.image_width !== 'number' || data.image_width <= 0) {
+    if ((typeof data.image_width !== 'number' || data.image_width <= 0) && data.image_width !== null) {
         errors.push("Bildbreite muss eine positive Zahl sein.");
     }
-    if (typeof data.paper_height !== 'number' || data.paper_height <= 0) {
+    if ((typeof data.paper_height !== 'number' || data.paper_height <= 0) && data.paper_height !== null) {
         errors.push("Papierhöhe muss eine positive Zahl sein.");
     }
-    if (typeof data.paper_width !== 'number' || data.paper_width <= 0) {
+    if ((typeof data.paper_width !== 'number' || data.paper_width <= 0) && data.paper_width !== null) {
         errors.push("Papierbreite muss eine positive Zahl sein.");
     }
     if (typeof data.price !== 'number' || data.price < 0) {
@@ -156,6 +113,10 @@ export async function GET(request: NextRequest) {
         });
     }
 
+    const parsedData = data.map((image: ImageDatabaseResponseData) => {
+        return databaseDataToResponseData(image);
+    });
+
     if (error) {
         return new NextResponse("Fehler beim Laden der Bilder", {
             status: 500,
@@ -163,7 +124,7 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json({
-        data: data,
+        data: parsedData,
     });
 }
 

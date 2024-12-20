@@ -18,7 +18,7 @@ export default async function Gallery() {
 
             {user?.role === UserRole.Trader && (
                 <Button startIcon={<Add/>}
-                        href="/gallery/add"
+                        href="/image/add"
                         className={"top_action_buttons"}
 
                 >

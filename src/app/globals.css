@@ -32,6 +32,10 @@ html, body {
     }
 }
 
+.bottom_space {
+    margin-bottom: 1rem !important;
+}
+
 .items_list {
     display: flex;
     flex-direction: column;
