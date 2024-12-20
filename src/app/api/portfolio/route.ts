@@ -1,8 +1,6 @@
 import {
     PortfolioData,
     PortfolioDatabaseData,
-    PortfolioDatabaseResponseData,
-    PortfolioResponseData,
 } from "@/src/app/api/models/portfolio.model";
 import { createClient } from "@/src/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
@@ -70,40 +68,4 @@ const validateData = (data: PortfolioDatabaseData): {valid: boolean, errors: str
         valid: errors.length === 0,
         errors,
     }
-}
-
-export async function GET() {
-    const supabaseClient = createClient();
-    const { data, error } = await supabaseClient
-        .from('portfolio')
-        .select();
-
-    if (error) {
-        return NextResponse.json({message: "Fehler beim Laden der Bilder"}, {
-            status: 500,
-        });
-    }
-
-    if (!data) {
-        return NextResponse.json({message: "Keine Bilder gefunden"}, {
-            status: 404,
-        });
-    }
-
-    const parsedData = parseGetData(data as PortfolioDatabaseResponseData[]);
-
-    return NextResponse.json({
-        data: parsedData,
-    });
-}
-
-const parseGetData = (data: PortfolioDatabaseResponseData[]): PortfolioResponseData[] => {
-    return data.map((entry) => {
-        return {
-            id: entry.id,
-            name: entry.name,
-            description: entry.description,
-            owner_id: entry.owner_id,
-        }
-    });
 }
