@@ -108,13 +108,13 @@ export async function GET(request: NextRequest) {
         .range(page*pageSize, page*pageSize+pageSize-1);
 
         if (error) {
-        return new NextResponse("Fehler beim Laden der Bilder", {
+        return NextResponse.json({message: "Fehler beim Laden der Bilder"}, {
             status: 500,
         });
     }
 
     if (!data) {
-        return new NextResponse("Keine Bilder gefunden", {
+        return NextResponse.json({message: "Keine Bilder gefunden"}, {
             status: 404,
         });
     }

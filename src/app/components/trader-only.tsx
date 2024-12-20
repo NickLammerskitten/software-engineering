@@ -3,7 +3,7 @@
 import { createClient } from "@/src/utils/supabase/server";
 import { UserRole } from "../models/user-role";
 
-interface TraderOnlyProps {
+export interface TraderOnlyProps {
     children?: React.ReactNode;
 }
 
