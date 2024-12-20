@@ -31,18 +31,23 @@ async function AppBar() {
             role: null,
         },
         {
-            name: "Meine Mappe",
+            name: "Themenmappen",
             href: "/portfolio",
-            role: UserRole.Customer,
-        },
+            role: null
+        }
     ];
 
     const secondaryPages: PageProps[] = [
         {
-            name: "Bild hinzufügen",
+            name: "+ Bild",
             href: "/image/add",
             role: UserRole.Trader,
-        }
+        },
+        {
+            name: "+ Themenmappe",
+            href: "/portfolio/add",
+            role: UserRole.Trader,
+        },
     ];
 
     return (
