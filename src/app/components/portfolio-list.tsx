@@ -1,7 +1,8 @@
 "use client";
 
 import { Portfolio } from "@/src/app/models/portfolio.model";
-import { Alert, Box, Card, CircularProgress } from "@mui/material";
+import { Edit } from "@mui/icons-material";
+import { Alert, Box, Card, CircularProgress, IconButton } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 
 export function PortfolioList() {
@@ -43,8 +44,16 @@ export function PortfolioList() {
                                 key={portfolio.id}
                                 className={"item"}
                             >
-                                {portfolio.name}
-                                <p>{portfolio.description}</p>
+                                <Box>
+                                    {portfolio.name}
+                                    <p>{portfolio.description}</p>
+                                </Box>
+
+                                <Box>
+                                    <IconButton href={`portfolio/${portfolio.id}/edit`}>
+                                        <Edit />
+                                    </IconButton>
+                                </Box>
                             </Card>
                         </Fragment>
                     ))}

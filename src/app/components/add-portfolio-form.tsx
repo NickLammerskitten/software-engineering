@@ -99,7 +99,7 @@ export function AddPortfolioForm() {
                 <Button
                     variant={"text"}
                     type={"reset"}
-                    href="/settings/category"
+                    href="/portfolio"
                 >
                     Abbrechen
                 </Button>
