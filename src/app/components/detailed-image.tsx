@@ -3,13 +3,16 @@
 import styles from "@/src/app/components/detailed-image.module.css";
 import { Image } from "@/src/app/models/image.model";
 import { numberToCurrency } from "@/src/app/utils/number-to-currency";
-import { Box, CircularProgress, Divider, Typography } from "@mui/material";
-import { usePathname } from "next/navigation";
+import {Box, Button, CircularProgress, Divider, Typography} from "@mui/material";
+import {usePathname, useRouter} from "next/navigation";
 import { useEffect, useState } from "react";
+import * as React from "react";
+import {UserRole} from "@/src/app/models/user-role";
+
 
 export function DetailedImage() {
     const pathname = usePathname();
-
+    const router = useRouter();
     const [loading, setLoading] = useState<boolean>(true);
     const [imageId, setImageId] = useState<string | null>(null);
 
@@ -159,6 +162,17 @@ export function DetailedImage() {
                             <Typography variant={"body1"}>
                                 {"Kennung: " + imageId}
                             </Typography>
+                        </Box>
+                        <Box className={"actions_container"}>
+                            <Button
+                                variant={"text"}
+                                onClick={() => {
+                                    router.push(`/image/edit/${image.id}`)
+                                }}
+                                role= {UserRole.Trader}
+                            >
+                                Edit
+                            </Button>
                         </Box>
                     </Box>
                 </Box>

@@ -1,5 +1,14 @@
-import { databaseDataToResponseData, postRequestDataToDatabaseData } from "@/src/app/api/image/data-parser";
-import { ImageData, ImageDatabaseData } from "@/src/app/api/models/image.model";
+import {
+    databaseDataToResponseData,
+    postRequestDataToDatabaseData,
+    putRequestDataToDatabaseData
+} from "@/src/app/api/image/data-parser";
+import {
+    ImageData,
+    ImageDatabaseData,
+    ImageDatabaseResponseData,
+    ImageResponseData
+} from "@/src/app/api/models/image.model";
 import { createClient } from "@/src/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -140,4 +149,41 @@ const validateGetImagesRequest = (data: GetImagesRequest): { valid: boolean, err
     }
 
     return { valid: errors.length === 0, errors };
+}
+
+export async function PUT(request: Request) {
+    const supabaseClient = createClient();
+
+    const data = (await request.json()).formData as ImageResponseData;
+    const { id, ...parsedData }: ImageDatabaseResponseData = putRequestDataToDatabaseData(data);
+
+    if (!id) {
+        return new NextResponse("Fehler: ID muss angegeben werden", {
+            status: 400,
+        });
+    }
+
+    // Validate the parsed data
+    const { valid, errors } = validateData(parsedData);
+    if (!valid) {
+        return new NextResponse(errors.join("\n"), {
+            status: 400,
+        });
+    }
+
+    // Perform the update in Supabase
+    const { error } = await supabaseClient
+        .from('image')
+        .update(parsedData)
+        .eq('id', id);
+
+    if (error) {
+        return new NextResponse("Fehler beim Aktualisieren des Bildes", {
+            status: 500,
+        });
+    }
+
+    return NextResponse.json({
+        message: "Bild erfolgreich aktualisiert",
+    });
 }
