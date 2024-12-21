@@ -79,7 +79,11 @@ describe('Gallery Page for trader', () => {
                 return {
                     prefetch: () => null
                 };
-            }
+            },
+            useSearchParams: vi.fn().mockReturnValue({
+                get: vi.fn().mockReturnValue(1),
+            }),
+            usePathname: vi.fn(),
         }));
 
         vi.mock("@/src/app/components/trader-only", () => ({

@@ -102,12 +102,12 @@ export async function GET(request: NextRequest) {
     }
 
     const supabaseClient = createClient();
-    const { data, error } = await supabaseClient
+    const { data, error, count } = await supabaseClient
         .from('image')
-        .select()
+        .select("*", {count: "exact"})
         .range(page*pageSize, page*pageSize+pageSize-1);
 
-        if (error) {
+    if (error) {
         return NextResponse.json({message: "Fehler beim Laden der Bilder"}, {
             status: 500,
         });
@@ -126,6 +126,9 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
         data: parsedData,
+        page: page,
+        pageSize: pageSize,
+        total: count,
     });
 }
 
