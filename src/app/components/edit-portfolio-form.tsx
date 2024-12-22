@@ -64,7 +64,32 @@ export function EditPortfolioForm() {
     }, [portfolio]);
 
     const handleSubmit = async (formData: FormData) => {
-        // TODO: Implement form data parsing
+        const data = {
+            id: portfolioId,
+            name: formData.get("name"),
+            description: formData.get("description")
+        }
+
+        if (!portfolioNameValid) {
+            return;
+        }
+
+        const response = await fetch(`/api/portfolio`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                formData: data
+            })
+        });
+
+        if (!response.ok) {
+            setSuccess(false);
+            return;
+        }
+
+        setSuccess(true);
     }
 
     const handleChange = () => {
@@ -108,6 +133,8 @@ export function EditPortfolioForm() {
                                 name="description"
                                 fullWidth
                                 variant="outlined"
+                                value={portfolio.description}
+                                onChange={(e) => setPortfolio({ ...portfolio, description: e.target.value })}
                                 multiline
                                 rows={4}
                             />

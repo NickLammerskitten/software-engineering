@@ -8,6 +8,12 @@ export interface PortfolioResponseData extends PortfolioData {
     owner_id: string;
 }
 
+export interface PortfolioPutData {
+    id: string;
+    name: string;
+    description: string | null;
+}
+
 export interface PortfolioDatabaseData {
     name: string;
     description: string | null;

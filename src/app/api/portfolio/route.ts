@@ -1,7 +1,4 @@
-import {
-    PortfolioData,
-    PortfolioDatabaseData,
-} from "@/src/app/api/models/portfolio.model";
+import { PortfolioData, PortfolioDatabaseData, PortfolioPutData } from "@/src/app/api/models/portfolio.model";
 import { createClient } from "@/src/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -10,7 +7,7 @@ const nameRegEx = new RegExp('^[\u00C0-\u017Fa-zA-Z0-9 ]{3,30}$')
 export async function POST(request: NextRequest) {
     const supabaseClient = createClient()
 
-    const {data: userData, error} = await supabaseClient.auth.getUser();
+    const { data: userData, error } = await supabaseClient.auth.getUser();
 
     if (error || !userData?.user) {
         return new NextResponse("Nicht authentifiziert", {
@@ -23,7 +20,7 @@ export async function POST(request: NextRequest) {
     const portfolioData = (await request.json()).formData as PortfolioData;
     const parsedData = parsePostData(userId, portfolioData);
 
-    const {valid, errors} = validateData(parsedData);
+    const { valid, errors } = validateData(parsedData);
     if (!valid) {
         return new NextResponse(errors.join("\n"), {
             status: 400,
@@ -35,13 +32,42 @@ export async function POST(request: NextRequest) {
         .insert([parsedData]);
 
     if (insertError) {
-        return NextResponse.json({message: "Fehler beim Hinzufügen des Portfolios"}, {
+        return NextResponse.json({ message: "Fehler beim Hinzufügen des Portfolios" }, {
             status: 500,
         });
     }
 
     return NextResponse.json({
         message: "Portfolio erfolgreich hinzugefügt",
+    });
+}
+
+export async function PUT(request: NextRequest) {
+    const supabaseClient = createClient()
+
+    const data = (await request.json()).formData as PortfolioPutData;
+    const parsedData = parsePutData(data);
+
+    const { valid, errors } = validateData(parsedData);
+    if (!valid) {
+        return new NextResponse(errors.join("\n"), {
+            status: 400,
+        });
+    }
+
+    const { error } = await supabaseClient
+        .from('portfolio')
+        .update([parsedData])
+        .eq('id', parsedData.id);
+
+    if (error) {
+        return NextResponse.json({ message: "Fehler beim Bearbeiten des Portfolios" }, {
+            status: 500,
+        });
+    }
+
+    return NextResponse.json({
+        message: "Portfolio erfolgreich bearbeitet",
     });
 }
 
@@ -53,7 +79,15 @@ const parsePostData = (userId: string, data: PortfolioData): PortfolioDatabaseDa
     }
 }
 
-const validateData = (data: PortfolioDatabaseData): {valid: boolean, errors: string[]} => {
+const parsePutData = (data: PortfolioPutData): PortfolioPutData => {
+    return {
+        id: data.id,
+        name: data.name.trim(),
+        description: data.description?.trim() || null,
+    }
+}
+
+const validateData = (data: PortfolioDatabaseData | PortfolioPutData): { valid: boolean, errors: string[] } => {
     const errors: string[] = [];
 
     if (data.name === undefined || !nameRegEx.test(data.name)) {
