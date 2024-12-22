@@ -77,8 +77,12 @@ const DEFAULT_PAGE_SIZE = 10;
 interface GetImagesRequest {
     page: number;
     pageSize: number;
-    category: string; // TODO
-    query: string; // TODO
+    category: string[];
+    query: string;
+}
+
+function decodeQueryParam(p: string) {
+    return decodeURIComponent(p.replace(/\+/g, " "));
 }
 
 /*
@@ -103,11 +107,13 @@ export async function GET(request: NextRequest) {
     const page = Number(searchParams.get("page") ?? 0);
     const pageSize = Number(searchParams.get("pageSize") ?? DEFAULT_PAGE_SIZE);
     const category = (searchParams.get("category") ?? "").split(",");
-    const searchQuery = searchParams.get("query") ?? "";
+    const searchQuery = decodeQueryParam(searchParams.get("query") ?? "");
     
     const getImagesRequest = {
-        page,
-        pageSize,
+        page: page,
+        pageSize: pageSize,
+        category: category,
+        query: searchQuery
     } as GetImagesRequest;
 
     const { valid, errors } = validateGetImagesRequest(getImagesRequest);

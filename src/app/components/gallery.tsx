@@ -1,16 +1,29 @@
 "use client";
 
-import { Box, Checkbox, Chip, CircularProgress, FormControl, Grid2, InputLabel, ListItemText, MenuItem, OutlinedInput, Pagination, Select, SelectChangeEvent, TextField } from "@mui/material";
-import { ChangeEvent, Suspense, useEffect, useState } from "react";
+import { 
+    Box, 
+    Checkbox, 
+    Chip, 
+    CircularProgress, 
+    FormControl, 
+    Grid2, 
+    InputLabel, 
+    ListItemText, 
+    MenuItem, 
+    OutlinedInput, 
+    Pagination, 
+    Select, 
+    SelectChangeEvent, 
+    TextField 
+} from "@mui/material";
+import { useEffect, useState } from "react";
 import { ImageResponseData } from "../api/models/image.model";
 import { ImageCard } from "./image-card";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import styles from "./gallery.module.css";
-import { Key, Search } from "@mui/icons-material";
-import { useDebouncedCallback } from "use-debounce";
+import { Search } from "@mui/icons-material";
 
 const fallbackImageUrl = "images/no-photo.jpg";
-const SEARCH_DEBOUNCE_TIMEOUT = 300;
 
 export function Gallery() {
     const [images, setImages] = useState<ImageResponseData[] | null>(null);
@@ -19,11 +32,9 @@ export function Gallery() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const pathname = usePathname();
-    const currentPage = Number.parseInt(searchParams.get("page") ?? "1");
 
     const [loadingCategories, setLoadingCategories] = useState<boolean>(true);
-    const [categories, setCategories] = useState<Category[]>([]);
-    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+    const [possibleCategories, setPossibleCategories] = useState<Category[]>([]);
     useEffect(() => {
         setLoadingCategories(true);
         fetch(`/api/category`)
@@ -35,35 +46,57 @@ export function Gallery() {
                 return res.json();
             })
             .then((data: { data: Category[] }) => {
-                setCategories(data.data);
+                setPossibleCategories(data.data);
                 setLoadingCategories(false);
             });
     }, []);
 
+    const currentCategory = searchParams.get("category") ?? "";
+    const [selectedCategories, setSelectedCategories] = useState<string[]>(currentCategory !== "" ? currentCategory.split(",") : []);
     const handleCategoryChange = (event: SelectChangeEvent<typeof selectedCategories>) => {
-        const {
-            target: { value },
-        } = event;
-        setSelectedCategories(
-            // On autofill we get a stringified value.
-            typeof value === 'string' ? value.split(',') : value,
-        );
+        const content = event.target.value;
+
+        setSelectedCategories(typeof content === 'string' ? content.split(',') : content);
+
+        const params = new URLSearchParams(searchParams);
+        if (content.length === 0) {
+            params.delete("category");
+        } else {
+            params.set("category", typeof content === "string" ? content : content.join(","));
+        }
+        router.replace(`${pathname}?${params.toString()}`);
     };
 
-    const [searchQuery, setSearchQuery] = useState<string>("");
-    const debouncedSetSearchQuery = useDebouncedCallback((query: string) => {
-        setSearchQuery(query);
-    }, SEARCH_DEBOUNCE_TIMEOUT);
+    const currentSearchQuery = searchParams.get("query") ?? "";
+    const [searchQuery, setSearchQuery] = useState<string>(currentSearchQuery);
+    const handleSearchInput = (event: any) => {
+        const content = event.target.value;
+        
+        const params = new URLSearchParams(searchParams);
+        if (content === "") {
+            params.delete("query");
+        } else {
+            params.set("query", encodeURIComponent(content));
+        }
+        router.replace(`${pathname}?${params.toString()}`);
+    };
     const handleSearchChange = (event: any) => {
-        debouncedSetSearchQuery(event.target.value);
+        setSearchQuery(event.target.value);
     }
+
+    const currentPage = Number.parseInt(searchParams.get("page") ?? "1");
+    const handlePagination = (event: React.ChangeEvent<unknown>, value: number) => {
+        const params = new URLSearchParams(searchParams);
+        params.set("page", value.toString());
+        router.replace(`${pathname}?${params.toString()}`);
+    };
 
     useEffect(() => {
         (async () => {
             const apiParams = new URLSearchParams({
                 page: (currentPage - 1).toString(),
-                category: selectedCategories.join(","),
-                query: searchQuery,
+                category: currentCategory,
+                query: currentSearchQuery,
             }).toString();
             const response = await fetch("api/image?" + apiParams, {
                 method: "GET",
@@ -82,13 +115,7 @@ export function Gallery() {
             setImages(json["data"]);
             setTotalImageCount(Math.ceil(json["total"] / json["pageSize"]));
         })();
-    }, [currentPage, selectedCategories, searchQuery]);
-
-    const handlePagination = (event: React.ChangeEvent<unknown>, value: number) => {
-        const params = new URLSearchParams(searchParams);
-        params.set("page", value.toString());
-        router.replace(`${pathname}?${params.toString()}`);
-    };
+    }, [currentPage, currentSearchQuery, currentCategory]);
 
     return loadingError ? <div>{loadingError}</div> : images === null ? <CircularProgress /> : <>
         <div>
@@ -117,7 +144,7 @@ export function Gallery() {
                             },
                         }}
                     >
-                        {categories.map(category => (
+                        {possibleCategories.map(category => (
                             <MenuItem
                                 key={category.id}
                                 value={category.name}
@@ -133,7 +160,10 @@ export function Gallery() {
                 label="Suchen"
                 variant="outlined"
                 sx={{minWidth: 400}}
+                value={searchQuery}
                 onChange={handleSearchChange}
+                onBlur={handleSearchInput}
+                onKeyDown={(event) => {if (event.key === "Enter") handleSearchInput(event);}}
                 slotProps={{
                     input: {
                         endAdornment: <Search />,
