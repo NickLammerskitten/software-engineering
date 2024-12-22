@@ -16,12 +16,13 @@ import {
     SelectChangeEvent, 
     TextField 
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { ImageResponseData } from "../api/models/image.model";
 import { ImageCard } from "./image-card";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import styles from "./gallery.module.css";
 import { Search } from "@mui/icons-material";
+import { useDebounce, useDebouncedCallback } from "use-debounce";
 
 const fallbackImageUrl = "images/no-photo.jpg";
 
@@ -67,20 +68,17 @@ export function Gallery() {
         router.replace(`${pathname}?${params.toString()}`);
     };
 
-    const currentSearchQuery = searchParams.get("query") ?? "";
-    const [searchQuery, setSearchQuery] = useState<string>(currentSearchQuery);
-    const handleSearchInput = (event: any) => {
-        const content = event.target.value;
-        
+    const [searchQuery, setSearchQuery] = useState<string>(searchParams.get("query") ?? "");
+    const handleSearchInput = () => {
         const params = new URLSearchParams(searchParams);
-        if (content === "") {
+        if (searchQuery === "") {
             params.delete("query");
         } else {
-            params.set("query", encodeURIComponent(content));
+            params.set("query", searchQuery);
         }
         router.replace(`${pathname}?${params.toString()}`);
     };
-    const handleSearchChange = (event: any) => {
+    const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
         setSearchQuery(event.target.value);
     }
 
@@ -91,31 +89,33 @@ export function Gallery() {
         router.replace(`${pathname}?${params.toString()}`);
     };
 
-    useEffect(() => {
-        (async () => {
-            const apiParams = new URLSearchParams({
-                page: (currentPage - 1).toString(),
-                category: currentCategory,
-                query: currentSearchQuery,
-            }).toString();
-            const response = await fetch("api/image?" + apiParams, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                }
-            });
-
-            const json = await response.json();
-
-            if (!response.ok) {
-                setLoadingError(json["message"]);
-                return;
+    const debouncedSearchRequest = useDebouncedCallback(async () => {
+        const apiParams = new URLSearchParams({
+            page: (currentPage - 1).toString(),
+            category: currentCategory,
+            query: searchQuery,
+        }).toString();
+        const response = await fetch("api/image?" + apiParams, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
             }
+        });
 
-            setImages(json["data"]);
-            setTotalImageCount(Math.ceil(json["total"] / json["pageSize"]));
-        })();
-    }, [currentPage, currentSearchQuery, currentCategory]);
+        const json = await response.json();
+
+        if (!response.ok) {
+            setLoadingError(json["message"]);
+            return;
+        }
+
+        setImages(json["data"]);
+        setTotalImageCount(Math.ceil(json["total"] / json["pageSize"]));
+    }, 300);
+
+    useEffect(() => {
+        debouncedSearchRequest();
+    }, [currentPage, searchQuery, currentCategory]);
 
     return loadingError ? <div>{loadingError}</div> : images === null ? <CircularProgress /> : <>
         <div>
@@ -128,9 +128,9 @@ export function Gallery() {
                         value={selectedCategories}
                         onChange={handleCategoryChange}
                         input={<OutlinedInput label="Kategorien" />}
-                        renderValue={(selected: any) => (
+                        renderValue={(selected: string[]) => (
                             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                {selected.map((value: any) => (
+                                {selected.map((value) => (
                                     <Chip key={value} label={value} />
                                 ))}
                             </Box>
@@ -163,7 +163,7 @@ export function Gallery() {
                 value={searchQuery}
                 onChange={handleSearchChange}
                 onBlur={handleSearchInput}
-                onKeyDown={(event) => {if (event.key === "Enter") handleSearchInput(event);}}
+                onKeyDown={(event) => {if (event.key === "Enter") handleSearchInput()}}
                 slotProps={{
                     input: {
                         endAdornment: <Search />,
