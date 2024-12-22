@@ -22,7 +22,7 @@ import { ImageCard } from "./image-card";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import styles from "./gallery.module.css";
 import { Search } from "@mui/icons-material";
-import { useDebounce, useDebouncedCallback } from "use-debounce";
+import { useDebouncedCallback } from "use-debounce";
 
 const fallbackImageUrl = "images/no-photo.jpg";
 
