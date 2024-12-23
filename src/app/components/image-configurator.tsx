@@ -1,5 +1,15 @@
 import { Portfolio } from "@/src/app/models/portfolio.model";
-import { Alert, Box, Button, CircularProgress, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import {
+    Alert,
+    Box,
+    Button,
+    CircularProgress,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    Typography,
+} from "@mui/material";
 import * as React from "react";
 import { useEffect, useState } from "react";
 
@@ -69,9 +79,7 @@ export function ImageConfigurator({ imageId }: { imageId: string }) {
             action={handleSubmit}
             onChange={handleChange}
         >
-            {loadingPortfolios && (<CircularProgress />)}
-
-            {!loadingPortfolios && portfolios && (
+            {loadingPortfolios ? (<CircularProgress />) : portfolios && portfolios.length > 0 ? (
                 <FormControl fullWidth>
                     <InputLabel id="portfolio-select">Mappe</InputLabel>
                     <Select
@@ -95,18 +103,30 @@ export function ImageConfigurator({ imageId }: { imageId: string }) {
                         ))}
                     </Select>
                 </FormControl>
+            ) : (
+                <Typography variant={"body1"}>Noch keine Mappen vorhanden. Erstelle deine erste Mappe, um eine Bild
+                    Konfiguration hinzuzufügen!</Typography>
             )}
 
             {success === true && <Alert severity="success">{successMessage}</Alert>}
             {success === false && <Alert severity="error">{errorMessage}</Alert>}
 
-            <Box className={"actions_container"}>
-                <Button
-                    variant={"contained"}
-                    type={"submit"}
-                >
-                    Zu Mappe hinzufügen
-                </Button>
+            <Box>
+                {portfolios.length > 0 ? (
+                    <Button
+                        variant={"contained"}
+                        type={"submit"}
+                    >
+                        Zu Mappe hinzufügen
+                    </Button>
+                ) : (
+                    <Button
+                        variant={"contained"}
+                        href={"/portfolio/add"}
+                    >
+                        Neue Mappe erstellen
+                    </Button>
+                )}
             </Box>
         </form>
     )
