@@ -36,6 +36,7 @@ export function Gallery() {
 
     const [loadingCategories, setLoadingCategories] = useState<boolean>(true);
     const [possibleCategories, setPossibleCategories] = useState<Category[]>([]);
+
     useEffect(() => {
         setLoadingCategories(true);
         fetch(`/api/category`)
@@ -60,6 +61,8 @@ export function Gallery() {
         setSelectedCategories(typeof content === 'string' ? content.split(',') : content);
 
         const params = new URLSearchParams(searchParams);
+        params.set("page", "1");
+
         if (content.length === 0) {
             params.delete("category");
         } else {
