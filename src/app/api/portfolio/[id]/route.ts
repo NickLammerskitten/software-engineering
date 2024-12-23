@@ -62,3 +62,38 @@ const parseGetData = (data: PortfolioDatabaseResponseData): PortfolioResponseDat
             owner_id: data.owner_id,
         }
 }
+
+export async function DELETE(request: NextRequest) {
+    const supabaseClient = createClient();
+
+    const requestParams = request.url.split("/");
+    const portfolioId = requestParams[5];
+
+    if (!portfolioId) {
+        return NextResponse.json("Keine Portfolio id angegeben.", {
+            status: 400,
+        });
+    }
+
+    const { data: userData, error: userError } = await supabaseClient.auth.getUser();
+
+    if (userError || !userData?.user) {
+        return NextResponse.json("Nicht authentifiziert", {
+            status: 401,
+        });
+    }
+
+    const { error } = await supabaseClient
+        .from('portfolio')
+        .delete()
+        .eq('id', portfolioId)
+        .eq('owner_id', userData.user.id);
+
+    if (error) {
+        return NextResponse.json("Fehler beim Löschen des Portfolios", {
+            status: 500,
+        });
+    }
+
+    return NextResponse.json({ message: "Portfolio erfolgreich gelöscht" });
+}

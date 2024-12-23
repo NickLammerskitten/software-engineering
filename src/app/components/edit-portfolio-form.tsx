@@ -247,9 +247,9 @@ export function EditPortfolioForm() {
                     {loadingImageConfigurations && (<CircularProgress />)}
 
                     {!loadingImageConfigurations && imageConfigurations.length === 0 && (
-                        <Typography variant={"body1"}>
-                            Es wurden noch keine Bilder hinzugefügt.
-                        </Typography>
+                        <Alert severity="info">
+                            Keine Bilder vorhanden.
+                        </Alert>
                     )}
 
                     <Grid2
