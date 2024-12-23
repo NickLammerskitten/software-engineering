@@ -1,28 +1,54 @@
 "use client"
 
+import { ImageCard } from "@/src/app/components/image-card";
 import { Portfolio } from "@/src/app/models/portfolio.model";
-import { Alert, Box, Button, CircularProgress, FormControl, FormLabel, TextField, Typography } from "@mui/material";
-import { usePathname } from "next/navigation";
+import {
+    Alert,
+    Box,
+    Button,
+    CircularProgress,
+    FormControl,
+    FormLabel,
+    Grid2,
+    TextField,
+    Typography,
+} from "@mui/material";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+
+const fallbackImageUrl = "/images/no-photo.jpg";
 
 const successMessage: string = "Themenmappe erfolgreich bearbeitet!";
 const errorMessage: string = "Fehler beim Bearbeiten der Themenmappe!";
 
 const nameRegEx = new RegExp('^[\u00C0-\u017Fa-zA-Z0-9 ]{3,30}$')
 
+interface ImageConfiguration {
+    id: string;
+    byTrader: boolean;
+    imageId: string;
+    title: string;
+    artist: string;
+    imageUrl: string | null;
+}
+
 export function EditPortfolioForm() {
     const pathname = usePathname();
+    const router = useRouter();
 
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loadingPortfolio, setLoadingPortfolio] = useState<boolean>(true);
     const [portfolioId, setPortfolioId] = useState<string | null>(null);
 
     const [portfolio, setPortfolio] = useState<Portfolio | null>(null);
     const [portfolioNameValid, setPortfolioNameValid] = useState<boolean>(true)
 
+    const [loadingImageConfigurations, setLoadingImageConfigurations] = useState<boolean>(true);
+    const [imageConfigurations, setImageConfigurations] = useState<ImageConfiguration[]>([]);
+
     const [success, setSuccess] = useState<boolean | undefined>(undefined);
 
     useEffect(() => {
-        setLoading(true);
+        setLoadingPortfolio(true);
 
         const pathnames = pathname.split('/') as string[];
         pathnames.pop();
@@ -31,7 +57,7 @@ export function EditPortfolioForm() {
         setPortfolioId(portfolioId);
 
         if (portfolioId == null) {
-            setLoading(false);
+            setLoadingPortfolio(false);
             setPortfolio(null);
             return;
         }
@@ -41,7 +67,7 @@ export function EditPortfolioForm() {
                 const json = await response.json();
 
                 if (!response.ok) {
-                    setLoading(false);
+                    setLoadingPortfolio(false);
                     throw new Error(`Error while fetching portfolio (${response.status}): ${json["message"]}`);
                 }
 
@@ -49,7 +75,24 @@ export function EditPortfolioForm() {
             })
             .then((data: { data: Portfolio }) => {
                 setPortfolio(data.data);
-                setLoading(false);
+                setLoadingPortfolio(false);
+            });
+
+        setLoadingImageConfigurations(true);
+        fetch(`/api/portfolio/${portfolioId}/configuration`)
+            .then(async (response) => {
+                const json = await response.json();
+
+                if (!response.ok) {
+                    setLoadingImageConfigurations(false);
+                    throw new Error(`Error while fetching portfolio configurations (${response.status}): ${json["message"]}`);
+                }
+
+                return json;
+            })
+            .then((data: { data: ImageConfiguration[] }) => {
+                setImageConfigurations(data.data);
+                setLoadingImageConfigurations(false);
             });
     }, [pathname]);
 
@@ -67,7 +110,7 @@ export function EditPortfolioForm() {
         const data = {
             id: portfolioId,
             name: formData.get("name"),
-            description: formData.get("description")
+            description: formData.get("description"),
         }
 
         if (!portfolioNameValid) {
@@ -77,11 +120,11 @@ export function EditPortfolioForm() {
         const response = await fetch(`/api/portfolio`, {
             method: "PUT",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                formData: data
-            })
+                formData: data,
+            }),
         });
 
         if (!response.ok) {
@@ -98,7 +141,7 @@ export function EditPortfolioForm() {
 
     return (
         <>
-            {loading ? (<CircularProgress />)
+            {loadingPortfolio ? (<CircularProgress />)
                 : portfolio !== null ? (
                     <form
                         className={"form_container"}
@@ -164,6 +207,47 @@ export function EditPortfolioForm() {
                         Es ist ein unerwarteter Fehler aufgetreten.
                     </Typography>
                 )}
+
+            {portfolio !== null && (
+                <>
+                    <Typography
+                        variant={"h4"}
+                        className={"top_space"}
+                    >
+                        Bilder
+                    </Typography>
+
+                    {loadingImageConfigurations && (<CircularProgress />)}
+
+                    {!loadingImageConfigurations && imageConfigurations.length === 0 && (
+                        <Typography variant={"body1"}>
+                            Es wurden noch keine Bilder hinzugefügt.
+                        </Typography>
+                    )}
+
+                    <Grid2
+                        container
+                        spacing={3}
+                    >
+                        {imageConfigurations.map((image, index) => {
+                            return <Grid2
+                                key={index}
+                                size={3}
+                                minWidth={250}
+                            >
+                                <ImageCard
+                                    url={image.imageUrl ?? fallbackImageUrl}
+                                    artist={image.artist}
+                                    title={image.title}
+                                    onClick={() => {
+                                        router.push(`/image/${image.imageId}`)
+                                    }}
+                                />
+                            </Grid2>;
+                        })}
+                    </Grid2>
+                </>
+            )}
         </>
     )
 }

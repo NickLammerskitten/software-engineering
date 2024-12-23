@@ -1,6 +1,7 @@
 "use client"
 
 import styles from "@/src/app/components/detailed-image.module.css";
+import { ImageConfigurator } from "@/src/app/components/image-configurator";
 import { Image } from "@/src/app/models/image.model";
 import { numberToCurrency } from "@/src/app/utils/number-to-currency";
 import { Box, CircularProgress, Divider, Typography } from "@mui/material";
@@ -145,6 +146,8 @@ export function DetailedImage() {
                             >
                                 {numberToCurrency(image.price)}
                             </Typography>
+
+                            <ImageConfigurator imageId={image.id} />
 
                             <Divider className={styles.divider_spacing} />
 

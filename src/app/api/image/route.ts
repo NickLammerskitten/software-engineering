@@ -3,7 +3,7 @@ import { ImageData, ImageDatabaseData } from "@/src/app/api/models/image.model";
 import { createClient } from "@/src/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
     const supabaseClient = createClient()
 
     const data = (await request.json()).formData as ImageData;
