@@ -38,7 +38,77 @@ insert into public.image(category_id, title, description, image_height, image_wi
                          annotations, price, artist)
 values (2, 'Image 2', 'Image 2 description', 100, 100, 120, 120, 'Annotation 2', 999.95, 'Künstler 2');
 
+insert into public.image(category_id, title, description, image_height, image_width, paper_height, paper_width,
+                         annotations, price, artist)
+values (2, 'Image 3', 'Description 3', 800, 600, 800, 600, 'Annotation 3', 150.00, 'Künstler 3');
 
+insert into public.image(category_id, title, description, image_height, image_width, paper_height, paper_width,
+                         annotations, price, artist)
+values (2, 'Image 4', 'Description 4', 500, 500, 520, 520, 'Annotation 4', 250.50, 'Künstler 4');
+
+insert into public.image(category_id, title, description, image_height, image_width, paper_height, paper_width,
+                         annotations, price, artist)
+values (2, 'Image 5', 'Description 5', 1200, 800, 1200, 800, 'Annotation 5', 350.00, 'Künstler 5');
+
+insert into public.image(category_id, title, description, image_height, image_width, paper_height, paper_width,
+                         annotations, price, artist)
+values (2, 'Image 6', 'Description 6', 300, 400, 310, 410, 'Annotation 6', 85.00, 'Künstler 6');
+
+insert into public.image(category_id, title, description, image_height, image_width, paper_height, paper_width,
+                         annotations, price, artist)
+values (1, 'Image 7', 'Description 7', 700, 700, 710, 710, 'Annotation 7', 95.75, 'Künstler 7');
+
+insert into public.image(category_id, title, description, image_height, image_width, paper_height, paper_width,
+                         annotations, price, artist)
+values (1, 'Image 8', 'Description 8', 1500, 1500, 1500, 1500, 'Annotation 8', 500.00, 'Künstler 8');
+
+insert into public.image(category_id, title, description, image_height, image_width, paper_height, paper_width,
+                         annotations, price, artist)
+values (2, 'Image 9', 'Description 9', 400, 600, 400, 600, 'Annotation 9', 125.00, 'Künstler 9');
+
+insert into public.image(category_id, title, description, image_height, image_width, paper_height, paper_width,
+                         annotations, price, artist)
+values (2, 'Image 10', 'Description 10', 600, 800, 620, 820, 'Annotation 10', 200.00, 'Künstler 10');
+
+insert into public.image(category_id, title, description, image_height, image_width, paper_height, paper_width,
+                         annotations, price, artist)
+values (1, 'Image 11', 'Description 11', 900, 1200, 900, 1200, 'Annotation 11', 175.50, 'Künstler 11');
+
+insert into public.image(category_id, title, description, image_height, image_width, paper_height, paper_width,
+                         annotations, price, artist)
+values (1, 'Image 12', 'Description 12', 1100, 1300, 1110, 1310, 'Annotation 12', 600.00, 'Künstler 12');
+
+insert into public.image(category_id, title, description, image_height, image_width, paper_height, paper_width,
+                         annotations, price, artist)
+values (2, 'Image 13', 'Description 13', 300, 200, 310, 210, 'Annotation 13', 65.00, 'Künstler 13');
+
+insert into public.image(category_id, title, description, image_height, image_width, paper_height, paper_width,
+                         annotations, price, artist)
+values (2, 'Image 14', 'Description 14', 700, 500, 720, 520, 'Annotation 14', 175.00, 'Künstler 14');
+
+insert into public.image(category_id, title, description, image_height, image_width, paper_height, paper_width,
+                         annotations, price, artist)
+values (2, 'Image 15', 'Description 15', 800, 1000, 800, 1000, 'Annotation 15', 400.00, 'Künstler 15');
+
+insert into public.image(category_id, title, description, image_height, image_width, paper_height, paper_width,
+                         annotations, price, artist)
+values (2, 'Image 16', 'Description 16', 1000, 800, 1020, 820, 'Annotation 16', 320.00, 'Künstler 16');
+
+insert into public.image(category_id, title, description, image_height, image_width, paper_height, paper_width,
+                         annotations, price, artist)
+values (1, 'Image 17', 'Description 17', 500, 400, 500, 400, 'Annotation 17', 150.00, 'Künstler 17');
+
+insert into public.image(category_id, title, description, image_height, image_width, paper_height, paper_width,
+                         annotations, price, artist)
+values (1, 'Image 18', 'Description 18', 600, 600, 610, 610, 'Annotation 18', 275.00, 'Künstler 18');
+
+insert into public.image(category_id, title, description, image_height, image_width, paper_height, paper_width,
+                         annotations, price, artist)
+values (1, 'Image 19', 'Description 19', 750, 900, 750, 900, 'Annotation 19', 350.00, 'Künstler 19');
+
+insert into public.image(category_id, title, description, image_height, image_width, paper_height, paper_width,
+                         annotations, price, artist)
+values (1, 'Image 20', 'Description 20', 900, 1100, 920, 1120, 'Annotation 20', 490.00, 'Künstler 20');
 
 insert into storage.buckets (id, name, public, avif_autodetection)
 values
