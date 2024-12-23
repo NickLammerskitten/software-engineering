@@ -38,6 +38,18 @@ alter table "public"."portfolio" add constraint "portfolio_users_id_fk" FOREIGN 
 
 alter table "public"."portfolio" validate constraint "portfolio_users_id_fk";
 
+alter table "public"."image_configuration" drop constraint "image_configuration_image_id_fk";
+
+alter table "public"."image_configuration" drop constraint "image_configuration_portfolio_id_fk";
+
+alter table "public"."image_configuration" add constraint "image_configuration_image_id_fkey" FOREIGN KEY (image_id) REFERENCES image(id) ON UPDATE CASCADE ON DELETE CASCADE not valid;
+
+alter table "public"."image_configuration" validate constraint "image_configuration_image_id_fkey";
+
+alter table "public"."image_configuration" add constraint "image_configuration_portfolio_id_fkey" FOREIGN KEY (portfolio_id) REFERENCES portfolio(id) ON UPDATE CASCADE ON DELETE CASCADE not valid;
+
+alter table "public"."image_configuration" validate constraint "image_configuration_portfolio_id_fkey";
+
 grant delete on table "public"."image_configuration" to "anon";
 
 grant insert on table "public"."image_configuration" to "anon";
