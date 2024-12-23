@@ -1,6 +1,7 @@
 import { databaseDataToResponseData, postRequestDataToDatabaseData } from "@/src/app/api/image/data-parser";
 import { ImageData, ImageDatabaseData } from "@/src/app/api/models/image.model";
 import { createClient } from "@/src/utils/supabase/server";
+import { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -76,22 +77,43 @@ const DEFAULT_PAGE_SIZE = 10;
 interface GetImagesRequest {
     page: number;
     pageSize: number;
+    category: string[];
+    query: string;
+}
+
+function decodeQueryParam(p: string) {
+    return decodeURIComponent(p.replace(/\+/g, " "));
 }
 
 /*
-    GET request at /api/gallery with optional parameters page
-    and pageSize. Parameter page starts at 0, so that 0 is the
-    first page.
-    The default page is 0 and the default page size is 10.
+    method: GET
+    route: /api/image
+    parameters:
+    - page
+        Number indicating page to be fetched
+        default: 0
+    - pageSize
+        Number determining the page size
+        default: 10
+    - category
+        Comma separated list of category names to filter for
+        default: ""
+    - query
+        Query string to filter title and artist by
+        default: ""
 */
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const page = Number(searchParams.get("page") ?? 0);
     const pageSize = Number(searchParams.get("pageSize") ?? DEFAULT_PAGE_SIZE);
+    const category = (searchParams.get("category") ?? "").split(",");
+    const searchQuery = decodeQueryParam(searchParams.get("query") ?? "");
 
     const getImagesRequest = {
-        page,
-        pageSize,
+        page: page,
+        pageSize: pageSize,
+        category: category,
+        query: searchQuery
     } as GetImagesRequest;
 
     const { valid, errors } = validateGetImagesRequest(getImagesRequest);
@@ -102,19 +124,33 @@ export async function GET(request: NextRequest) {
     }
 
     const supabaseClient = createClient();
-    const { data, error } = await supabaseClient
-        .from('image')
-        .select()
-        .range(page * pageSize, page * pageSize + pageSize - 1);
+
+    const categories = await getCategoryByName(supabaseClient, category);
+    if (categories.error) {
+        return NextResponse.json({message: categories.error?.message}, {status: 500});
+    }
+    if (categories.category === null) {
+        return NextResponse.json({message: `Keine Kategorien mit Namen '${category}' gefunden`}, {status: 404})
+    }
+    const category_ids = categories.category.map(c => c.id);
+
+    let query = supabaseClient.from("image").select("*", {count: "exact"});
+    if (category_ids.length > 0) {
+        query = query.in("category_id", category_ids);
+    }
+    if (searchQuery !== "") {
+        query = query.or(`title.ilike.%${searchQuery}%,artist.ilike.%${searchQuery}%`)
+    }
+    const { data, error, count } = await query.range(page*pageSize, page*pageSize+pageSize-1);
 
     if (error) {
-        return NextResponse.json({ message: "Fehler beim Laden der Bilder" }, {
+        return NextResponse.json({message: "Fehler beim Laden der Bilder: " + error.message}, {
             status: 500,
         });
     }
 
     if (!data) {
-        return NextResponse.json({ message: "Keine Bilder gefunden" }, {
+        return NextResponse.json({message: "Keine Bilder gefunden"}, {
             status: 404,
         });
     }
@@ -126,7 +162,24 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
         data: parsedData,
+        page: page,
+        pageSize: pageSize,
+        total: count,
     });
+}
+
+async function getCategoryByName(client: SupabaseClient, category: string | string[]): Promise<{category: Category[] | null, error: PostgrestError | null}> {
+    const filterNames = typeof category === "string" ? [category] : category;
+    const { data, error } = await client
+        .from("category")
+        .select()
+        .in("name", filterNames)
+
+    if (error) {
+        return {category: null, error: error};
+    }
+
+    return {category: data, error: null};
 }
 
 const validateGetImagesRequest = (data: GetImagesRequest): { valid: boolean, errors: string[] } => {
