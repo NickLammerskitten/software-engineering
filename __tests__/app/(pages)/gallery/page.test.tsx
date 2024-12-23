@@ -53,9 +53,23 @@ describe('Gallery Page for trader', () => {
         },
     ];
 
+    const categories: Category[] = [
+        {
+            id: 1,
+            name: 'Original',
+        },
+        {
+            id: 2,
+            name: 'Kopie',
+        },
+    ]
+
     const restHandlers = [
         http.get("api/image", () => {
-            return NextResponse.json({ data: images });
+            return NextResponse.json({ data: images, page: 0, pageSize: 10, total: 3 });
+        }),
+        http.get('api/category', () => {
+            return NextResponse.json({ data: categories })
         }),
     ];
 
@@ -81,7 +95,7 @@ describe('Gallery Page for trader', () => {
                 };
             },
             useSearchParams: vi.fn().mockReturnValue({
-                get: vi.fn().mockReturnValue(1),
+                get: vi.fn(),
             }),
             usePathname: vi.fn(),
         }));
