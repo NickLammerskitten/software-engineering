@@ -30,9 +30,9 @@ values ('Original');
 insert into public.category (name)
 values ('Kopie');
 
-insert into public.image(category_id, title, description, image_height, image_width, paper_height, paper_width,
+insert into public.image(id, category_id, title, description, image_height, image_width, paper_height, paper_width,
                          annotations, price, artist)
-values (1, 'Image 1', 'Image 1 description', 1000, 1000, 1000, 1000, 'Annotation', 100.00, 'Künstler 1');
+values ('0b29d9c7-ae71-440a-a631-e67b0875cd51', 1, 'Image 1', 'Image 1 description', 1000, 1000, 1000, 1000, 'Annotation', 100.00, 'Künstler 1');
 
 insert into public.image(category_id, title, description, image_height, image_width, paper_height, paper_width,
                          annotations, price, artist)
@@ -43,3 +43,10 @@ values (2, 'Image 2', 'Image 2 description', 100, 100, 120, 120, 'Annotation 2',
 insert into storage.buckets (id, name, public, avif_autodetection)
 values
 ('images', 'images', true, true);
+
+
+insert into public.portfolio(id, name, description, owner_id)
+values ('5b72a802-54b1-4393-b205-ccf2937c073b','Portfolio 1', 'Portfolio 1 description', 'aabc22aa-68ba-425c-9888-d5e77ad1f30e');
+
+insert into public.image_configuration (image_id, portfolio_id, by_trader)
+values ('0b29d9c7-ae71-440a-a631-e67b0875cd51', '5b72a802-54b1-4393-b205-ccf2937c073b', true);
