@@ -2,6 +2,7 @@
 
 import { ImageCard } from "@/src/app/components/image-card";
 import { Portfolio } from "@/src/app/models/portfolio.model";
+import { Remove } from "@mui/icons-material";
 import {
     Alert,
     Box,
@@ -44,10 +45,27 @@ export function EditPortfolioForm() {
 
     const [loadingImageConfigurations, setLoadingImageConfigurations] = useState<boolean>(true);
     const [imageConfigurations, setImageConfigurations] = useState<ImageConfiguration[]>([]);
+    const [imageConfigurationsErrorMessages, setImageConfigurationsErrorMessages] = useState<{
+        [id: string]: string
+    }>({})
 
     const [success, setSuccess] = useState<boolean | undefined>(undefined);
 
     useEffect(() => {
+        fetchData();
+    }, [pathname]);
+
+    useEffect(() => {
+        if (portfolio?.name == null || portfolio?.name == "") {
+            setPortfolioNameValid(true);
+            return;
+        }
+
+        const valid = nameRegEx.test(portfolio?.name);
+        setPortfolioNameValid(valid);
+    }, [portfolio]);
+
+    const fetchData = async () => {
         setLoadingPortfolio(true);
 
         const pathnames = pathname.split('/') as string[];
@@ -94,17 +112,7 @@ export function EditPortfolioForm() {
                 setImageConfigurations(data.data);
                 setLoadingImageConfigurations(false);
             });
-    }, [pathname]);
-
-    useEffect(() => {
-        if (portfolio?.name == null || portfolio?.name == "") {
-            setPortfolioNameValid(true);
-            return;
-        }
-
-        const valid = nameRegEx.test(portfolio?.name);
-        setPortfolioNameValid(valid);
-    }, [portfolio]);
+    }
 
     const handleSubmit = async (formData: FormData) => {
         const data = {
@@ -137,6 +145,25 @@ export function EditPortfolioForm() {
 
     const handleChange = () => {
         setSuccess(undefined);
+    }
+
+    const removeImageConfiguration = async (imageConfigurationId: string) => {
+        const response = await fetch(`/api/portfolio/configuration/${imageConfigurationId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        const json = await response.json();
+
+        if (!response.ok) {
+            imageConfigurationsErrorMessages[imageConfigurationId] = `Error ${response.status}: ${json["message"]}`;
+            setImageConfigurationsErrorMessages({ ...imageConfigurationsErrorMessages });
+            return;
+        }
+
+        fetchData();
     }
 
     return (
@@ -241,6 +268,11 @@ export function EditPortfolioForm() {
                                     title={image.title}
                                     onClick={() => {
                                         router.push(`/image/${image.imageId}`)
+                                    }}
+                                    subactionIcon={<Remove />}
+                                    subactionTooltip={"Entfernen"}
+                                    onSubactionClick={() => {
+                                        removeImageConfiguration(image.id);
                                     }}
                                 />
                             </Grid2>;

@@ -1,14 +1,17 @@
 "use client"
 
-import { Paper } from "@mui/material";
-import styles from "./image-card.module.css";
+import { IconButton, Paper, Tooltip } from "@mui/material";
 import { useState } from "react";
+import styles from "./image-card.module.css";
 
 interface ImageCardProps {
     url: string;
     artist: string;
     title: string;
     onClick?: () => void;
+    subactionIcon?: JSX.Element;
+    subactionTooltip?: string;
+    onSubactionClick?: () => void;
 }
 
 export function ImageCard({
@@ -16,20 +19,37 @@ export function ImageCard({
     artist,
     title,
     onClick = () => { },
+    subactionIcon,
+    subactionTooltip,
+    onSubactionClick,
 }: ImageCardProps) {
-
     const [elevation, setElevation] = useState(1);
 
     return <>
-        <Paper 
-            className={styles.image_container} 
-            onClick={onClick} 
-            elevation={elevation} 
+        <Paper
+            className={styles.image_container}
+            elevation={elevation}
             onMouseEnter={() => {setElevation(4)}}
             onMouseLeave={() => {setElevation(1)}}
         >
+            {onSubactionClick !== undefined &&
+                <Tooltip title={subactionTooltip ?? ""}>
+                    <IconButton
+                        onClick={onSubactionClick}
+                        className={styles.image_actions}
+                    >
+                        {subactionIcon}
+                    </IconButton>
+                </Tooltip>
+            }
+
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={url} className={styles.image} alt="image of art"/>
+            <img
+                onClick={onClick}
+                src={url}
+                className={styles.image}
+                alt="image of art"
+            />
         </Paper>
         <div className={styles.subtitle_container}>
             <span><b>{title}</b></span>
