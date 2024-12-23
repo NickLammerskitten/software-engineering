@@ -76,6 +76,7 @@ export function DetailedImage() {
                     <Box className={styles.container}>
 
                         <Box className={styles.container__left}>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                                 className={styles.img}
                                 src={image.image_url || "/images/no-photo.jpg"}

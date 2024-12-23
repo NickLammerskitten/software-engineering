@@ -37,7 +37,7 @@ export function ImageConfigurator({ imageId }: { imageId: string }) {
         }
     }
 
-    const handleSubmit = async (formData: FormData) => {
+    const handleSubmit = async () => {
         const data = {
             imageId: imageId,
             portfolioId: selectedPortfolio,
@@ -66,7 +66,7 @@ export function ImageConfigurator({ imageId }: { imageId: string }) {
         <form
             className={"form_container"}
             id={"image-configurator-form"}
-            action={(value) => handleSubmit(value)}
+            action={handleSubmit}
             onChange={handleChange}
         >
             {loadingPortfolios && (<CircularProgress />)}

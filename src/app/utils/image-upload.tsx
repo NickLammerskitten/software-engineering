@@ -107,6 +107,7 @@ export function ImageUpload({ setImageUrl }: ImageUploadProps) {
                         <Tooltip title="Bild entfernen">
                             <IconButton style={{ position: "absolute", right: "0", margin: "5px 5px 0 0" }} onClick={handleRemoveImage}><Close /></IconButton>
                         </Tooltip>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                             style={{ maxWidth: "100%", maxHeight: "500px" }}
                             src={URL.createObjectURL(imageFile)}
