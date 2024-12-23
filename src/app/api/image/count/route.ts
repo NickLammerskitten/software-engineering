@@ -8,9 +8,10 @@ export async function GET() {
         .select("*", { count: 'exact', head: true })
 
     if (error) {
-        return new NextResponse("Fehler beim Laden der Bilder", {
-            status: 500,
-        });
+        return NextResponse.json({ message: "Fehler beim Laden der Bilder" }, {
+                status: 500,
+            },
+        );
     }
 
     return NextResponse.json({

@@ -8,7 +8,7 @@ export async function DELETE(request: NextRequest) {
     const configurationId = requestParams[6];
 
     if (!configurationId) {
-        return new NextResponse("Keine Konfigurations id angegeben.", {
+        return NextResponse.json({ message: "Keine Konfigurations id angegeben." }, {
             status: 400,
         });
     }
@@ -16,7 +16,7 @@ export async function DELETE(request: NextRequest) {
     const { data: userData, error: userError } = await supabaseClient.auth.getUser();
 
     if (userError || !userData?.user) {
-        return new NextResponse("Nicht authentifiziert", {
+        return NextResponse.json({ message: "Nicht authentifiziert" }, {
             status: 401,
         });
     }
@@ -33,6 +33,6 @@ export async function DELETE(request: NextRequest) {
     }
 
     return NextResponse.json({
-        message: "Konfiguration erfolgreich entfernt"
+        message: "Konfiguration erfolgreich entfernt",
     })
 }

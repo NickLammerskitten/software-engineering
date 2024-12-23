@@ -1,6 +1,6 @@
 import { CategoryData } from "@/src/app/api/models/category.model";
-import {createClient} from "@/src/utils/supabase/server";
-import {NextRequest, NextResponse} from "next/server";
+import { createClient } from "@/src/utils/supabase/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const nameRegEx = new RegExp('^[\u00C0-\u017Fa-zA-Z0-9 ]{3,30}$')
 
@@ -10,9 +10,9 @@ export async function POST(request: NextRequest) {
     const data = (await request.json()).formData as CategoryData;
     const parsedData = parsePostData(data);
 
-    const {valid, errors} = validateData(parsedData);
+    const { valid, errors } = validateData(parsedData);
     if (!valid) {
-        return new NextResponse(errors.join("\n"), {
+        return NextResponse.json({ message: errors.join("\n") }, {
             status: 400,
         });
     }
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
         .insert([parsedData]);
 
     if (error) {
-        return NextResponse.json({message: "Fehler beim Hinzufügen der Kategorie"}, {
+        return NextResponse.json({ message: "Fehler beim Hinzufügen der Kategorie" }, {
             status: 500,
         });
     }
@@ -50,9 +50,9 @@ export async function PUT(request: NextRequest) {
     const data = (await request.json()).formData as CategoryPutData;
     const parsedData = parsePutData(data);
 
-    const {valid, errors} = validateData(parsedData);
+    const { valid, errors } = validateData(parsedData);
     if (!valid) {
-        return new NextResponse(errors.join("\n"), {
+        return NextResponse.json({ message: errors.join("\n") }, {
             status: 400,
         });
     }
@@ -63,7 +63,7 @@ export async function PUT(request: NextRequest) {
         .eq('id', parsedData.id);
 
     if (error) {
-        return NextResponse.json({message: "Fehler beim Bearbeiten der Kategorie"}, {
+        return NextResponse.json({ message: "Fehler beim Bearbeiten der Kategorie" }, {
             status: 500,
         });
     }
@@ -102,13 +102,13 @@ export async function GET() {
         .order('id');
 
     if (!data) {
-        return NextResponse.json({message: "Keine Kategorien gefunden"}, {
+        return NextResponse.json({ message: "Keine Kategorien gefunden" }, {
             status: 404,
         });
     }
 
     if (error) {
-        return NextResponse.json({message: "Fehler beim Laden der Kategorien"}, {
+        return NextResponse.json({ message: "Fehler beim Laden der Kategorien" }, {
             status: 500,
         });
     }

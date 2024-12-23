@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
 
     const { valid, errors } = validateData(parsedData);
     if (!valid) {
-        return new NextResponse(errors.join("\n"), {
+        return NextResponse.json({ message: errors.join("\n") }, {
             status: 400,
         });
     }
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
         .insert([parsedData]);
 
     if (error) {
-        return new NextResponse("Fehler beim Hinzufügen des Bildes", {
+        return NextResponse.json({ message: "Fehler beim Hinzufügen des Bildes" }, {
             status: 500,
         });
     }
@@ -96,7 +96,7 @@ export async function GET(request: NextRequest) {
 
     const { valid, errors } = validateGetImagesRequest(getImagesRequest);
     if (!valid) {
-        return new NextResponse(errors.join("\n"), {
+        return NextResponse.json({ message: errors.join("\n") }, {
             status: 400,
         });
     }
@@ -105,16 +105,16 @@ export async function GET(request: NextRequest) {
     const { data, error } = await supabaseClient
         .from('image')
         .select()
-        .range(page*pageSize, page*pageSize+pageSize-1);
+        .range(page * pageSize, page * pageSize + pageSize - 1);
 
-        if (error) {
-        return NextResponse.json({message: "Fehler beim Laden der Bilder"}, {
+    if (error) {
+        return NextResponse.json({ message: "Fehler beim Laden der Bilder" }, {
             status: 500,
         });
     }
 
     if (!data) {
-        return NextResponse.json({message: "Keine Bilder gefunden"}, {
+        return NextResponse.json({ message: "Keine Bilder gefunden" }, {
             status: 404,
         });
     }

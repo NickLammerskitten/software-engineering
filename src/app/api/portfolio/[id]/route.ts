@@ -18,10 +18,10 @@ export async function GET(request: NextRequest) {
         })
     }
 
-    const {data: userData, error: userError} = await supabaseClient.auth.getUser();
+    const { data: userData, error: userError } = await supabaseClient.auth.getUser();
 
     if (userError || !userData?.user) {
-        return new NextResponse("Nicht authentifiziert", {
+        return NextResponse.json({ message: "Nicht authentifiziert" }, {
             status: 401,
         });
     }
@@ -36,13 +36,13 @@ export async function GET(request: NextRequest) {
         .single();
 
     if (error) {
-        return NextResponse.json({message: "Fehler beim Laden des Portfolios"}, {
+        return NextResponse.json({ message: "Fehler beim Laden des Portfolios" }, {
             status: 500,
         });
     }
 
     if (!data) {
-        return NextResponse.json({message: "Kein Portfolio gefunden"}, {
+        return NextResponse.json({ message: "Kein Portfolio gefunden" }, {
             status: 404,
         });
     }
@@ -55,12 +55,12 @@ export async function GET(request: NextRequest) {
 }
 
 const parseGetData = (data: PortfolioDatabaseResponseData): PortfolioResponseData => {
-        return {
-            id: data.id,
-            name: data.name,
-            description: data.description,
-            owner_id: data.owner_id,
-        }
+    return {
+        id: data.id,
+        name: data.name,
+        description: data.description,
+        owner_id: data.owner_id,
+    }
 }
 
 export async function DELETE(request: NextRequest) {

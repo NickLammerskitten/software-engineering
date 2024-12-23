@@ -10,10 +10,10 @@ import { NextResponse } from "next/server";
 export async function GET() {
     const supabaseClient = createClient();
 
-    const {data: userData, error: userError} = await supabaseClient.auth.getUser();
+    const { data: userData, error: userError } = await supabaseClient.auth.getUser();
 
     if (userError || !userData?.user) {
-        return new NextResponse("Nicht authentifiziert", {
+        return NextResponse.json({ message: "Nicht authentifiziert" }, {
             status: 401,
         });
     }
@@ -26,13 +26,13 @@ export async function GET() {
         .eq('owner_id', userId);
 
     if (error) {
-        return NextResponse.json({message: "Fehler beim Laden der Bilder"}, {
+        return NextResponse.json({ message: "Fehler beim Laden der Bilder" }, {
             status: 500,
         });
     }
 
     if (!data) {
-        return NextResponse.json({message: "Keine Bilder gefunden"}, {
+        return NextResponse.json({ message: "Keine Bilder gefunden" }, {
             status: 404,
         });
     }

@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     const { data: userData, error } = await supabaseClient.auth.getUser();
 
     if (error || !userData?.user) {
-        return new NextResponse("Nicht authentifiziert", {
+        return NextResponse.json({ message: "Nicht authentifiziert" }, {
             status: 401,
         });
     }
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
 
     const { valid, errors } = validateData(parsedData);
     if (!valid) {
-        return new NextResponse(errors.join("\n"), {
+        return NextResponse.json({ message: errors.join("\n") }, {
             status: 400,
         });
     }
@@ -50,7 +50,7 @@ export async function PUT(request: NextRequest) {
 
     const { valid, errors } = validateData(parsedData);
     if (!valid) {
-        return new NextResponse(errors.join("\n"), {
+        return NextResponse.json({ message: errors.join("\n") }, {
             status: 400,
         });
     }
