@@ -46,7 +46,7 @@ values
 
 
 insert into public.portfolio(id, name, description, owner_id)
-values ('5b72a802-54b1-4393-b205-ccf2937c073b','Portfolio 1', 'Portfolio 1 description', 'aabc22aa-68ba-425c-9888-d5e77ad1f30e');
+values ('5b72a802-54b1-4393-b205-ccf2937c073b','Portfolio 1', 'Portfolio 1 description', '185f2f83-d63a-4c9b-b4a0-7e4a885799e2');
 
 insert into public.image_configuration (image_id, portfolio_id, by_trader)
 values ('0b29d9c7-ae71-440a-a631-e67b0875cd51', '5b72a802-54b1-4393-b205-ccf2937c073b', true);
