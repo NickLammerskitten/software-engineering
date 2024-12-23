@@ -1,7 +1,7 @@
 "use client"
 
 import { IconButton, Paper, Tooltip } from "@mui/material";
-import { useState } from "react";
+import React, { useState } from "react";
 import styles from "./image-card.module.css";
 
 interface ImageCardProps {
@@ -9,7 +9,7 @@ interface ImageCardProps {
     artist: string;
     title: string;
     onClick?: () => void;
-    subactionIcon?: JSX.Element;
+    subactionIcon?: React.ReactNode;
     subactionTooltip?: string;
     onSubactionClick?: () => void;
 }

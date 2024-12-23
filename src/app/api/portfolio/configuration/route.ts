@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
 
     const { data: { user } } = await supabaseClient.auth.getUser();
     if (user == null) {
-        return NextResponse.json("Benutzer nicht gefunden.", {
+        return NextResponse.json({ message: "Benutzer nicht gefunden." }, {
             status: 404,
         });
     }
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
 
     const { valid, errors } = validateData(parsedData);
     if (!valid) {
-        return NextResponse.json(errors.join("\n"), {
+        return NextResponse.json({ message: errors.join("\n") }, {
             status: 400,
         });
     }
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
         .from('image_configuration')
         .insert([parsedData]);
     if (error) {
-        return NextResponse.json("Fehler beim Hinzufügen der Konfiguration", {
+        return NextResponse.json({ message: "Fehler beim Hinzufügen der Konfiguration" }, {
             status: 500,
         });
     }

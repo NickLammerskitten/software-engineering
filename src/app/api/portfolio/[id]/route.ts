@@ -70,7 +70,7 @@ export async function DELETE(request: NextRequest) {
     const portfolioId = requestParams[5];
 
     if (!portfolioId) {
-        return NextResponse.json("Keine Portfolio id angegeben.", {
+        return NextResponse.json({ message: "Keine Portfolio id angegeben." }, {
             status: 400,
         });
     }
@@ -78,7 +78,7 @@ export async function DELETE(request: NextRequest) {
     const { data: userData, error: userError } = await supabaseClient.auth.getUser();
 
     if (userError || !userData?.user) {
-        return NextResponse.json("Nicht authentifiziert", {
+        return NextResponse.json({ message: "Nicht authentifiziert" }, {
             status: 401,
         });
     }
@@ -90,7 +90,7 @@ export async function DELETE(request: NextRequest) {
         .eq('owner_id', userData.user.id);
 
     if (error) {
-        return NextResponse.json("Fehler beim Löschen des Portfolios", {
+        return NextResponse.json({ message: "Fehler beim Löschen des Portfolios" }, {
             status: 500,
         });
     }
