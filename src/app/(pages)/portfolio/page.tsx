@@ -5,7 +5,7 @@ import { createClient } from "@/src/utils/supabase/server";
 import { Add } from "@mui/icons-material";
 import { Button, Typography } from "@mui/material";
 
-export default async function Portfolio() {
+export default async function PortfolioPage() {
     const supabase = await createClient();
 
     const {

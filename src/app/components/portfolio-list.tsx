@@ -99,7 +99,7 @@ export function PortfolioList() {
                 </Box>
             ) : (
                 <Alert severity="info">
-                    Keine Portfolios vorhanden.
+                    Keine vorhanden.
                 </Alert>
             )}
 
