@@ -1,4 +1,5 @@
 import { PortfolioDatabaseResponseData, PortfolioResponseData } from "@/src/app/api/models/portfolio.model";
+import { parseGetData } from "@/src/app/api/portfolio/data-parser";
 import { createClient } from "@/src/utils/supabase/server";
 import { NextResponse } from "next/server";
 
@@ -41,16 +42,5 @@ export async function GET() {
 
     return NextResponse.json({
         data: parsedData,
-    });
-}
-
-const parseGetData = (data: PortfolioDatabaseResponseData[]): PortfolioResponseData[] => {
-    return data.map((entry) => {
-        return {
-            id: entry.id,
-            name: entry.name,
-            description: entry.description,
-            owner_id: entry.owner_id,
-        }
     });
 }

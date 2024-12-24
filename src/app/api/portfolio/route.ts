@@ -1,8 +1,43 @@
-import { PortfolioData, PortfolioDatabaseData, PortfolioPutData } from "@/src/app/api/models/portfolio.model";
+import {
+    PortfolioData,
+    PortfolioDatabaseData,
+    PortfolioDatabaseResponseData,
+    PortfolioPutData,
+} from "@/src/app/api/models/portfolio.model";
+import { parseGetData } from "@/src/app/api/portfolio/data-parser";
 import { createClient } from "@/src/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
 const nameRegEx = new RegExp('^[\u00C0-\u017Fa-zA-Z0-9 ]{3,30}$')
+
+/*
+    GET request at /api/portfolio to get all portfolios
+*/
+export async function GET() {
+    const supabaseClient = createClient();
+
+    const { data, error } = await supabaseClient
+        .from('portfolio')
+        .select();
+
+    if (error) {
+        return NextResponse.json({ message: "Fehler beim Laden der Bilder" }, {
+            status: 500,
+        });
+    }
+
+    if (!data) {
+        return NextResponse.json({ message: "Keine Bilder gefunden" }, {
+            status: 404,
+        });
+    }
+
+    const parsedData = parseGetData(data as PortfolioDatabaseResponseData[]);
+
+    return NextResponse.json({
+        data: parsedData,
+    });
+}
 
 export async function POST(request: NextRequest) {
     const supabaseClient = createClient()
