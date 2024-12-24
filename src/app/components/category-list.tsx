@@ -25,12 +25,13 @@ export function CategoryList() {
 
         const json = await response.json();
 
+        setLoading(false);
+
         if (!response.ok) {
             setCategoryListError(`Error while fetching categories (${response.status}): ${json["message"]}`);
             return;
         }
 
-        setLoading(false);
         setCategories(json["data"]);
     };
 

@@ -4,7 +4,7 @@ import { createClient } from "@/src/utils/supabase/server";
 import { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
     const supabaseClient = createClient()
 
     const data = (await request.json()).formData as ImageData;
@@ -12,7 +12,7 @@ export async function POST(request: Request) {
 
     const { valid, errors } = validateData(parsedData);
     if (!valid) {
-        return new NextResponse(errors.join("\n"), {
+        return NextResponse.json({ message: errors.join("\n") }, {
             status: 400,
         });
     }
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
         .insert([parsedData]);
 
     if (error) {
-        return new NextResponse("Fehler beim Hinzufügen des Bildes", {
+        return NextResponse.json({ message: "Fehler beim Hinzufügen des Bildes" }, {
             status: 500,
         });
     }
@@ -108,7 +108,7 @@ export async function GET(request: NextRequest) {
     const pageSize = Number(searchParams.get("pageSize") ?? DEFAULT_PAGE_SIZE);
     const category = (searchParams.get("category") ?? "").split(",");
     const searchQuery = decodeQueryParam(searchParams.get("query") ?? "");
-    
+
     const getImagesRequest = {
         page: page,
         pageSize: pageSize,
@@ -118,7 +118,7 @@ export async function GET(request: NextRequest) {
 
     const { valid, errors } = validateGetImagesRequest(getImagesRequest);
     if (!valid) {
-        return new NextResponse(errors.join("\n"), {
+        return NextResponse.json({ message: errors.join("\n") }, {
             status: 400,
         });
     }
@@ -174,7 +174,7 @@ async function getCategoryByName(client: SupabaseClient, category: string | stri
         .from("category")
         .select()
         .in("name", filterNames)
-    
+
     if (error) {
         return {category: null, error: error};
     }

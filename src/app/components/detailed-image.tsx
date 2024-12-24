@@ -1,6 +1,7 @@
 "use client"
 
 import styles from "@/src/app/components/detailed-image.module.css";
+import { ImageConfigurator } from "@/src/app/components/image-configurator";
 import { Image } from "@/src/app/models/image.model";
 import { numberToCurrency } from "@/src/app/utils/number-to-currency";
 import { Box, CircularProgress, Divider, Typography } from "@mui/material";
@@ -75,6 +76,7 @@ export function DetailedImage() {
                     <Box className={styles.container}>
 
                         <Box className={styles.container__left}>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                                 className={styles.img}
                                 src={image.image_url || "/images/no-photo.jpg"}
@@ -145,6 +147,8 @@ export function DetailedImage() {
                             >
                                 {numberToCurrency(image.price)}
                             </Typography>
+
+                            <ImageConfigurator imageId={image.id} />
 
                             <Divider className={styles.divider_spacing} />
 

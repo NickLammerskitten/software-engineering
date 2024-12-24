@@ -1,9 +1,11 @@
+import { PortfolioList } from "@/src/app/components/portfolio-list";
+import { TraderOnly } from "@/src/app/components/trader-only";
 import { UserRole } from "@/src/app/models/user-role";
-import WrongUserRole from "@/src/app/utils/wrong-user-role";
 import { createClient } from "@/src/utils/supabase/server";
-import { Typography } from "@mui/material";
+import { Add } from "@mui/icons-material";
+import { Button, Typography } from "@mui/material";
 
-export default async function Portfolio() {
+export default async function PortfolioPage() {
     const supabase = await createClient();
 
     const {
@@ -12,15 +14,26 @@ export default async function Portfolio() {
 
     return (
         <div>
-            {user?.role === UserRole.Customer ? (
-                <>
-                    <Typography variant={"h1"}>
-                        Meine Mappe
-                    </Typography>
-                </>
+            {user?.role === UserRole.Trader ? (
+                <Typography variant={"h1"}>
+                    Themenmappen
+                </Typography>
             ) : (
-                <WrongUserRole />
+                <Typography variant={"h1"}>
+                    Auswahlmappen
+                </Typography>
             )}
+
+            <TraderOnly>
+                <Button startIcon={<Add />}
+                        href="/portfolio/add"
+                        className={"top_action_buttons"}
+                >
+                    Hinzufügen
+                </Button>
+            </TraderOnly>
+
+            <PortfolioList />
         </div>
     );
 }
