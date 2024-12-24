@@ -1,4 +1,4 @@
-import { PortfolioDatabaseResponseData, PortfolioResponseData } from "@/src/app/api/models/portfolio.model";
+import { PortfolioDatabaseResponseData } from "@/src/app/api/models/portfolio.model";
 import { parseGetData } from "@/src/app/api/portfolio/data-parser";
 import { createClient } from "@/src/utils/supabase/server";
 import { NextResponse } from "next/server";
