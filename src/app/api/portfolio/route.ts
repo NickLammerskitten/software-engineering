@@ -1,7 +1,6 @@
 import {
     PortfolioData,
     PortfolioDatabaseData,
-    PortfolioDatabaseResponseData,
     PortfolioPutData,
 } from "@/src/app/api/models/portfolio.model";
 import { parseGetData } from "@/src/app/api/portfolio/data-parser";
@@ -32,7 +31,7 @@ export async function GET() {
         });
     }
 
-    const parsedData = parseGetData(data as PortfolioDatabaseResponseData[]);
+    const parsedData = data.map(parseGetData);
 
     return NextResponse.json({
         data: parsedData,

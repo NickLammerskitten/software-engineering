@@ -1,12 +1,14 @@
 import { PortfolioDatabaseResponseData } from "@/src/app/api/models/portfolio.model";
 import { parseGetData } from "@/src/app/api/portfolio/data-parser";
+import { UserRole } from "@/src/app/models/user-role";
 import { createClient } from "@/src/utils/supabase/server";
+import { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 
 /*
     GET request at /api/portfolio/my to get all portfolios of the current user
-    Trader = Themenmappen
-    Customer = Auswahlmappen
+    Trader = Themenmappen (multiple possible)
+    Customer = Auswahlmappe (only one possible)
 */
 export async function GET() {
     const supabaseClient = createClient();
@@ -21,10 +23,9 @@ export async function GET() {
 
     const userId = userData.user.id as string;
 
-    const { data, error } = await supabaseClient
-        .from('portfolio')
-        .select()
-        .eq('owner_id', userId);
+    const { data, error } = userData.user.role === UserRole.Trader
+        ? await fetchPortfolios(userId, supabaseClient)
+        : await fetchOnePortfolio(userId, supabaseClient);
 
     if (error) {
         return NextResponse.json({ message: "Fehler beim Laden der Bilder" }, {
@@ -38,9 +39,38 @@ export async function GET() {
         });
     }
 
-    const parsedData = parseGetData(data as PortfolioDatabaseResponseData[]);
+    const parsedData = userData.user.role === UserRole.Trader
+        ? (data as PortfolioDatabaseResponseData[]).map(parseGetData)
+        : parseGetData(data as PortfolioDatabaseResponseData);
 
     return NextResponse.json({
         data: parsedData,
     });
+}
+
+const fetchOnePortfolio = async (userId: string, supabaseClient: SupabaseClient): Promise<{
+    data: PortfolioDatabaseResponseData,
+    error: PostgrestError | null
+}> => {
+    const { data, error } = await supabaseClient
+        .from('portfolio')
+        .select()
+        .eq('owner_id', userId)
+        .single();
+
+    return { data: data, error: error };
+}
+
+const fetchPortfolios = async (userId: string, supabaseClient: SupabaseClient): Promise<{
+    data: PortfolioDatabaseResponseData[],
+    error: PostgrestError | null
+}> => {
+    const { data, error } = await supabaseClient
+        .from('portfolio')
+        .select()
+        .eq('owner_id', userId)
+
+    const typedData: PortfolioDatabaseResponseData[] = data as PortfolioDatabaseResponseData[];
+
+    return { data: typedData, error: error };
 }
