@@ -1,6 +1,5 @@
 import { PortfolioDatabaseResponseData } from "@/src/app/api/models/portfolio.model";
 import { parseGetData } from "@/src/app/api/portfolio/data-parser";
-import { UserRole } from "@/src/app/models/user-role";
 import { createClient } from "@/src/utils/supabase/server";
 import { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
