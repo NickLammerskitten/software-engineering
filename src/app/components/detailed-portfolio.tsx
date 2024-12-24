@@ -1,7 +1,8 @@
 "use client";
 
+import { ImageConfigurationList } from "@/src/app/components/image-configuration-list";
 import { Portfolio } from "@/src/app/models/portfolio.model";
-import { CircularProgress, Typography } from "@mui/material";
+import { CircularProgress, Divider, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 
 export function DetailedPortfolio() {
@@ -27,8 +28,14 @@ export function DetailedPortfolio() {
 
                 return json;
             })
-            .then((data: { data: Portfolio }) => {
-                setPortfolio(data.data);
+            .then((data: { data: Portfolio[] }) => {
+                if (data.data.length === 0) {
+                    setLoadingPortfolio(false);
+                    setPortfolio(null);
+                    return;
+                }
+
+                setPortfolio(data.data[0]);
                 setLoadingPortfolio(false);
             });
     }
@@ -43,6 +50,10 @@ export function DetailedPortfolio() {
                         {portfolio.description && (
                             <Typography variant={"body1"}>Beschreibung: {portfolio.description}</Typography>
                         )}
+
+                        <Divider className={"divider_spacing"}/>
+
+                        <ImageConfigurationList portfolioId={portfolio.id} />
                     </>
                 ) : (
                     <Typography variant={"body1"}>

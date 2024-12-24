@@ -153,7 +153,7 @@ export function DetailedImage({ isTrader }: { isTrader: boolean }) {
                                 isTrader={isTrader}
                             />
 
-                            <Divider className={styles.divider_spacing} />
+                            <Divider className={"divider_spacing"} />
 
                             <Typography variant={"body1"}>
                                 {image.description}

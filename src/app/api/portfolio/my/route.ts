@@ -23,9 +23,7 @@ export async function GET() {
 
     const userId = userData.user.id as string;
 
-    const { data, error } = userData.user.role === UserRole.Trader
-        ? await fetchPortfolios(userId, supabaseClient)
-        : await fetchOnePortfolio(userId, supabaseClient);
+    const { data, error } = await fetchPortfolios(userId, supabaseClient)
 
     if (error) {
         return NextResponse.json({ message: "Fehler beim Laden der Bilder" }, {
@@ -39,26 +37,11 @@ export async function GET() {
         });
     }
 
-    const parsedData = userData.user.role === UserRole.Trader
-        ? (data as PortfolioDatabaseResponseData[]).map(parseGetData)
-        : parseGetData(data as PortfolioDatabaseResponseData);
+    const parsedData = (data as PortfolioDatabaseResponseData[]).map(parseGetData)
 
     return NextResponse.json({
         data: parsedData,
     });
-}
-
-const fetchOnePortfolio = async (userId: string, supabaseClient: SupabaseClient): Promise<{
-    data: PortfolioDatabaseResponseData,
-    error: PostgrestError | null
-}> => {
-    const { data, error } = await supabaseClient
-        .from('portfolio')
-        .select()
-        .eq('owner_id', userId)
-        .single();
-
-    return { data: data, error: error };
 }
 
 const fetchPortfolios = async (userId: string, supabaseClient: SupabaseClient): Promise<{
