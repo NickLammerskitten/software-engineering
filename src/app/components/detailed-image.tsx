@@ -8,7 +8,7 @@ import { Box, CircularProgress, Divider, Typography } from "@mui/material";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export function DetailedImage() {
+export function DetailedImage({ isTrader }: { isTrader: boolean }) {
     const pathname = usePathname();
 
     const [loading, setLoading] = useState<boolean>(true);
@@ -148,7 +148,10 @@ export function DetailedImage() {
                                 {numberToCurrency(image.price)}
                             </Typography>
 
-                            <ImageConfigurator imageId={image.id} />
+                            <ImageConfigurator
+                                imageId={image.id}
+                                isTrader={isTrader}
+                            />
 
                             <Divider className={styles.divider_spacing} />
 

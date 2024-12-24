@@ -16,7 +16,15 @@ import { useEffect, useState } from "react";
 const successMessage: string = "Bild erfolgreich hinzugefügt!";
 const errorMessage: string = "Fehler beim Hinzufügen des Bildes!";
 
-export function ImageConfigurator({ imageId }: { imageId: string }) {
+const customerPortfolioRoute: string = "/api/portfolio/my";
+const traderPortfolioRoute: string = "/api/portfolio";
+
+interface ImageConfiguratorProps {
+    isTrader: boolean;
+    imageId: string;
+}
+
+export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps) {
     const [loadingPortfolios, setLoadingPortfolios] = useState<boolean>(false);
     const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
     const [selectedPortfolio, setSelectedPortfolio] = useState<number | undefined>(undefined);
@@ -30,7 +38,7 @@ export function ImageConfigurator({ imageId }: { imageId: string }) {
     const fetchPortfolios = async () => {
         setLoadingPortfolios(true);
 
-        const response = await fetch(`/api/portfolio/my`);
+        const response = await fetch(isTrader ? traderPortfolioRoute : customerPortfolioRoute);
 
         const json = await response.json();
 
