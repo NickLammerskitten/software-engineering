@@ -1,18 +1,16 @@
 "use client"
-
+import { default as NextImage } from 'next/image';
 import styles from "@/src/app/components/detailed-image.module.css";
 import { Image } from "@/src/app/models/image.model";
 import { numberToCurrency } from "@/src/app/utils/number-to-currency";
 import {Box, Button, CircularProgress, Divider, Typography} from "@mui/material";
-import {usePathname, useRouter} from "next/navigation";
+import {usePathname} from "next/navigation";
 import { useEffect, useState } from "react";
 import * as React from "react";
 import {UserRole} from "@/src/app/models/user-role";
 
-
 export function DetailedImage() {
     const pathname = usePathname();
-    const router = useRouter();
     const [loading, setLoading] = useState<boolean>(true);
     const [imageId, setImageId] = useState<string | null>(null);
 
@@ -78,7 +76,7 @@ export function DetailedImage() {
                     <Box className={styles.container}>
 
                         <Box className={styles.container__left}>
-                            <img
+                            <NextImage
                                 className={styles.img}
                                 src={image.image_url || "/images/no-photo.jpg"}
                                 alt={image.title}
@@ -166,9 +164,7 @@ export function DetailedImage() {
                         <Box className={"actions_container"}>
                             <Button
                                 variant={"text"}
-                                onClick={() => {
-                                    router.push(`/image/edit/${image.id}`)
-                                }}
+                                href={`/image/edit/${image.id}`}
                                 role= {UserRole.Trader}
                             >
                                 Edit

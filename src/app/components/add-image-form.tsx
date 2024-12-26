@@ -86,10 +86,7 @@ export default function AddImageForm() {
 
             setSuccess(true);
 
-
             return response.json();
-
-
         });
     }
 

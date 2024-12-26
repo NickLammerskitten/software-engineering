@@ -1,6 +1,5 @@
 "use client"
-
-
+import { default as NextImage } from 'next/image';
 import {usePathname, useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 import {Image} from "@/src/app/models/image.model";
@@ -306,7 +305,7 @@ export default function EditImageForm() {
                         />
                     </FormControl>
                     <Box className={styles.container__left}>
-                        <img className={styles.img} src={image.image_url || "/images/no-photo.jpg"} alt={image.title} />
+                        <NextImage className={styles.img} src={image.image_url || "/images/no-photo.jpg"} alt={image.title} />
                     </Box>
 
                     {success === true && <Alert severity="success">{successMessage}</Alert>}
