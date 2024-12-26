@@ -1,0 +1,51 @@
+html, body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+:root {
+    --margin-normal: 1rem;
+    --color-inherit: inherit;
+}
+
+.form_container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px
+}
+
+.top_action_buttons {
+    margin-bottom: 1rem !important;
+}
+
+.actions_container {
+    display: flex;
+    margin-top: 1rem;
+    gap: 1rem;
+    justify-content: flex-end;
+
+    p {
+        display: flex;
+        align-items: center;
+    }
+}
+
+.bottom_space {
+    margin-bottom: 1rem !important;
+}
+
+.items_list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.5rem
+    }
+}
