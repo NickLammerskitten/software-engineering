@@ -1,7 +1,7 @@
 "use client"
 
 
-import {usePathname} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 import {Image} from "@/src/app/models/image.model";
 import {
@@ -16,12 +16,12 @@ import {
     TextField
 } from "@mui/material";
 import * as React from "react";
-import {ImageUpload} from "@/src/app/utils/image-upload";
 import styles from "@/src/app/components/detailed-image.module.css";
 const successMessage: string = "Bild erfolgreich geändert!";
 const errorMessage: string = "Fehler beim Bearbeiten des Bildes!";
 export default function EditImageForm() {
     const pathname = usePathname();
+    const router = useRouter();
     const [loadingCategories, setLoadingCategories] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(true);
     const [, setImageId] = useState<string | null>(null);
@@ -119,7 +119,7 @@ export default function EditImageForm() {
             paperWidth: formData.get("paperWidth"),
             price: formData.get("price"),
             annotations: formData.get("annotations"),
-            image_url: image?.image_url,
+
         }
 
         await fetch(`/api/image`, {
@@ -140,7 +140,7 @@ export default function EditImageForm() {
 
             setSuccess(true);
 
-
+            router.push('/');
 
             return response.json();
 
@@ -306,11 +306,7 @@ export default function EditImageForm() {
                         />
                     </FormControl>
                     <Box className={styles.container__left}>
-                        <img
-                            className={styles.img}
-                            src={image.image_url || "/images/no-photo.jpg"}
-                            alt={image.title}
-                        />
+                        <img className={styles.img} src={image.image_url || "/images/no-photo.jpg"} alt={image.title} />
                     </Box>
 
                     {success === true && <Alert severity="success">{successMessage}</Alert>}

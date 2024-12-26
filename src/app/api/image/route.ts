@@ -20,7 +20,7 @@ export async function POST(request: Request) {
 
     const { valid, errors } = validateData(parsedData);
     if (!valid) {
-        return new NextResponse(errors.join("\n"), {
+        return  NextResponse.json({message: errors.join("\n")}, {
             status: 400,
         });
     }
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
         .insert([parsedData]);
 
     if (error) {
-        return new NextResponse("Fehler beim Hinzufügen des Bildes", {
+        return NextResponse.json({message: "Fehler beim Hinzufügen des Bildes" + error.message}, {
             status: 500,
         });
     }
@@ -105,7 +105,7 @@ export async function GET(request: NextRequest) {
 
     const { valid, errors } = validateGetImagesRequest(getImagesRequest);
     if (!valid) {
-        return new NextResponse(errors.join("\n"), {
+        return NextResponse.json({message: errors.join("\n")}, {
             status: 400,
         });
     }
@@ -117,7 +117,7 @@ export async function GET(request: NextRequest) {
         .range(page*pageSize, page*pageSize+pageSize-1);
 
         if (error) {
-        return NextResponse.json({message: "Fehler beim Laden der Bilder"}, {
+        return NextResponse.json({message: "Fehler beim Laden der Bilder" + error.message}, {
             status: 500,
         });
     }
@@ -158,17 +158,13 @@ export async function PUT(request: Request) {
     const { id, ...parsedData }: ImageDatabaseResponseData = putRequestDataToDatabaseData(data);
 
     if (!id) {
-        return new NextResponse("Fehler: ID muss angegeben werden", {
-            status: 400,
-        });
+        return NextResponse.json({message: "ID muss angegeben werden"} ,{status: 400});
     }
 
     // Validate the parsed data
     const { valid, errors } = validateData(parsedData);
     if (!valid) {
-        return new NextResponse(errors.join("\n"), {
-            status: 400,
-        });
+        return NextResponse.json({message: errors.join("\n")},{status: 400});
     }
 
     // Perform the update in Supabase
@@ -178,9 +174,7 @@ export async function PUT(request: Request) {
         .eq('id', id);
 
     if (error) {
-        return new NextResponse("Fehler beim Aktualisieren des Bildes", {
-            status: 500,
-        });
+        return NextResponse.json({message: "Fehler beim Aktualisieren des Bildes" + error.message} ,{status: 500});
     }
 
     return NextResponse.json({
