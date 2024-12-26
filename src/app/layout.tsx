@@ -1,4 +1,3 @@
-import { AuthProviderContext } from "@/src/app/context/auth-context";
 import theme from "@/src/app/theme/theme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
@@ -9,6 +8,8 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+import AppBar from "./components/app-bar";
+import styles from "./layout.module.css"
 
 export const metadata: Metadata = {
     title: "Create Next App",
@@ -22,16 +23,17 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="de">
-        <body>
-            <AppRouterCacheProvider>
-                <AuthProviderContext>
+            <body style={{ display: "flex", flexDirection: "column" }}>
+                <AppRouterCacheProvider>
                     <ThemeProvider theme={theme}>
                         <CssBaseline />
-                        {children}
+                        <AppBar />
+                        <div className={styles.content_container}>
+                            {children}
+                        </div>
                     </ThemeProvider>
-                </AuthProviderContext>
-            </AppRouterCacheProvider>
-        </body>
+                </AppRouterCacheProvider>
+            </body>
         </html>
     );
 }
