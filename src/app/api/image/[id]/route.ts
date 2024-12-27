@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
         .single();
 
     if (error) {
-        return NextResponse.json({ message: "Fehler beim Laden des Bildes" }, {
+        return NextResponse.json({ message: `Fehler beim Laden des Bildes, ${error.details}` }, {
             status: 500,
         });
     }

@@ -2,7 +2,6 @@
 
 import { ImageUpload } from "@/src/app/utils/image-upload";
 import {
-    Alert,
     Box,
     Button,
     CircularProgress,
@@ -15,20 +14,18 @@ import {
     Select,
     TextField,
 } from "@mui/material";
+import { useSnackbar } from "notistack";
 import * as React from "react";
 import { useEffect, useState } from "react";
 
-const successMessage: string = "Bild erfolgreich hinzugefügt!";
-const errorMessage: string = "Fehler beim Hinzufügen des Bildes!";
-
 export default function AddImageForm() {
+    const { enqueueSnackbar } = useSnackbar();
+
     const [loadingCategories, setLoadingCategories] = useState<boolean>(true);
     const [categories, setCategories] = useState<Category[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<number | undefined>(undefined);
 
     const [image_url, setImageUrl] = useState<string | undefined>(undefined);
-
-    const [success, setSuccess] = useState<boolean | undefined>(undefined);
 
     useEffect(() => {
         setLoadingCategories(true);
@@ -73,24 +70,19 @@ export default function AddImageForm() {
             headers: {
                 "Content-Type": "application/json",
             },
-        }).then((response) => {
-            if (!response.ok) {
-                setSuccess(false);
+        }).then(async (response) => {
+            const json = await response.json();
 
+            if (!response.ok) {
+                enqueueSnackbar(json.message, { variant: "error" });
                 return;
             }
 
             const form = document.getElementById("add-image-form") as HTMLFormElement;
             form.reset();
 
-            setSuccess(true);
-
-            return response.json();
+            enqueueSnackbar(json.message, { variant: "success" });
         });
-    }
-
-    const handleChange = () => {
-        setSuccess(undefined);
     }
 
     return (
@@ -98,7 +90,6 @@ export default function AddImageForm() {
             className={"form_container"}
             id={"add-image-form"}
             action={(value) => handleSubmit(value)}
-            onChange={handleChange}
         >
             {loadingCategories ? (<CircularProgress />)
                 : (
@@ -238,9 +229,6 @@ export default function AddImageForm() {
             </FormControl>
 
             <ImageUpload setImageUrl={setImageUrl} />
-
-            {success === true && <Alert severity="success">{successMessage}</Alert>}
-            {success === false && <Alert severity="error">{errorMessage}</Alert>}
 
             <Box className={"actions_container"}>
                 <Button
