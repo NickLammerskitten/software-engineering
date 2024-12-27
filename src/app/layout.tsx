@@ -1,3 +1,4 @@
+import { Content } from "@/src/app/content";
 import theme from "@/src/app/theme/theme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
@@ -23,17 +24,19 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="de">
-            <body style={{ display: "flex", flexDirection: "column" }}>
-                <AppRouterCacheProvider>
-                    <ThemeProvider theme={theme}>
-                        <CssBaseline />
-                        <AppBar />
-                        <div className={styles.content_container}>
+        <body style={{ display: "flex", flexDirection: "column" }}>
+            <AppRouterCacheProvider>
+                <ThemeProvider theme={theme}>
+                    <CssBaseline />
+                    <AppBar />
+                    <div className={styles.content_container}>
+                        <Content>
                             {children}
-                        </div>
-                    </ThemeProvider>
-                </AppRouterCacheProvider>
-            </body>
+                        </Content>
+                    </div>
+                </ThemeProvider>
+            </AppRouterCacheProvider>
+        </body>
         </html>
     );
 }
