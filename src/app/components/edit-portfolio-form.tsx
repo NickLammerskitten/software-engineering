@@ -15,12 +15,10 @@ import {
     Typography,
 } from "@mui/material";
 import { usePathname, useRouter } from "next/navigation";
+import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 
 const fallbackImageUrl = "/images/no-photo.jpg";
-
-const successMessage: string = "Themenmappe erfolgreich bearbeitet!";
-const errorMessage: string = "Fehler beim Bearbeiten der Themenmappe!";
 
 const nameRegEx = new RegExp('^[\u00C0-\u017Fa-zA-Z0-9 ]{3,30}$')
 
@@ -34,6 +32,7 @@ interface ImageConfiguration {
 }
 
 export function EditPortfolioForm() {
+    const { enqueueSnackbar } = useSnackbar();
     const pathname = usePathname();
     const router = useRouter();
 
@@ -45,11 +44,6 @@ export function EditPortfolioForm() {
 
     const [loadingImageConfigurations, setLoadingImageConfigurations] = useState<boolean>(true);
     const [imageConfigurations, setImageConfigurations] = useState<ImageConfiguration[]>([]);
-    const [imageConfigurationsErrorMessages, setImageConfigurationsErrorMessages] = useState<{
-        [id: string]: string
-    }>({})
-
-    const [success, setSuccess] = useState<boolean | undefined>(undefined);
 
     useEffect(() => {
         fetchData();
@@ -86,7 +80,7 @@ export function EditPortfolioForm() {
 
                 if (!response.ok) {
                     setLoadingPortfolio(false);
-                    throw new Error(`Error while fetching portfolio (${response.status}): ${json["message"]}`);
+                    enqueueSnackbar(json.message, { variant: "error" });
                 }
 
                 return json;
@@ -103,7 +97,7 @@ export function EditPortfolioForm() {
 
                 if (!response.ok) {
                     setLoadingImageConfigurations(false);
-                    throw new Error(`Error while fetching portfolio configurations (${response.status}): ${json["message"]}`);
+                    enqueueSnackbar(json.message, { variant: "error" });
                 }
 
                 return json;
@@ -135,16 +129,14 @@ export function EditPortfolioForm() {
             }),
         });
 
+        const json = await response.json();
+
         if (!response.ok) {
-            setSuccess(false);
+            enqueueSnackbar(json.message, { variant: "error" });
             return;
         }
 
-        setSuccess(true);
-    }
-
-    const handleChange = () => {
-        setSuccess(undefined);
+        enqueueSnackbar(json.message, { variant: "success" });
     }
 
     const removeImageConfiguration = async (imageConfigurationId: string) => {
@@ -158,8 +150,7 @@ export function EditPortfolioForm() {
         const json = await response.json();
 
         if (!response.ok) {
-            imageConfigurationsErrorMessages[imageConfigurationId] = `Error ${response.status}: ${json["message"]}`;
-            setImageConfigurationsErrorMessages({ ...imageConfigurationsErrorMessages });
+            enqueueSnackbar(json.message, { variant: "error" });
             return;
         }
 
@@ -174,7 +165,6 @@ export function EditPortfolioForm() {
                         className={"form_container"}
                         id={"edit-portfolio-form"}
                         action={(value) => handleSubmit(value)}
-                        onChange={handleChange}
                     >
                         <FormControl>
                             <FormLabel htmlFor="name">Name *</FormLabel>
@@ -209,9 +199,6 @@ export function EditPortfolioForm() {
                                 rows={4}
                             />
                         </FormControl>
-
-                        {success === true && <Alert severity="success">{successMessage}</Alert>}
-                        {success === false && <Alert severity="error">{errorMessage}</Alert>}
 
                         <Box className={"actions_container"}>
                             <Button

@@ -1,17 +1,15 @@
 "use client"
 
-import { Alert, Box, Button, FormControl, FormLabel, TextField } from "@mui/material";
+import { Box, Button, FormControl, FormLabel, TextField } from "@mui/material";
+import { useSnackbar } from "notistack";
 import { useEffect, useRef, useState } from "react";
-
-const successMessage: string = "Themenmappe erfolgreich hinzugefügt!";
-const errorMessage: string = "Fehler beim Hinzufügen der Themenmappe!";
 
 const nameRegEx = new RegExp('^[\u00C0-\u017Fa-zA-Z0-9 ]{3,30}$')
 
 export function AddPortfolioForm() {
+    const { enqueueSnackbar } = useSnackbar();
 
     const [portfolioNameValid, setPortfolioNameValid] = useState<boolean>(true);
-    const [success, setSuccess] = useState<boolean | undefined>(undefined);
     const [portfolioName, setPortfolioName] = useState<string>("");
     const formRef = useRef<HTMLFormElement>(null);
 
@@ -37,21 +35,17 @@ export function AddPortfolioForm() {
             headers: {
                 "Content-Type": "application/json",
             },
-        }).then((response) => {
+        }).then(async (response) => {
+            const json = await response.json();
             if (!response.ok) {
-                setSuccess(false);
+                enqueueSnackbar(json.message, { variant: "error" });
                 return;
             }
 
             formRef.current?.reset();
 
-            setSuccess(true);
-            return response.json();
+            enqueueSnackbar(json.message, { variant: "success" });
         })
-    }
-
-    const handleChange = () => {
-        setSuccess(undefined);
     }
 
     return (
@@ -59,7 +53,6 @@ export function AddPortfolioForm() {
             className={"form_container"}
             id={"add-porfolio-form"}
             action={(value) => handleSubmit(value)}
-            onChange={handleChange}
             ref={formRef}
         >
             <FormControl fullWidth>
@@ -91,9 +84,6 @@ export function AddPortfolioForm() {
                     rows={4}
                 />
             </FormControl>
-
-            {success === true && <Alert severity="success">{successMessage}</Alert>}
-            {success === false && <Alert severity="error">{errorMessage}</Alert>}
 
             <Box className={"actions_container"}>
                 <Button

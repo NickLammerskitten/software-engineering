@@ -4,19 +4,17 @@ import { Portfolio } from "@/src/app/models/portfolio.model";
 import { useConfirmDialog } from "@/src/app/utils/confirm-dialog-hook";
 import { Delete, Edit } from "@mui/icons-material";
 import { Alert, Box, Card, CircularProgress, IconButton } from "@mui/material";
+import { useSnackbar } from "notistack";
 import { Fragment, useEffect, useState } from "react";
 
 export function PortfolioList() {
+    const { enqueueSnackbar } = useSnackbar();
     const [loading, setLoading] = useState<boolean>(false);
     const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
-    const [errorMessages, setErrorMessages] = useState<{ [id: string]: string }>({});
-    const [portfolioListError, setPortfolioListError] = useState<string>("");
 
     const { showConfirm, ConfirmDialogComponent } = useConfirmDialog();
 
     useEffect(() => {
-        setErrorMessages({});
-        setPortfolioListError("");
         fetchPortfolios();
     }, []);
 
@@ -30,7 +28,7 @@ export function PortfolioList() {
         setLoading(false);
 
         if (!response.ok) {
-            setPortfolioListError(`Error while fetching portfolios (${response.status}): ${json["message"]}`);
+            enqueueSnackbar(json.message, { variant: "error" });
             return;
         }
 
@@ -42,18 +40,17 @@ export function PortfolioList() {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
-            }
+            },
         });
 
         const json = await response.json();
 
         if (!response.ok) {
-            errorMessages[id] = `Error ${response.status}: ${json["message"]}`;
-            setErrorMessages({ ...errorMessages });
+            enqueueSnackbar(json.message, { variant: "error" });
             return;
         }
 
-
+        enqueueSnackbar(json.message, { variant: "success" });
         await fetchPortfolios();
     };
 
@@ -63,7 +60,7 @@ export function PortfolioList() {
             "",
             () => {
                 deletePortfolio(id);
-            }
+            },
         );
     };
 
@@ -89,23 +86,12 @@ export function PortfolioList() {
                                     </IconButton>
                                 </Box>
                             </Card>
-                            {errorMessages[portfolio.id] &&
-                                <Alert severity="error">
-                                    {errorMessages[portfolio.id]}
-                                </Alert>
-                            }
                         </Fragment>
                     ))}
                 </Box>
             ) : (
                 <Alert severity="info">
                     Keine vorhanden.
-                </Alert>
-            )}
-
-            {portfolioListError !== "" && (
-                <Alert severity="error">
-                    {portfolioListError}
                 </Alert>
             )}
 
