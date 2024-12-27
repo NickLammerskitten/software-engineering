@@ -25,7 +25,7 @@ export async function GET() {
         });
     }
 
-    if (!data) {
+    if (!data || data.length === 0) {
         return NextResponse.json({ message: "Keine Bilder gefunden" }, {
             status: 404,
         });
