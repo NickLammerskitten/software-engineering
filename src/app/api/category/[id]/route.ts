@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (error) {
-        return NextResponse.json({message: "Fehler beim Laden der Kategorie"}, {
+        return NextResponse.json({message: `Fehler beim Laden der Kategorie, ${error.details}`}, {
             status: 500,
         });
     }

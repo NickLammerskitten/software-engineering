@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
         .insert([parsedData]);
 
     if (error) {
-        return NextResponse.json({ message: "Fehler beim Hinzufügen der Kategorie" }, {
+        return NextResponse.json({ message: `Fehler beim Hinzufügen der Kategorie, ${error.details}` }, {
             status: 500,
         });
     }
@@ -63,7 +63,7 @@ export async function PUT(request: NextRequest) {
         .eq('id', parsedData.id);
 
     if (error) {
-        return NextResponse.json({ message: "Fehler beim Bearbeiten der Kategorie" }, {
+        return NextResponse.json({ message: `Fehler beim Bearbeiten der Kategorie, ${error.details}` }, {
             status: 500,
         });
     }
