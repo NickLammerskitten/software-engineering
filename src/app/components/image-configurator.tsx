@@ -13,7 +13,15 @@ import { useSnackbar } from "notistack";
 import * as React from "react";
 import { useEffect, useState } from "react";
 
-export function ImageConfigurator({ imageId }: { imageId: string }) {
+const customerPortfolioRoute: string = "/api/portfolio/my";
+const traderPortfolioRoute: string = "/api/portfolio";
+
+interface ImageConfiguratorProps {
+    isTrader: boolean;
+    imageId: string;
+}
+
+export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps) {
     const {enqueueSnackbar} = useSnackbar();
     const [loadingPortfolios, setLoadingPortfolios] = useState<boolean>(false);
     const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
@@ -26,7 +34,7 @@ export function ImageConfigurator({ imageId }: { imageId: string }) {
     const fetchPortfolios = async () => {
         setLoadingPortfolios(true);
 
-        const response = await fetch(`/api/portfolio/my`);
+        const response = await fetch(isTrader ? traderPortfolioRoute : customerPortfolioRoute);
 
         const json = await response.json();
 

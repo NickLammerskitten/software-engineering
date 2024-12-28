@@ -1,49 +1,32 @@
 "use client"
 
-import { ImageCard } from "@/src/app/components/image-card";
+import { ImageConfigurationList } from "@/src/app/components/image-configuration-list";
 import { Portfolio } from "@/src/app/models/portfolio.model";
-import { Remove } from "@mui/icons-material";
 import {
-    Alert,
     Box,
     Button,
     CircularProgress,
+    Divider,
     FormControl,
     FormLabel,
-    Grid2,
     TextField,
     Typography,
 } from "@mui/material";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 
-const fallbackImageUrl = "/images/no-photo.jpg";
-
 const nameRegEx = new RegExp('^[\u00C0-\u017Fa-zA-Z0-9 ]{3,30}$')
-
-interface ImageConfiguration {
-    id: string;
-    byTrader: boolean;
-    imageId: string;
-    title: string;
-    artist: string;
-    imageUrl: string | null;
-}
 
 export function EditPortfolioForm() {
     const { enqueueSnackbar } = useSnackbar();
     const pathname = usePathname();
-    const router = useRouter();
 
     const [loadingPortfolio, setLoadingPortfolio] = useState<boolean>(true);
     const [portfolioId, setPortfolioId] = useState<string | null>(null);
 
     const [portfolio, setPortfolio] = useState<Portfolio | null>(null);
     const [portfolioNameValid, setPortfolioNameValid] = useState<boolean>(true)
-
-    const [loadingImageConfigurations, setLoadingImageConfigurations] = useState<boolean>(true);
-    const [imageConfigurations, setImageConfigurations] = useState<ImageConfiguration[]>([]);
 
     useEffect(() => {
         fetchData();
@@ -89,23 +72,6 @@ export function EditPortfolioForm() {
                 setPortfolio(data.data);
                 setLoadingPortfolio(false);
             });
-
-        setLoadingImageConfigurations(true);
-        fetch(`/api/portfolio/${portfolioId}/configuration`)
-            .then(async (response) => {
-                const json = await response.json();
-
-                if (!response.ok) {
-                    setLoadingImageConfigurations(false);
-                    enqueueSnackbar(json.message, { variant: "error" });
-                }
-
-                return json;
-            })
-            .then((data: { data: ImageConfiguration[] }) => {
-                setImageConfigurations(data.data);
-                setLoadingImageConfigurations(false);
-            });
     }
 
     const handleSubmit = async (formData: FormData) => {
@@ -137,24 +103,6 @@ export function EditPortfolioForm() {
         }
 
         enqueueSnackbar(json.message, { variant: "success" });
-    }
-
-    const removeImageConfiguration = async (imageConfigurationId: string) => {
-        const response = await fetch(`/api/portfolio/configuration/${imageConfigurationId}`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
-
-        const json = await response.json();
-
-        if (!response.ok) {
-            enqueueSnackbar(json.message, { variant: "error" });
-            return;
-        }
-
-        fetchData();
     }
 
     return (
@@ -224,47 +172,9 @@ export function EditPortfolioForm() {
 
             {portfolio !== null && (
                 <>
-                    <Typography
-                        variant={"h4"}
-                        className={"top_space"}
-                    >
-                        Bilder
-                    </Typography>
+                    <Divider className={"divider_spacing"} />
 
-                    {loadingImageConfigurations && (<CircularProgress />)}
-
-                    {!loadingImageConfigurations && imageConfigurations.length === 0 && (
-                        <Alert severity="info">
-                            Keine Bilder vorhanden.
-                        </Alert>
-                    )}
-
-                    <Grid2
-                        container
-                        spacing={3}
-                    >
-                        {imageConfigurations.map((image, index) => {
-                            return <Grid2
-                                key={index}
-                                size={3}
-                                minWidth={250}
-                            >
-                                <ImageCard
-                                    url={image.imageUrl ?? fallbackImageUrl}
-                                    artist={image.artist}
-                                    title={image.title}
-                                    onClick={() => {
-                                        router.push(`/image/${image.imageId}`)
-                                    }}
-                                    subactionIcon={<Remove />}
-                                    subactionTooltip={"Entfernen"}
-                                    onSubactionClick={() => {
-                                        removeImageConfiguration(image.id);
-                                    }}
-                                />
-                            </Grid2>;
-                        })}
-                    </Grid2>
+                    <ImageConfigurationList portfolioId={portfolio.id} />
                 </>
             )}
         </>
