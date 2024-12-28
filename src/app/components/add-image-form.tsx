@@ -22,6 +22,7 @@ const successMessage: string = "Bild erfolgreich hinzugefügt!";
 const errorMessage: string = "Fehler beim Hinzufügen des Bildes!";
 
 export default function AddImageForm() {
+
     const [loadingCategories, setLoadingCategories] = useState<boolean>(true);
     const [categories, setCategories] = useState<Category[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<number | undefined>(undefined);

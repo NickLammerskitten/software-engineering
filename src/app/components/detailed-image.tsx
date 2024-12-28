@@ -4,9 +4,11 @@ import styles from "@/src/app/components/detailed-image.module.css";
 import { ImageConfigurator } from "@/src/app/components/image-configurator";
 import { Image } from "@/src/app/models/image.model";
 import { numberToCurrency } from "@/src/app/utils/number-to-currency";
-import { Box, CircularProgress, Divider, Typography } from "@mui/material";
-import { usePathname } from "next/navigation";
+import {Box, Button, CircularProgress, Divider, Typography} from "@mui/material";
+import {usePathname} from "next/navigation";
 import { useEffect, useState } from "react";
+import * as React from "react";
+import {UserRole} from "@/src/app/models/user-role";
 
 export function DetailedImage({ isTrader }: { isTrader: boolean }) {
     const pathname = usePathname();
@@ -73,6 +75,16 @@ export function DetailedImage({ isTrader }: { isTrader: boolean }) {
 
             {!loading && image && category && (
                 <Box>
+                    <Box className={"actions_container"}>
+                        <Button
+                            variant={"text"}
+                            href={`/image/${imageId}/edit`}
+                            role= {UserRole.Trader}
+                        >
+                            Edit
+                        </Button>
+                    </Box>
+
                     <Box className={styles.container}>
 
                         <Box className={styles.container__left}>

@@ -1,5 +1,14 @@
-import { databaseDataToResponseData, postRequestDataToDatabaseData } from "@/src/app/api/image/data-parser";
-import { ImageData, ImageDatabaseData, ImageDatabaseResponseData } from "@/src/app/api/models/image.model";
+import {
+    databaseDataToResponseData,
+    postRequestDataToDatabaseData,
+    putRequestDataToDatabaseData
+} from "@/src/app/api/image/data-parser";
+import {
+    ImageData,
+    ImageDatabaseData,
+    ImageDatabaseResponseData,
+    ImageResponseData
+} from "@/src/app/api/models/image.model";
 import { createClient } from "@/src/utils/supabase/server";
 import { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
@@ -166,11 +175,11 @@ export async function GET(request: NextRequest) {
 }
 
 async function getImages(
-    client: SupabaseClient, 
-    page: number, 
-    pageSize: number, 
-    category_id_filter?: number[], 
-    query_filter?: string, 
+    client: SupabaseClient,
+    page: number,
+    pageSize: number,
+    category_id_filter?: number[],
+    query_filter?: string,
     original_filter?: boolean
 ): Promise<{data: ImageDatabaseResponseData[] | null, error: PostgrestError | null, count: number | null}> {
     let query = client.from("image").select("*", {count: "exact"});
@@ -223,4 +232,35 @@ const validateGetImagesRequest = (data: GetImagesRequest): { valid: boolean, err
     }
 
     return { valid: errors.length === 0, errors };
+}
+
+export async function PUT(request: Request) {
+    const supabaseClient = createClient();
+
+    const data = (await request.json()).formData as ImageResponseData;
+    const { id, ...parsedData }: ImageDatabaseResponseData = putRequestDataToDatabaseData(data);
+
+    if (!id) {
+        return NextResponse.json({message: "ID muss angegeben werden"} ,{status: 400});
+    }
+
+    // Validate the parsed data
+    const { valid, errors } = validateData(parsedData);
+    if (!valid) {
+        return NextResponse.json({message: errors.join("\n")},{status: 400});
+    }
+
+    // Perform the update in Supabase
+    const { error } = await supabaseClient
+        .from('image')
+        .update(parsedData)
+        .eq('id', id);
+
+    if (error) {
+        return NextResponse.json({message: "Fehler beim Aktualisieren des Bildes" + error.message} ,{status: 500});
+    }
+
+    return NextResponse.json({
+        message: "Bild erfolgreich aktualisiert",
+    });
 }
