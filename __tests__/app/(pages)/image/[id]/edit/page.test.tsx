@@ -1,4 +1,4 @@
-import EditImage from '@/src/app/(pages)/image/edit/[id]/page';
+import EditImage from '@/src/app/(pages)/image/[id]/edit/page';
 import { render, screen } from "@testing-library/react";
 import { http } from "msw";
 import { setupServer } from "msw/node";

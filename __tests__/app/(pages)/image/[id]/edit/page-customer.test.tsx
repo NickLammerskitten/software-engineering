@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import EditImage from "@/src/app/(pages)/image/edit/[id]/page";
+import EditImage from "@/src/app/(pages)/image/[id]/edit/page";
 
 describe('Eidt Image Page for non-trader', () => {
     beforeEach(() => {

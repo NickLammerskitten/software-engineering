@@ -75,6 +75,16 @@ export function DetailedImage({ isTrader }: { isTrader: boolean }) {
 
             {!loading && image && category && (
                 <Box>
+                    <Box className={"actions_container"}>
+                        <Button
+                            variant={"text"}
+                            href={`/image/${imageId}/edit`}
+                            role= {UserRole.Trader}
+                        >
+                            Edit
+                        </Button>
+                    </Box>
+
                     <Box className={styles.container}>
 
                         <Box className={styles.container__left}>
@@ -168,15 +178,6 @@ export function DetailedImage({ isTrader }: { isTrader: boolean }) {
                             <Typography variant={"body1"}>
                                 {"Kennung: " + imageId}
                             </Typography>
-                        </Box>
-                        <Box className={"actions_container"}>
-                            <Button
-                                variant={"text"}
-                                href={`/image/edit/${image.id}`}
-                                role= {UserRole.Trader}
-                            >
-                                Edit
-                            </Button>
                         </Box>
                     </Box>
                 </Box>

@@ -1,40 +1,45 @@
 "use client"
-import { default as NextImage } from 'next/image';
-import {usePathname, useRouter} from "next/navigation";
-import {useEffect, useState} from "react";
-import {Image} from "@/src/app/models/image.model";
+
+import styles from "@/src/app/components/detailed-image.module.css";
+import { Image } from "@/src/app/models/image.model";
 import {
-    Alert, Box, Button,
+    Alert,
+    Box,
+    Button,
     CircularProgress,
     FormControl,
-    FormLabel, InputAdornment,
+    FormLabel,
+    InputAdornment,
     InputLabel,
     MenuItem,
     OutlinedInput,
     Select,
-    TextField
+    TextField,
 } from "@mui/material";
-import * as React from "react";
-import styles from "@/src/app/components/detailed-image.module.css";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
 const successMessage: string = "Bild erfolgreich geändert!";
 const errorMessage: string = "Fehler beim Bearbeiten des Bildes!";
+
 export default function EditImageForm() {
     const pathname = usePathname();
     const router = useRouter();
+
     const [loadingCategories, setLoadingCategories] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(true);
-    const [, setImageId] = useState<string | null>(null);
     const [image, setImage] = useState<Image | null>(null);
     const [categories, setCategories] = useState<Category[]>([]);
-    const [category, setCategory] = useState< Category | null>(null);
+    const [category, setCategory] = useState<Category | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<number | undefined>(undefined);
     const [success, setSuccess] = useState<boolean | undefined>(undefined);
 
     useEffect(() => {
         setLoading(true);
 
-        const imageId = pathname.split('/').pop() as string;
-        setImageId(imageId);
+        const pathnames = pathname.split('/');
+        pathnames.pop();
+        const imageId = pathnames.pop();
 
         if (imageId == null) {
             setLoading(false);
@@ -100,7 +105,6 @@ export default function EditImageForm() {
             });
     }, [image]);
 
-
     const handleChange = () => {
         setSuccess(undefined);
     }
@@ -146,8 +150,7 @@ export default function EditImageForm() {
         });
     }
 
-
-    return(
+    return (
         <div>
             {loading && (<CircularProgress />)}
 
@@ -305,7 +308,11 @@ export default function EditImageForm() {
                         />
                     </FormControl>
                     <Box className={styles.container__left}>
-                        <NextImage className={styles.img} src={image.image_url || "/images/no-photo.jpg"} alt={image.title} />
+                        <img
+                            className={styles.img}
+                            src={image.image_url || "/images/no-photo.jpg"}
+                            alt={image.title}
+                        />
                     </Box>
 
                     {success === true && <Alert severity="success">{successMessage}</Alert>}
@@ -327,8 +334,7 @@ export default function EditImageForm() {
                         </Button>
                     </Box>
                 </form>
-                )}
+            )}
         </div>
-        )
-
+    )
 }
