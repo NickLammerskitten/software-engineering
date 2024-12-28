@@ -1,8 +1,18 @@
-import { databaseDataToResponseData, postRequestDataToDatabaseData } from "@/src/app/api/image/data-parser";
-import { ImageData, ImageDatabaseData } from "@/src/app/api/models/image.model";
+import {
+    databaseDataToResponseData,
+    postRequestDataToDatabaseData,
+    putRequestDataToDatabaseData
+} from "@/src/app/api/image/data-parser";
+import {
+    ImageData,
+    ImageDatabaseData,
+    ImageDatabaseResponseData,
+    ImageResponseData
+} from "@/src/app/api/models/image.model";
 import { createClient } from "@/src/utils/supabase/server";
 import { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
+import { UserRole } from "../../models/user-role";
 
 export async function POST(request: NextRequest) {
     const supabaseClient = createClient()
@@ -124,6 +134,7 @@ export async function GET(request: NextRequest) {
     }
 
     const supabaseClient = createClient();
+    const { data: { user } } = await supabaseClient.auth.getUser();
 
     const categories = await getCategoryByName(supabaseClient, category);
     if (categories.error) {
@@ -134,14 +145,9 @@ export async function GET(request: NextRequest) {
     }
     const category_ids = categories.category.map(c => c.id);
 
-    let query = supabaseClient.from("image").select("*", {count: "exact"});
-    if (category_ids.length > 0) {
-        query = query.in("category_id", category_ids);
-    }
-    if (searchQuery !== "") {
-        query = query.or(`title.ilike.%${searchQuery}%,artist.ilike.%${searchQuery}%`)
-    }
-    const { data, error, count } = await query.range(page*pageSize, page*pageSize+pageSize-1);
+    const useOriginalFilter = user === null || user?.role !== UserRole.Trader;
+
+    const { data, error, count } = await getImages(supabaseClient, page, pageSize, category_ids, searchQuery, useOriginalFilter);
 
     if (error) {
         return NextResponse.json({message: "Fehler beim Laden der Bilder: " + error.message}, {
@@ -166,6 +172,39 @@ export async function GET(request: NextRequest) {
         pageSize: pageSize,
         total: count,
     });
+}
+
+async function getImages(
+    client: SupabaseClient,
+    page: number,
+    pageSize: number,
+    category_id_filter?: number[],
+    query_filter?: string,
+    original_filter?: boolean
+): Promise<{data: ImageDatabaseResponseData[] | null, error: PostgrestError | null, count: number | null}> {
+    let query = client.from("image").select("*", {count: "exact"});
+
+    if (category_id_filter && category_id_filter.length > 0) {
+        query = query.in("category_id", category_id_filter);
+    }
+
+    if (query_filter && query_filter !== "") {
+        query = query.or(`title.ilike.%${query_filter}%,artist.ilike.%${query_filter}%`)
+    }
+
+    if (original_filter) {
+        const { data: trader_assigned_originals, error } = await client.from("trader_assigned_originals").select("id");
+        if (error) {
+            return {data: null, error: error, count: null};
+        }
+        if (trader_assigned_originals.length > 0) {
+            query = query.not("id", "in", `(${trader_assigned_originals.map(v => v.id).join(",")})`)
+        }
+    }
+
+    const { data, error, count } = await query.range(page*pageSize, page*pageSize+pageSize-1);
+
+    return { data, error, count };
 }
 
 async function getCategoryByName(client: SupabaseClient, category: string | string[]): Promise<{category: Category[] | null, error: PostgrestError | null}> {
@@ -193,4 +232,35 @@ const validateGetImagesRequest = (data: GetImagesRequest): { valid: boolean, err
     }
 
     return { valid: errors.length === 0, errors };
+}
+
+export async function PUT(request: Request) {
+    const supabaseClient = createClient();
+
+    const data = (await request.json()).formData as ImageResponseData;
+    const { id, ...parsedData }: ImageDatabaseResponseData = putRequestDataToDatabaseData(data);
+
+    if (!id) {
+        return NextResponse.json({message: "ID muss angegeben werden"} ,{status: 400});
+    }
+
+    // Validate the parsed data
+    const { valid, errors } = validateData(parsedData);
+    if (!valid) {
+        return NextResponse.json({message: errors.join("\n")},{status: 400});
+    }
+
+    // Perform the update in Supabase
+    const { error } = await supabaseClient
+        .from('image')
+        .update(parsedData)
+        .eq('id', id);
+
+    if (error) {
+        return NextResponse.json({message: "Fehler beim Aktualisieren des Bildes" + error.message} ,{status: 500});
+    }
+
+    return NextResponse.json({
+        message: "Bild erfolgreich aktualisiert",
+    });
 }
