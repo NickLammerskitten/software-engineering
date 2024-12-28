@@ -10,9 +10,11 @@ import {
     ImageResponseData
 } from "@/src/app/api/models/image.model";
 import { createClient } from "@/src/utils/supabase/server";
+import { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
+import { UserRole } from "../../models/user-role";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
     const supabaseClient = createClient()
 
     const data = (await request.json()).formData as ImageData;
@@ -20,7 +22,7 @@ export async function POST(request: Request) {
 
     const { valid, errors } = validateData(parsedData);
     if (!valid) {
-        return  NextResponse.json({message: errors.join("\n")}, {
+        return NextResponse.json({ message: errors.join("\n") }, {
             status: 400,
         });
     }
@@ -30,7 +32,7 @@ export async function POST(request: Request) {
         .insert([parsedData]);
 
     if (error) {
-        return NextResponse.json({message: "Fehler beim Hinzufügen des Bildes" + error.message}, {
+        return NextResponse.json({ message: "Fehler beim Hinzufügen des Bildes" }, {
             status: 500,
         });
     }
@@ -85,39 +87,70 @@ const DEFAULT_PAGE_SIZE = 10;
 interface GetImagesRequest {
     page: number;
     pageSize: number;
+    category: string[];
+    query: string;
+}
+
+function decodeQueryParam(p: string) {
+    return decodeURIComponent(p.replace(/\+/g, " "));
 }
 
 /*
-    GET request at /api/gallery with optional parameters page
-    and pageSize. Parameter page starts at 0, so that 0 is the
-    first page.
-    The default page is 0 and the default page size is 10.
+    method: GET
+    route: /api/image
+    parameters:
+    - page
+        Number indicating page to be fetched
+        default: 0
+    - pageSize
+        Number determining the page size
+        default: 10
+    - category
+        Comma separated list of category names to filter for
+        default: ""
+    - query
+        Query string to filter title and artist by
+        default: ""
 */
 export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const page = Number(searchParams.get("page") ?? 0);
     const pageSize = Number(searchParams.get("pageSize") ?? DEFAULT_PAGE_SIZE);
+    const category = (searchParams.get("category") ?? "").split(",");
+    const searchQuery = decodeQueryParam(searchParams.get("query") ?? "");
 
     const getImagesRequest = {
-        page,
-        pageSize,
+        page: page,
+        pageSize: pageSize,
+        category: category,
+        query: searchQuery
     } as GetImagesRequest;
 
     const { valid, errors } = validateGetImagesRequest(getImagesRequest);
     if (!valid) {
-        return NextResponse.json({message: errors.join("\n")}, {
+        return NextResponse.json({ message: errors.join("\n") }, {
             status: 400,
         });
     }
 
     const supabaseClient = createClient();
-    const { data, error } = await supabaseClient
-        .from('image')
-        .select()
-        .range(page*pageSize, page*pageSize+pageSize-1);
+    const { data: { user } } = await supabaseClient.auth.getUser();
 
-        if (error) {
-        return NextResponse.json({message: "Fehler beim Laden der Bilder" + error.message}, {
+    const categories = await getCategoryByName(supabaseClient, category);
+    if (categories.error) {
+        return NextResponse.json({message: categories.error?.message}, {status: 500});
+    }
+    if (categories.category === null) {
+        return NextResponse.json({message: `Keine Kategorien mit Namen '${category}' gefunden`}, {status: 404})
+    }
+    const category_ids = categories.category.map(c => c.id);
+
+    const useOriginalFilter = user === null || user?.role !== UserRole.Trader;
+
+    const { data, error, count } = await getImages(supabaseClient, page, pageSize, category_ids, searchQuery, useOriginalFilter);
+
+    if (error) {
+        return NextResponse.json({message: "Fehler beim Laden der Bilder: " + error.message}, {
             status: 500,
         });
     }
@@ -135,7 +168,57 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
         data: parsedData,
+        page: page,
+        pageSize: pageSize,
+        total: count,
     });
+}
+
+async function getImages(
+    client: SupabaseClient,
+    page: number,
+    pageSize: number,
+    category_id_filter?: number[],
+    query_filter?: string,
+    original_filter?: boolean
+): Promise<{data: ImageDatabaseResponseData[] | null, error: PostgrestError | null, count: number | null}> {
+    let query = client.from("image").select("*", {count: "exact"});
+
+    if (category_id_filter && category_id_filter.length > 0) {
+        query = query.in("category_id", category_id_filter);
+    }
+
+    if (query_filter && query_filter !== "") {
+        query = query.or(`title.ilike.%${query_filter}%,artist.ilike.%${query_filter}%`)
+    }
+
+    if (original_filter) {
+        const { data: trader_assigned_originals, error } = await client.from("trader_assigned_originals").select("id");
+        if (error) {
+            return {data: null, error: error, count: null};
+        }
+        if (trader_assigned_originals.length > 0) {
+            query = query.not("id", "in", `(${trader_assigned_originals.map(v => v.id).join(",")})`)
+        }
+    }
+
+    const { data, error, count } = await query.range(page*pageSize, page*pageSize+pageSize-1);
+
+    return { data, error, count };
+}
+
+async function getCategoryByName(client: SupabaseClient, category: string | string[]): Promise<{category: Category[] | null, error: PostgrestError | null}> {
+    const filterNames = typeof category === "string" ? [category] : category;
+    const { data, error } = await client
+        .from("category")
+        .select()
+        .in("name", filterNames)
+
+    if (error) {
+        return {category: null, error: error};
+    }
+
+    return {category: data, error: null};
 }
 
 const validateGetImagesRequest = (data: GetImagesRequest): { valid: boolean, errors: string[] } => {

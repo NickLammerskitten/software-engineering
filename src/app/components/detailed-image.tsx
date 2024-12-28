@@ -1,6 +1,7 @@
 "use client"
-import { default as NextImage } from 'next/image';
+
 import styles from "@/src/app/components/detailed-image.module.css";
+import { ImageConfigurator } from "@/src/app/components/image-configurator";
 import { Image } from "@/src/app/models/image.model";
 import { numberToCurrency } from "@/src/app/utils/number-to-currency";
 import {Box, Button, CircularProgress, Divider, Typography} from "@mui/material";
@@ -9,8 +10,9 @@ import { useEffect, useState } from "react";
 import * as React from "react";
 import {UserRole} from "@/src/app/models/user-role";
 
-export function DetailedImage() {
+export function DetailedImage({ isTrader }: { isTrader: boolean }) {
     const pathname = usePathname();
+
     const [loading, setLoading] = useState<boolean>(true);
     const [imageId, setImageId] = useState<string | null>(null);
 
@@ -76,7 +78,8 @@ export function DetailedImage() {
                     <Box className={styles.container}>
 
                         <Box className={styles.container__left}>
-                            <NextImage
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
                                 className={styles.img}
                                 src={image.image_url || "/images/no-photo.jpg"}
                                 alt={image.title}
@@ -147,7 +150,12 @@ export function DetailedImage() {
                                 {numberToCurrency(image.price)}
                             </Typography>
 
-                            <Divider className={styles.divider_spacing} />
+                            <ImageConfigurator
+                                imageId={image.id}
+                                isTrader={isTrader}
+                            />
+
+                            <Divider className={"divider_spacing"} />
 
                             <Typography variant={"body1"}>
                                 {image.description}

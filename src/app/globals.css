@@ -35,3 +35,22 @@ html, body {
 .bottom_space {
     margin-bottom: 1rem !important;
 }
+
+.items_list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.5rem
+    }
+}
+
+.divider_spacing {
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
+}
