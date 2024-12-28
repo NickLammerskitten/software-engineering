@@ -1,14 +1,5 @@
 import { Portfolio } from "@/src/app/models/portfolio.model";
-import {
-    Box,
-    Button,
-    CircularProgress,
-    FormControl,
-    InputLabel,
-    MenuItem,
-    Select,
-    Typography,
-} from "@mui/material";
+import { Box, Button, CircularProgress, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 import * as React from "react";
 import { useEffect, useState } from "react";
@@ -22,7 +13,7 @@ interface ImageConfiguratorProps {
 }
 
 export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps) {
-    const {enqueueSnackbar} = useSnackbar();
+    const { enqueueSnackbar } = useSnackbar();
     const [loadingPortfolios, setLoadingPortfolios] = useState<boolean>(false);
     const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
     const [selectedPortfolio, setSelectedPortfolio] = useState<number | undefined>(undefined);
@@ -41,7 +32,7 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
         setLoadingPortfolios(false);
 
         if (!response.ok) {
-            enqueueSnackbar(json.message, {variant: "error"});
+            enqueueSnackbar(json.message, { variant: "error" });
             setPortfolios([]);
             return;
         }
@@ -68,11 +59,11 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
         const json = await response.json();
 
         if (!response.ok) {
-            enqueueSnackbar(json.message, {variant: "error"});
+            enqueueSnackbar(json.message, { variant: "error" });
             return;
         }
 
-        enqueueSnackbar(json.message, {variant: "success"});
+        enqueueSnackbar(json.message, { variant: "success" });
     }
 
     return (
