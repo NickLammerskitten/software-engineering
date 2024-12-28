@@ -76,13 +76,14 @@ export function DetailedImage({ isTrader }: { isTrader: boolean }) {
             {!loading && image && category && (
                 <Box>
                     <Box className={"actions_container"}>
-                        <Button
-                            variant={"text"}
-                            href={`/image/${imageId}/edit`}
-                            role= {UserRole.Trader}
-                        >
-                            Edit
-                        </Button>
+                        {isTrader && (
+                            <Button
+                                variant={"text"}
+                                href={`/image/${imageId}/edit`}
+                            >
+                                Edit
+                            </Button>
+                        )}
                     </Box>
 
                     <Box className={styles.container}>
