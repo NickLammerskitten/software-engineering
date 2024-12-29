@@ -8,7 +8,6 @@ import {Box, Button, CircularProgress, Divider, Typography} from "@mui/material"
 import {usePathname} from "next/navigation";
 import { useEffect, useState } from "react";
 import * as React from "react";
-import {UserRole} from "@/src/app/models/user-role";
 
 export function DetailedImage({ isTrader }: { isTrader: boolean }) {
     const pathname = usePathname();
@@ -76,13 +75,14 @@ export function DetailedImage({ isTrader }: { isTrader: boolean }) {
             {!loading && image && category && (
                 <Box>
                     <Box className={"actions_container"}>
-                        <Button
-                            variant={"text"}
-                            href={`/image/${imageId}/edit`}
-                            role= {UserRole.Trader}
-                        >
-                            Edit
-                        </Button>
+                        {isTrader && (
+                            <Button
+                                variant={"text"}
+                                href={`/image/${imageId}/edit`}
+                            >
+                                Edit
+                            </Button>
+                        )}
                     </Box>
 
                     <Box className={styles.container}>

@@ -42,7 +42,7 @@ export async function POST(request: Request) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     if (error && error.statusCode !== '409') {
-        return NextResponse.json({message: "Fehler beim Hinzufügen des Bildes"}, {
+        return NextResponse.json({message: `Fehler beim Hinzufügen des Bildes, ${error.message}`}, {
             status: 500,
         });
     }

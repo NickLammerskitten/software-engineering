@@ -1,20 +1,8 @@
 import { Portfolio } from "@/src/app/models/portfolio.model";
-import {
-    Alert,
-    Box,
-    Button,
-    CircularProgress,
-    FormControl,
-    InputLabel,
-    MenuItem,
-    Select,
-    Typography,
-} from "@mui/material";
+import { Box, Button, CircularProgress, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material";
+import { useSnackbar } from "notistack";
 import * as React from "react";
 import { useEffect, useState } from "react";
-
-const successMessage: string = "Bild erfolgreich hinzugefügt!";
-const errorMessage: string = "Fehler beim Hinzufügen des Bildes!";
 
 const customerPortfolioRoute: string = "/api/portfolio/my";
 const traderPortfolioRoute: string = "/api/portfolio";
@@ -25,11 +13,10 @@ interface ImageConfiguratorProps {
 }
 
 export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps) {
+    const { enqueueSnackbar } = useSnackbar();
     const [loadingPortfolios, setLoadingPortfolios] = useState<boolean>(false);
     const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
     const [selectedPortfolio, setSelectedPortfolio] = useState<number | undefined>(undefined);
-
-    const [success, setSuccess] = useState<boolean | undefined>()
 
     useEffect(() => {
         fetchPortfolios();
@@ -45,6 +32,7 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
         setLoadingPortfolios(false);
 
         if (!response.ok) {
+            enqueueSnackbar(json.message, { variant: "error" });
             setPortfolios([]);
             return;
         }
@@ -68,16 +56,14 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
             }),
         });
 
+        const json = await response.json();
+
         if (!response.ok) {
-            setSuccess(false);
+            enqueueSnackbar(json.message, { variant: "error" });
             return;
         }
 
-        setSuccess(true);
-    }
-
-    const handleChange = () => {
-        setSuccess(undefined);
+        enqueueSnackbar(json.message, { variant: "success" });
     }
 
     return (
@@ -85,7 +71,6 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
             className={"form_container"}
             id={"image-configurator-form"}
             action={handleSubmit}
-            onChange={handleChange}
         >
             {loadingPortfolios ? (<CircularProgress />) : portfolios && portfolios.length > 0 ? (
                 <FormControl fullWidth>
@@ -100,7 +85,6 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
                         value={selectedPortfolio}
                         onChange={(event => {
                             setSelectedPortfolio(event.target.value as number);
-                            setSuccess(undefined);
                         })}
                     >
                         {portfolios.map((portfolio) => (
@@ -115,9 +99,6 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
                 <Typography variant={"body1"}>Noch keine Mappen vorhanden. Erstelle deine erste Mappe, um eine Bild
                     Konfiguration hinzuzufügen!</Typography>
             )}
-
-            {success === true && <Alert severity="success">{successMessage}</Alert>}
-            {success === false && <Alert severity="error">{errorMessage}</Alert>}
 
             <Box>
                 {portfolios.length > 0 ? (

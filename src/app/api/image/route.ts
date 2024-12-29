@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
         .insert([parsedData]);
 
     if (error) {
-        return NextResponse.json({ message: "Fehler beim Hinzufügen des Bildes" }, {
+        return NextResponse.json({ message: `Fehler beim Hinzufügen des Bildes, ${error.details}` }, {
             status: 500,
         });
     }

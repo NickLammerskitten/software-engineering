@@ -3,7 +3,6 @@
 import styles from "@/src/app/components/detailed-image.module.css";
 import { Image } from "@/src/app/models/image.model";
 import {
-    Alert,
     Box,
     Button,
     CircularProgress,
@@ -16,15 +15,16 @@ import {
     Select,
     TextField,
 } from "@mui/material";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 
 const successMessage: string = "Bild erfolgreich geändert!";
 const errorMessage: string = "Fehler beim Bearbeiten des Bildes!";
 
 export default function EditImageForm() {
+    const { enqueueSnackbar } = useSnackbar();
     const pathname = usePathname();
-    const router = useRouter();
 
     const [loadingCategories, setLoadingCategories] = useState<boolean>(true);
     const [loading, setLoading] = useState<boolean>(true);
@@ -32,7 +32,6 @@ export default function EditImageForm() {
     const [categories, setCategories] = useState<Category[]>([]);
     const [category, setCategory] = useState<Category | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<number | undefined>(undefined);
-    const [success, setSuccess] = useState<boolean | undefined>(undefined);
 
     useEffect(() => {
         setLoading(true);
@@ -105,10 +104,6 @@ export default function EditImageForm() {
             });
     }, [image]);
 
-    const handleChange = () => {
-        setSuccess(undefined);
-    }
-
     const handleSubmit = async (formData: FormData) => {
         const data = {
             id: image?.id,
@@ -133,7 +128,7 @@ export default function EditImageForm() {
             },
         }).then((response) => {
             if (!response.ok) {
-                setSuccess(false);
+                enqueueSnackbar(errorMessage, { variant: "error" });
 
                 return;
             }
@@ -141,12 +136,7 @@ export default function EditImageForm() {
             const form = document.getElementById("add-image-form") as HTMLFormElement;
             form.reset();
 
-            setSuccess(true);
-
-            router.push('/');
-
-            return response.json();
-
+            enqueueSnackbar(successMessage, { variant: "success" });
         });
     }
 
@@ -160,7 +150,6 @@ export default function EditImageForm() {
                     className={"form_container"}
                     id={"add-image-form"}
                     action={(value) => handleSubmit(value)}
-                    onChange={handleChange}
                 >
                     {loadingCategories ? (<CircularProgress />)
                         : (
@@ -314,9 +303,6 @@ export default function EditImageForm() {
                             alt={image.title}
                         />
                     </Box>
-
-                    {success === true && <Alert severity="success">{successMessage}</Alert>}
-                    {success === false && <Alert severity="error">{errorMessage}</Alert>}
 
                     <Box className={"actions_container"}>
                         <Button

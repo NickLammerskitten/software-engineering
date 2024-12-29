@@ -3,7 +3,6 @@
 import { ImageConfigurationList } from "@/src/app/components/image-configuration-list";
 import { Portfolio } from "@/src/app/models/portfolio.model";
 import {
-    Alert,
     Box,
     Button,
     CircularProgress,
@@ -14,14 +13,13 @@ import {
     Typography,
 } from "@mui/material";
 import { usePathname } from "next/navigation";
+import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
-
-const successMessage: string = "Themenmappe erfolgreich bearbeitet!";
-const errorMessage: string = "Fehler beim Bearbeiten der Themenmappe!";
 
 const nameRegEx = new RegExp('^[\u00C0-\u017Fa-zA-Z0-9 ]{3,30}$')
 
 export function EditPortfolioForm() {
+    const { enqueueSnackbar } = useSnackbar();
     const pathname = usePathname();
 
     const [loadingPortfolio, setLoadingPortfolio] = useState<boolean>(true);
@@ -29,8 +27,6 @@ export function EditPortfolioForm() {
 
     const [portfolio, setPortfolio] = useState<Portfolio | null>(null);
     const [portfolioNameValid, setPortfolioNameValid] = useState<boolean>(true)
-
-    const [success, setSuccess] = useState<boolean | undefined>(undefined);
 
     useEffect(() => {
         fetchData();
@@ -67,7 +63,7 @@ export function EditPortfolioForm() {
 
                 if (!response.ok) {
                     setLoadingPortfolio(false);
-                    throw new Error(`Error while fetching portfolio (${response.status}): ${json["message"]}`);
+                    enqueueSnackbar(json.message, { variant: "error" });
                 }
 
                 return json;
@@ -99,16 +95,14 @@ export function EditPortfolioForm() {
             }),
         });
 
+        const json = await response.json();
+
         if (!response.ok) {
-            setSuccess(false);
+            enqueueSnackbar(json.message, { variant: "error" });
             return;
         }
 
-        setSuccess(true);
-    }
-
-    const handleChange = () => {
-        setSuccess(undefined);
+        enqueueSnackbar(json.message, { variant: "success" });
     }
 
     return (
@@ -119,7 +113,6 @@ export function EditPortfolioForm() {
                         className={"form_container"}
                         id={"edit-portfolio-form"}
                         action={(value) => handleSubmit(value)}
-                        onChange={handleChange}
                     >
                         <FormControl>
                             <FormLabel htmlFor="name">Name *</FormLabel>
@@ -154,9 +147,6 @@ export function EditPortfolioForm() {
                                 rows={4}
                             />
                         </FormControl>
-
-                        {success === true && <Alert severity="success">{successMessage}</Alert>}
-                        {success === false && <Alert severity="error">{errorMessage}</Alert>}
 
                         <Box className={"actions_container"}>
                             <Button

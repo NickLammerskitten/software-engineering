@@ -84,7 +84,7 @@ export function ImageUpload({ setImageUrl }: ImageUploadProps) {
 
     return (
         <FormControl>
-            <FormLabel htmlFor="imageFile">Bild *</FormLabel>
+            <FormLabel htmlFor="imageFile">Bild</FormLabel>
             <Box>
                 <input
                     ref={inputRef}
@@ -94,7 +94,6 @@ export function ImageUpload({ setImageUrl }: ImageUploadProps) {
                     name={"imageFile"}
                     style={{ visibility: "hidden", position: "absolute" }}
                     onChange={handleImageChange}
-                    required
                 />
             </Box>
 
