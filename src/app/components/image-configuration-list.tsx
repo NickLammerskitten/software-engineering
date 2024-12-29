@@ -97,6 +97,7 @@ export function ImageConfigurationList({ portfolioId }: { portfolioId: string })
                             url={image.imageUrl ?? fallbackImageUrl}
                             artist={image.artist}
                             title={image.title}
+                            addedByTrader={image.byTrader}
                             onClick={() => {
                                 router.push(`/image/${image.imageId}`)
                             }}
