@@ -123,11 +123,15 @@ VALUES ('77b9eb8b-a842-41c0-95af-20e8f5f4e50f', 'Silber'),
        ('cd2dbe14-63b1-4ec4-90a5-7a296928224b', 'Gold'),
        ('e61f3696-8f34-4d07-abda-5689e92cd563', 'Schwarz');
 
+INSERT INTO "public".portfolio (id, name, description, owner_id)
+VALUES ('5b72a802-54b1-4393-b205-ccf2937c073b', 'Trader Portfolio', 'Portfolio eines Traders', '185f2f83-d63a-4c9b-b4a0-7e4a885799e2'),
+        ('f3b3b3b3-3b3b-3b3b-3b3b-3b3b3b3b3b3b', 'Customer Portfolio', 'Portfolio eines Kunden', 'aabc22aa-68ba-425c-9888-d5e77ad1f30e');
+
 INSERT INTO "public"."image_configuration" ("id", "image_id", "portfolio_id", "by_trader", "palette_id",
                                             "strip_color_id", "passepartout")
 VALUES ('043598d5-1da9-4b1e-83ba-96a3af0e51fa', '0b29d9c7-ae71-440a-a631-e67b0875cd51',
         '5b72a802-54b1-4393-b205-ccf2937c073b', 'true', '45d09dba-6512-4433-8b4d-da367384d77d',
         '77b9eb8b-a842-41c0-95af-20e8f5f4e50f', 'true'),
        ('80dd5a70-e3e0-4ff9-97a5-9eecba9c44f1', '0b29d9c7-ae71-440a-a631-e67b0875cd51',
-        '5b72a802-54b1-4393-b205-ccf2937c073b', 'true', '9491ddd2-f5b2-40cc-8024-4313a6ca2d5c',
+        'f3b3b3b3-3b3b-3b3b-3b3b-3b3b3b3b3b3b', 'true', '9491ddd2-f5b2-40cc-8024-4313a6ca2d5c',
         '9760c87d-34ff-4793-bb92-1b49f2915fa8', 'false');
