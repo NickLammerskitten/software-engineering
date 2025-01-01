@@ -1,12 +1,12 @@
 import { Portfolio } from "@/src/app/models/portfolio";
 import {
     Box,
-    Button,
+    Button, Checkbox,
     CircularProgress,
     FormControl,
-    FormLabel, InputAdornment,
+    FormLabel,
     InputLabel,
-    MenuItem, OutlinedInput,
+    MenuItem,
     Select,
     Typography,
 } from "@mui/material";
@@ -30,11 +30,11 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
 
     const [loadingPalettes, setLoadingPalettes] = useState<boolean>(false);
     const [palettes, setPalettes] = useState<Palette[]>([]);
-    const [selectedPalette, setSelectedPalette] = useState<number | undefined>(undefined);
+    const [selectedPalette, setSelectedPalette] = useState("");
 
     const [loadingStripColors, setLoadingStripColors] = useState<boolean>(false);
     const [stripColors, setStripColors] = useState<StripColor[]>([]);
-    const [selectedStripColor, setSelectedStripColor] = useState<number | undefined>(undefined);
+    const [selectedStripColor, setSelectedStripColor] = useState("");
 
     useEffect(() => {
         fetchPortfolios();
@@ -80,7 +80,7 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
 
         setPalettes(json["data"]);
         if (json["data"].length > 0) {
-            setSelectedPalette(json["data"][0].id);
+            setSelectedPalette("-1");
         }
     }
 
@@ -101,7 +101,7 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
 
         setStripColors(json["data"]);
         if (json["data"].length > 0) {
-            setSelectedStripColor(json["data"][0].id);
+            setSelectedStripColor("-1");
         }
     }
 
@@ -109,9 +109,9 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
         const data = {
             imageId: imageId,
             portfolioId: selectedPortfolio,
-            paletteId: selectedPalette,
-            stripColorId: selectedStripColor,
-            passepartout: formData.get("passepartout"),
+            paletteId: selectedPalette === "-1" ? null : selectedPalette,
+            stripColorId: selectedStripColor === "-1" ? null : selectedStripColor,
+            passepartout: formData.get("passepartout") === "on",
         }
 
         const response = await fetch(`/api/portfolio/configuration`, {
@@ -167,7 +167,7 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
 
             {portfolios.length > 0 && (
                 <>
-                    {loadingPalettes ? (<CircularProgress />) : palettes && palettes.length > 0 ? (
+                    {loadingPalettes ? (<CircularProgress />) : (
                         <FormControl fullWidth>
                             <InputLabel id="palette-select">Palette</InputLabel>
                             <Select
@@ -179,9 +179,13 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
                                 required
                                 value={selectedPalette}
                                 onChange={(event => {
-                                    setSelectedPalette(event.target.value as number);
+                                    setSelectedPalette(event.target.value);
                                 })}
                             >
+                                <MenuItem value="-1">
+                                    <em>Keine Auswahl</em>
+                                </MenuItem>
+
                                 {palettes.map((palette) => (
                                     <MenuItem
                                         key={palette.id}
@@ -190,13 +194,9 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
                                 ))}
                             </Select>
                         </FormControl>
-                    ) : (
-                        <Typography variant={"body1"}>
-                            Noch keine Paletten vorhanden.
-                        </Typography>
                     )}
 
-                    {loadingStripColors ? (<CircularProgress />) : stripColors && stripColors.length > 0 ? (
+                    {loadingStripColors ? (<CircularProgress />) : (
                         <FormControl fullWidth>
                             <InputLabel id="strip-color-select">Leistenfarbe</InputLabel>
                             <Select
@@ -208,9 +208,13 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
                                 required
                                 value={selectedStripColor}
                                 onChange={(event => {
-                                    setSelectedStripColor(event.target.value as number);
+                                    setSelectedStripColor(event.target.value);
                                 })}
                             >
+                                <MenuItem value="-1">
+                                    <em>Keine Auswahl</em>
+                                </MenuItem>
+
                                 {stripColors.map((stripColor) => (
                                     <MenuItem
                                         key={stripColor.id}
@@ -219,22 +223,16 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
                                 ))}
                             </Select>
                         </FormControl>
-                    ) : (
-                        <Typography variant={"body1"}>
-                            Noch keine Paletten vorhanden.
-                        </Typography>
                     )}
 
                     <FormControl fullWidth>
-                        <FormLabel htmlFor="passepartout">Passepartout</FormLabel>
-                        <OutlinedInput
-                            id="name"
-                            type="text"
-                            name="passepartout"
-                            required
-                            fullWidth
-                            endAdornment={<InputAdornment position="end">cm</InputAdornment>}
-                        />
+                        <Box>
+                            <Checkbox
+                                id="passepartout"
+                                name="passepartout"
+                            />
+                            <FormLabel htmlFor="passepartout">Passepartout</FormLabel>
+                        </Box>
                     </FormControl>
                 </>
             )}

@@ -46,6 +46,9 @@ const postRequestDataToDatabaseData = (
         image_id: data.imageId,
         portfolio_id: data.portfolioId,
         by_trader: isTrader,
+        palette_id: data.paletteId,
+        strip_color_id: data.stripColorId,
+        passepartout: data.passepartout,
     }
 }
 
@@ -57,6 +60,18 @@ const validateData = (data: ImageConfigurationDatabaseData): { valid: boolean, e
     }
     if (typeof data.portfolio_id !== 'string' || data.portfolio_id.trim() === "") {
         errors.push("Portfolioauswahl fehlerhaft.");
+    }
+
+    if (data.palette_id !== null && typeof data.palette_id !== 'string') {
+        errors.push("Paletteauswahl fehlerhaft.");
+    }
+
+    if (data.strip_color_id !== null && typeof data.strip_color_id !== 'string') {
+        errors.push("Leistenfarbeauswahl fehlerhaft.");
+    }
+
+    if (typeof data.passepartout !== 'boolean') {
+        errors.push("Passepartoutwwert fehlerhaft.");
     }
 
     return {
