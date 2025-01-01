@@ -1,7 +1,8 @@
 import { Portfolio } from "@/src/app/models/portfolio";
 import {
     Box,
-    Button, Checkbox,
+    Button,
+    Checkbox,
     CircularProgress,
     FormControl,
     FormLabel,
@@ -138,31 +139,46 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
             action={handleSubmit}
         >
             {loadingPortfolios ? (<CircularProgress />) : portfolios && portfolios.length > 0 ? (
-                <FormControl fullWidth>
-                    <InputLabel id="portfolio-select">Mappe</InputLabel>
-                    <Select
-                        label={"Mappe"}
-                        id={"portfolio-select"}
-                        name={"portfolio-select"}
-                        autoFocus
-                        fullWidth
-                        required
-                        value={selectedPortfolio}
-                        onChange={(event => {
-                            setSelectedPortfolio(event.target.value as number);
-                        })}
-                    >
-                        {portfolios.map((portfolio) => (
-                            <MenuItem
-                                key={portfolio.id}
-                                value={portfolio.id}
-                            >{portfolio.name}</MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
+                <>
+                    {isTrader && (
+                        <FormControl fullWidth>
+                            <InputLabel id="portfolio-select">Mappe</InputLabel>
+                            <Select
+                                label={"Mappe"}
+                                id={"portfolio-select"}
+                                name={"portfolio-select"}
+                                autoFocus
+                                fullWidth
+                                required
+                                value={selectedPortfolio}
+                                onChange={(event => {
+                                    setSelectedPortfolio(event.target.value as number);
+                                })}
+                            >
+                                {portfolios.map((portfolio) => (
+                                    <MenuItem
+                                        key={portfolio.id}
+                                        value={portfolio.id}
+                                    >{portfolio.name}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    )}
+                </>
             ) : (
-                <Typography variant={"body1"}>Noch keine Mappen vorhanden. Erstelle deine erste Mappe, um eine Bild
-                    Konfiguration hinzuzufügen!</Typography>
+                <>
+                    {isTrader ? (
+                        <Typography variant={"body1"}>
+                            Noch keine Mappen vorhanden. Erstelle deine erste Mappe, um eine Bild Konfiguration
+                            hinzuzufügen!
+                        </Typography>
+                    ) : (
+                        <Typography variant={"body1"}>
+                            Du hast keine Auswahlmappe. Bitte kontaktiere einen Händler, um eine Bild Konfiguration
+                            hinzuzufügen!
+                        </Typography>
+                    )}
+                </>
             )}
 
             {portfolios.length > 0 && (
@@ -200,7 +216,7 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
                         <FormControl fullWidth>
                             <InputLabel id="strip-color-select">Leistenfarbe</InputLabel>
                             <Select
-                                label={"Palette"}
+                                label={"Leistenfarbe"}
                                 id={"strip-color-select"}
                                 name={"strip-color-select"}
                                 autoFocus
@@ -245,7 +261,7 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
                     >
                         Zu Mappe hinzufügen
                     </Button>
-                ) : (
+                ) : isTrader && (
                     <Button
                         variant={"contained"}
                         href={"/portfolio/add"}
