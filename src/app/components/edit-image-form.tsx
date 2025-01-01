@@ -1,7 +1,7 @@
 "use client"
 
 import styles from "@/src/app/components/detailed-image.module.css";
-import { Image } from "@/src/app/models/image.model";
+import { Image } from "@/src/app/models/image";
 import {
     Box,
     Button,

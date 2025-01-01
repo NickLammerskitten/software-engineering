@@ -1,7 +1,7 @@
 "use client"
 
 import { ImageConfigurationList } from "@/src/app/components/image-configuration-list";
-import { Portfolio } from "@/src/app/models/portfolio.model";
+import { Portfolio } from "@/src/app/models/portfolio";
 import {
     Box,
     Button,

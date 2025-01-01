@@ -1,6 +1,6 @@
 import PortfolioPage from "@/src/app/(pages)/portfolio/page";
 import { TraderOnlyProps } from "@/src/app/components/trader-only";
-import { Portfolio } from "@/src/app/models/portfolio.model";
+import { Portfolio } from "@/src/app/models/portfolio";
 import { render, screen } from "@testing-library/react";
 import { http } from "msw";
 import { setupServer } from "msw/node";

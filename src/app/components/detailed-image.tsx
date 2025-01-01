@@ -2,7 +2,7 @@
 
 import styles from "@/src/app/components/detailed-image.module.css";
 import { ImageConfigurator } from "@/src/app/components/image-configurator";
-import { Image } from "@/src/app/models/image.model";
+import { Image } from "@/src/app/models/image";
 import { numberToCurrency } from "@/src/app/utils/number-to-currency";
 import {Box, Button, CircularProgress, Divider, Typography} from "@mui/material";
 import {usePathname} from "next/navigation";
