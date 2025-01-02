@@ -16,6 +16,11 @@ export function UserList() {
         fetchUsers();
     }, []);
 
+    const deleteUser = async (userId: string)=> {
+        console.log(userId);
+
+    };
+
     const fetchUsers = async () => {
         setLoading(true);
 
@@ -45,6 +50,7 @@ export function UserList() {
                                 className={"item"}
                             >
                                 <Box>
+
                                     <Typography variant={"body1"}>
                                         Email: {user.email}
                                     </Typography>
@@ -62,6 +68,15 @@ export function UserList() {
                                         ? timestampToDate(user.last_sign_in_at)
                                         : 'Nie'}
                                     </Typography>
+
+                                    { user.role == UserRole.Customer &&
+                                        <Button
+                                            variant={"text"}
+                                            onClick={deleteUser(user.id)}
+                                        >
+                                            Löschen
+                                        </Button>
+                                    }
                                 </Box>
                             </Card>
                         </Fragment>
