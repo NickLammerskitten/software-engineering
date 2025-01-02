@@ -36,8 +36,8 @@ async function AppBar() {
             role: UserRole.Trader,
         },
         {
-            name: "Auswahlmappen",
-            href: "/portfolio",
+            name: "Auswahlmappe",
+            href: "/portfolio/my",
             role: UserRole.Customer,
         }
     ];

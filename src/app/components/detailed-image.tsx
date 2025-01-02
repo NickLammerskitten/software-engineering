@@ -2,13 +2,14 @@
 
 import styles from "@/src/app/components/detailed-image.module.css";
 import { ImageConfigurator } from "@/src/app/components/image-configurator";
-import { Image } from "@/src/app/models/image.model";
+import { Image } from "@/src/app/models/image";
 import { numberToCurrency } from "@/src/app/utils/number-to-currency";
-import { Box, CircularProgress, Divider, Typography } from "@mui/material";
-import { usePathname } from "next/navigation";
+import {Box, Button, CircularProgress, Divider, Typography} from "@mui/material";
+import {usePathname} from "next/navigation";
 import { useEffect, useState } from "react";
+import * as React from "react";
 
-export function DetailedImage() {
+export function DetailedImage({ isTrader }: { isTrader: boolean }) {
     const pathname = usePathname();
 
     const [loading, setLoading] = useState<boolean>(true);
@@ -73,6 +74,17 @@ export function DetailedImage() {
 
             {!loading && image && category && (
                 <Box>
+                    <Box className={"actions_container"}>
+                        {isTrader && (
+                            <Button
+                                variant={"text"}
+                                href={`/image/${imageId}/edit`}
+                            >
+                                Edit
+                            </Button>
+                        )}
+                    </Box>
+
                     <Box className={styles.container}>
 
                         <Box className={styles.container__left}>
@@ -148,9 +160,12 @@ export function DetailedImage() {
                                 {numberToCurrency(image.price)}
                             </Typography>
 
-                            <ImageConfigurator imageId={image.id} />
+                            <ImageConfigurator
+                                imageId={image.id}
+                                isTrader={isTrader}
+                            />
 
-                            <Divider className={styles.divider_spacing} />
+                            <Divider className={"divider_spacing"} />
 
                             <Typography variant={"body1"}>
                                 {image.description}

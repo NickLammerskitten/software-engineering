@@ -1,20 +1,18 @@
 "use client";
 
+import { useSnackbar } from "notistack";
 import { Fragment, useEffect, useState } from "react";
-import { Alert, Box, Card, CircularProgress, IconButton } from "@mui/material";
+import { Box, Card, CircularProgress, IconButton } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 import { useConfirmDialog } from "../utils/confirm-dialog-hook";
 
 export function CategoryList() {
+    const { enqueueSnackbar } = useSnackbar();
     const [loading, setLoading] = useState<boolean>(false);
     const [categories, setCategories] = useState<Category[]>([]);
-    const [errorMessages, setErrorMessages] = useState<{ [id: number]: string }>({});
-    const [categoryListError, setCategoryListError] = useState<string>("");
     const {showConfirm, ConfirmDialogComponent} = useConfirmDialog();
 
     useEffect(() => {
-        setErrorMessages({});
-        setCategoryListError("");
         fetchCategories();
     }, []);
 
@@ -28,7 +26,7 @@ export function CategoryList() {
         setLoading(false);
 
         if (!response.ok) {
-            setCategoryListError(`Error while fetching categories (${response.status}): ${json["message"]}`);
+            enqueueSnackbar(json.message, { variant: "error" });
             return;
         }
 
@@ -45,15 +43,8 @@ export function CategoryList() {
 
         const json = await response.json();
 
-        if (!response.ok) {
-            errorMessages[id] = `Error ${response.status}: ${json["message"]}`;
-            setErrorMessages({ ...errorMessages });
-            return;
-        }
-
-        if (!json["success"]) {
-            errorMessages[id] = `Unexpected error when deleting category`;
-            setErrorMessages({ ...errorMessages });
+        if (!response.ok || !json["success"]) {
+            enqueueSnackbar(json.message, { variant: "error" });
             return;
         }
 
@@ -92,21 +83,10 @@ export function CategoryList() {
                                     </IconButton>
                                 </Box>
                             </Card>
-                            {errorMessages[category.id] &&
-                                <Alert severity="error">
-                                    {errorMessages[category.id]}
-                                </Alert>
-                            }
                         </Fragment>
                     ))}
                 </Box>
             )}
-
-            {categoryListError !== "" && 
-            <Alert severity="error">
-                {categoryListError}
-            </Alert>
-            }
 
             {ConfirmDialogComponent}
         </div>

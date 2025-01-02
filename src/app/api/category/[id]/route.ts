@@ -20,15 +20,15 @@ export async function GET(request: NextRequest) {
         .eq('id', categoryId)
         .single();
 
-    if (!data) {
-        return NextResponse.json({message: "Keine Kategorie gefunden"}, {
-            status: 404,
+    if (error) {
+        return NextResponse.json({message: `Fehler beim Laden der Kategorie, ${error.details}`}, {
+            status: 500,
         });
     }
 
-    if (error) {
-        return NextResponse.json({message: "Fehler beim Laden der Kategorie"}, {
-            status: 500,
+    if (!data) {
+        return NextResponse.json({message: "Keine Kategorie gefunden"}, {
+            status: 404,
         });
     }
 

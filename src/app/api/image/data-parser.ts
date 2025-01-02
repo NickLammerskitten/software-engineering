@@ -43,3 +43,20 @@ export const postRequestDataToDatabaseData = (data: ImageData): ImageDatabaseDat
         image_path: data.image_url,
     }
 }
+
+export const putRequestDataToDatabaseData = (data: ImageResponseData): ImageDatabaseResponseData => {
+    return {
+        id: data.id,
+        category_id: parseInt(data.categoryId.toString()),
+        title: data.title,
+        artist: data.artist,
+        description: data.description,
+        image_height: data.imageHeight ? parseFloat(data.imageHeight.toString()) : null,
+        image_width: data.imageWidth ? parseFloat(data.imageWidth.toString()) : null,
+        paper_height: data.paperHeight ? parseFloat(data.paperHeight.toString()) : null,
+        paper_width: data.paperWidth ? parseFloat(data.paperWidth.toString()) : null,
+        price: parseFloat(data.price.toString()),
+        annotations: data.annotations,
+        image_path: data.image_url,
+    }
+}
