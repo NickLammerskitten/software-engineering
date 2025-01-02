@@ -30,3 +30,9 @@
 .artist {
     color: #959595;
 }
+
+.trader_chip {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+}

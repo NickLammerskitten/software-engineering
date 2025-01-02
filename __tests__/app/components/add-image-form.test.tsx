@@ -53,7 +53,7 @@ describe('add image form', () => {
         expect(screen.getByText('Papierhöhe')).toBeDefined();
         expect(screen.getByText('Papierbreite')).toBeDefined();
         expect(screen.getByText('Preis *')).toBeDefined();
-        expect(screen.getByText('Bild *')).toBeDefined();
+        expect(screen.getByText('Bild')).toBeDefined();
         expect(screen.getByText('Anmerkungen')).toBeDefined();
     })
 })
