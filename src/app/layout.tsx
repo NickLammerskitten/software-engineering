@@ -10,7 +10,8 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import AppBar from "./components/app-bar";
-import styles from "./layout.module.css"
+import Breadcrumbs from "./components/breadcrumbs";
+import styles from "./layout.module.css";
 
 export const metadata: Metadata = {
     title: "Create Next App",
@@ -18,24 +19,29 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-    children,
-}: Readonly<{
+                                       children,
+                                   }: Readonly<{
     children: React.ReactNode;
 }>) {
     return (
         <html lang="de">
         <body style={{ display: "flex", flexDirection: "column" }}>
-            <AppRouterCacheProvider>
-                <ThemeProvider theme={theme}>
-                    <CssBaseline />
-                    <AppBar />
-                    <div className={styles.content_container}>
-                        <Content>
-                            {children}
-                        </Content>
-                    </div>
-                </ThemeProvider>
-            </AppRouterCacheProvider>
+        <AppRouterCacheProvider>
+            <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <AppBar />
+
+                <div className={styles.breadcrumbs_container}>
+                    <Breadcrumbs />
+                </div>
+
+                <div className={styles.content_container}>
+                    <Content>
+                        {children}
+                    </Content>
+                </div>
+            </ThemeProvider>
+        </AppRouterCacheProvider>
         </body>
         </html>
     );
