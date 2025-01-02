@@ -2,7 +2,7 @@
 
 import { UserRole } from "@/src/app/models/user-role";
 import { timestampToDate } from "@/src/app/utils/timestamp-to-date-formatter";
-import { Alert, Box, Card, CircularProgress, Typography } from "@mui/material";
+import {Alert, Box, Button, Card, CircularProgress, Typography} from "@mui/material";
 import { User } from "@supabase/auth-js";
 import { Fragment, useEffect, useState } from "react";
 
@@ -64,9 +64,15 @@ export function UserList() {
                                     </Typography>
                                 </Box>
                             </Card>
-
                         </Fragment>
                     ))}
+
+                    <Button
+                        variant={"text"}
+                        href={`/user/add`}
+                    >
+                        Edit
+                    </Button>
                 </Box>
             )}
 
