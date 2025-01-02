@@ -69,9 +69,9 @@ export function UserList() {
 
                     <Button
                         variant={"text"}
-                        href={`/user/add`}
+                        href={`/settings/user/add`}
                     >
-                        Edit
+                        Benutzer Hinzufügen
                     </Button>
                 </Box>
             )}

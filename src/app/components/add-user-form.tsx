@@ -1,5 +1,6 @@
+'use client'
 import {useSnackbar} from "notistack";
-import {FormControl, FormLabel, TextField} from "@mui/material";
+import {Box, Button, FormControl, FormLabel, TextField} from "@mui/material";
 import * as React from "react";
 
 
@@ -24,7 +25,7 @@ export default function AddUserForm() {
             },
         }).then(async (response) => {
             const json = await response.json();
-
+            console.log(response);
             if (!response.ok) {
                 enqueueSnackbar(json.message, {variant: "error"});
                 return;
@@ -74,6 +75,21 @@ export default function AddUserForm() {
                     variant="outlined"
                 />
             </FormControl>
+            <Box className={"actions_container"}>
+                <Button
+                    variant={"text"}
+                    type={"reset"}
+                    href="/settings/user"
+                >
+                    Abbrechen
+                </Button>
+                <Button
+                    variant={"contained"}
+                    type={"submit"}
+                >
+                    Speichern
+                </Button>
+            </Box>
         </form>
     )
 }

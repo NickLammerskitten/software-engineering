@@ -4,7 +4,7 @@ import {UserRole} from "@/src/app/models/user-role";
 import WrongUserRole from "@/src/app/utils/wrong-user-role";
 import AddUserForm from "@/src/app/components/add-user-form";
 
-export default async function Users() {
+export default async function AddUser() {
     const supabase = await createClient();
     const { data: { user} } = await supabase.auth.getUser();
 
