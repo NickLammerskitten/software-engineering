@@ -12,7 +12,7 @@ export async function GET() {
         .order('id');
 
     if (error) {
-        return NextResponse.json({ message: "Fehler beim Laden der Paletten" }, {
+        return NextResponse.json({ message: "Fehler beim Laden der Paletten" + error.message }, {
             status: 500,
         });
     }
