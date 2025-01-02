@@ -12,7 +12,7 @@ export async function GET() {
         .order('id');
 
     if (error) {
-        return NextResponse.json({ message: "Fehler beim Laden der Leistenfarben" }, {
+        return NextResponse.json({ message: "Fehler beim Laden der Leistenfarben: " + error.message }, {
             status: 500,
         });
     }
