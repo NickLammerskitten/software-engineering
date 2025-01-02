@@ -30,12 +30,8 @@ export default function RootLayout({
             <ThemeProvider theme={theme}>
                 <CssBaseline />
                 <AppBar />
-
-                <div className={styles.breadcrumbs_container}>
-                    <Breadcrumbs />
-                </div>
-
                 <div className={styles.content_container}>
+                    <Breadcrumbs />
                     <Content>
                         {children}
                     </Content>

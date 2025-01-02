@@ -1,19 +1,18 @@
-'use client'
+'use client';
 import React from "react";
 import { Breadcrumbs as MUIBreadcrumbs, Link, Typography } from "@mui/material";
-import { usePathname } from 'next/navigation';
+import { usePathname } from "next/navigation";
 
 const Breadcrumbs: React.FC = () => {
-    const location = usePathname();
-    const pathnames = location.split("/").filter((x) => x);
+    const pathname = usePathname();
+    const pathnames = pathname.split("/").filter((x) => x);
+
+    if (pathnames.length <= 1) {
+        return null;
+    }
 
     return (
         <MUIBreadcrumbs aria-label="breadcrumb">
-            {pathnames.length === 0 ? null : (
-                <>
-                </>
-            )}
-
             {pathnames.map((value, index) => {
                 const to = `/${pathnames.slice(0, index + 1).join("/")}`;
                 const isLast = index === pathnames.length - 1;
@@ -23,8 +22,14 @@ const Breadcrumbs: React.FC = () => {
                         {value.charAt(0).toUpperCase() + value.slice(1)}
                     </Typography>
                 ) : (
-                    <>
-                    </>
+                    <Link
+                        key={to}
+                        href={to.includes("/image") ? "/gallery" : to}
+                        underline="hover"
+                        color="inherit"
+                    >
+                        {to.includes("/image") ? "Gallery" : value.charAt(0).toUpperCase() + value.slice(1)}
+                    </Link>
                 );
             })}
         </MUIBreadcrumbs>
