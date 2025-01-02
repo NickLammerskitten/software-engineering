@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
         .from('image_configuration')
         .insert([parsedData]);
     if (error) {
-        return NextResponse.json({ message: "Fehler beim Hinzufügen der Konfiguration" }, {
+        return NextResponse.json({ message: "Fehler beim Hinzufügen der Konfiguration: " + error.message }, {
             status: 500,
         });
     }

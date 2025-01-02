@@ -1,22 +1,30 @@
 "use client"
 
 import { ImageUpload } from "@/src/app/utils/image-upload";
+import { ExpandMore } from "@mui/icons-material";
 import {
     Box,
     Button,
     CircularProgress,
+    Collapse,
     FormControl,
+    FormControlLabel,
     FormLabel,
+    IconButton,
     InputAdornment,
     InputLabel,
     MenuItem,
     OutlinedInput,
     Select,
     TextField,
+    Typography,
+    Checkbox
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 import * as React from "react";
 import { useEffect, useState } from "react";
+import { PaletteSelector } from "./palette-selector";
+import { StripSelector } from "./strip-selector";
 
 export default function AddImageForm() {
     const { enqueueSnackbar } = useSnackbar();
@@ -47,7 +55,7 @@ export default function AddImageForm() {
             });
     }, []);
 
-
+    const [expanded, setExpanded] = React.useState(false);
 
     const handleSubmit = async (formData: FormData) => {
         const data = {
@@ -62,6 +70,11 @@ export default function AddImageForm() {
             price: formData.get("price"),
             annotations: formData.get("annotations"),
             image_url: image_url,
+            preconfiguration: {
+                strip: formData.get("strip-select"),
+                palette: formData.get("palette-select"),
+                passepartout: formData.get("passepartout"),
+            },
         }
 
         await fetch(`/api/image`, {
@@ -93,28 +106,26 @@ export default function AddImageForm() {
         >
             {loadingCategories ? (<CircularProgress />)
                 : (
-                    <>
-                        <FormControl fullWidth>
-                            <InputLabel id="category-select">Kategorie *</InputLabel>
-                            <Select
-                                label={"Kategorie *"}
-                                id={"category-select"}
-                                name={"category-select"}
-                                autoFocus
-                                fullWidth
-                                required
-                                value={selectedCategory}
-                                onChange={(event => setSelectedCategory(event.target.value as number))}
-                            >
-                                {categories.map((category) => (
-                                    <MenuItem
-                                        key={category.id}
-                                        value={category.id}
-                                    >{category.name}</MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </>
+                    <FormControl fullWidth>
+                        <InputLabel id="category-select">Kategorie *</InputLabel>
+                        <Select
+                            label={"Kategorie *"}
+                            id={"category-select"}
+                            name={"category-select"}
+                            autoFocus
+                            fullWidth
+                            required
+                            value={selectedCategory}
+                            onChange={(event => setSelectedCategory(event.target.value as number))}
+                        >
+                            {categories.map((category) => (
+                                <MenuItem
+                                    key={category.id}
+                                    value={category.id}
+                                >{category.name}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
                 )}
 
             <FormControl>
@@ -227,6 +238,26 @@ export default function AddImageForm() {
                     variant="outlined"
                 />
             </FormControl>
+
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <Typography variant="h5">
+                    Vorkonfiguration
+                </Typography>
+                <IconButton onClick={() => setExpanded(!expanded)}>
+                    <ExpandMore style={{ transform: expanded ? "rotate(180deg)" : "rotate(0deg)", transition: "all 0.2s" }} />
+                </IconButton>
+            </div>
+            <Collapse in={expanded} timeout="auto" className={"form_container"} unmountOnExit >
+                <div className={"form_container"}>
+                    <PaletteSelector />
+                    <StripSelector />
+                    <FormControlLabel
+                        name={"passepartout"}
+                        control={<Checkbox />}
+                        label="Passepartout"
+                    />
+                </div>
+            </Collapse>
 
             <ImageUpload setImageUrl={setImageUrl} />
 

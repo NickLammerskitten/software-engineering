@@ -5,6 +5,7 @@ import {
     Checkbox,
     CircularProgress,
     FormControl,
+    FormControlLabel,
     FormLabel,
     InputLabel,
     MenuItem,
@@ -14,6 +15,8 @@ import {
 import { useSnackbar } from "notistack";
 import * as React from "react";
 import { useEffect, useState } from "react";
+import { PaletteSelector } from "./palette-selector";
+import { StripSelector } from "./strip-selector";
 
 const customerPortfolioRoute: string = "/api/portfolio/my";
 const traderPortfolioRoute: string = "/api/portfolio";
@@ -29,18 +32,8 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
     const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
     const [selectedPortfolio, setSelectedPortfolio] = useState<number | undefined>(undefined);
 
-    const [loadingPalettes, setLoadingPalettes] = useState<boolean>(false);
-    const [palettes, setPalettes] = useState<Palette[]>([]);
-    const [selectedPalette, setSelectedPalette] = useState("");
-
-    const [loadingStrips, setLoadingStrips] = useState<boolean>(false);
-    const [strips, setStrips] = useState<Strip[]>([]);
-    const [selectedStrip, setSelectedStrip] = useState("");
-
     useEffect(() => {
         fetchPortfolios();
-        fetchPalettes();
-        fetchStrips();
     }, [])
 
     const fetchPortfolios = async () => {
@@ -64,54 +57,12 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
         }
     }
 
-    const fetchPalettes = async () => {
-        setLoadingPalettes(true);
-
-        const response = await fetch(`/api/palette`);
-
-        const json = await response.json();
-
-        setLoadingPalettes(false);
-
-        if (!response.ok) {
-            enqueueSnackbar(json.message, { variant: "error" });
-            setPalettes([]);
-            return;
-        }
-
-        setPalettes(json["data"]);
-        if (json["data"].length > 0) {
-            setSelectedPalette("-1");
-        }
-    }
-
-    const fetchStrips = async () => {
-        setLoadingStrips(true);
-
-        const response = await fetch(`/api/strip`);
-
-        const json = await response.json();
-
-        setLoadingStrips(false);
-
-        if (!response.ok) {
-            enqueueSnackbar(json.message, { variant: "error" });
-            setStrips([]);
-            return;
-        }
-
-        setStrips(json["data"]);
-        if (json["data"].length > 0) {
-            setSelectedStrip("-1");
-        }
-    }
-
     const handleSubmit = async (formData: FormData) => {
         const data = {
             imageId: imageId,
             portfolioId: selectedPortfolio,
-            paletteId: selectedPalette === "-1" ? null : selectedPalette,
-            stripId: selectedStrip === "-1" ? null : selectedStrip,
+            paletteId: !formData.get("palette-select") ? null : formData.get("palette-select"),
+            stripId: !formData.get("strip-select") ? null : formData.get("strip-select"),
             passepartout: formData.get("passepartout") === "on",
         }
 
@@ -183,73 +134,13 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
 
             {portfolios.length > 0 && (
                 <>
-                    {loadingPalettes ? (<CircularProgress />) : (
-                        <FormControl fullWidth>
-                            <InputLabel id="palette-select">Palette</InputLabel>
-                            <Select
-                                label={"Palette"}
-                                id={"palette-select"}
-                                name={"palette-select"}
-                                autoFocus
-                                fullWidth
-                                required
-                                value={selectedPalette}
-                                onChange={(event => {
-                                    setSelectedPalette(event.target.value);
-                                })}
-                            >
-                                <MenuItem value="-1">
-                                    <em>Keine Auswahl</em>
-                                </MenuItem>
-
-                                {palettes.map((palette) => (
-                                    <MenuItem
-                                        key={palette.id}
-                                        value={palette.id}
-                                    >{palette.name}</MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    )}
-
-                    {loadingStrips ? (<CircularProgress />) : (
-                        <FormControl fullWidth>
-                            <InputLabel id="strip-color-select">Leistenfarbe</InputLabel>
-                            <Select
-                                label={"Leistenfarbe"}
-                                id={"strip-color-select"}
-                                name={"strip-color-select"}
-                                autoFocus
-                                fullWidth
-                                required
-                                value={selectedStrip}
-                                onChange={(event => {
-                                    setSelectedStrip(event.target.value);
-                                })}
-                            >
-                                <MenuItem value="-1">
-                                    <em>Keine Auswahl</em>
-                                </MenuItem>
-
-                                {strips.map((stripColor) => (
-                                    <MenuItem
-                                        key={stripColor.id}
-                                        value={stripColor.id}
-                                    >{stripColor.name}</MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    )}
-
-                    <FormControl fullWidth>
-                        <Box>
-                            <Checkbox
-                                id="passepartout"
-                                name="passepartout"
-                            />
-                            <FormLabel htmlFor="passepartout">Passepartout</FormLabel>
-                        </Box>
-                    </FormControl>
+                    <PaletteSelector />
+                    <StripSelector />
+                    <FormControlLabel
+                        name={"passepartout"}
+                        control={<Checkbox />}
+                        label="Passepartout"
+                    />
                 </>
             )}
 
