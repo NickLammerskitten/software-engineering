@@ -11,15 +11,15 @@ export async function GET() {
         .select()
         .order('id');
 
-    if (!data) {
-        return NextResponse.json({ message: "Keine Leistenfarbe gefunden" }, {
-            status: 404,
-        });
-    }
-
     if (error) {
         return NextResponse.json({ message: "Fehler beim Laden der Leistenfarben" }, {
             status: 500,
+        });
+    }
+
+    if (!data) {
+        return NextResponse.json({ message: "Keine Leistenfarbe gefunden" }, {
+            status: 404,
         });
     }
 

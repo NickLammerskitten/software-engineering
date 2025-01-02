@@ -101,15 +101,15 @@ export async function GET() {
         .select()
         .order('id');
 
-    if (!data) {
-        return NextResponse.json({ message: "Keine Kategorien gefunden" }, {
-            status: 404,
-        });
-    }
-
     if (error) {
         return NextResponse.json({ message: "Fehler beim Laden der Kategorien" }, {
             status: 500,
+        });
+    }
+
+    if (!data) {
+        return NextResponse.json({ message: "Keine Kategorien gefunden" }, {
+            status: 404,
         });
     }
 
