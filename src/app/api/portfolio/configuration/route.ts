@@ -47,7 +47,7 @@ const postRequestDataToDatabaseData = (
         portfolio_id: data.portfolioId,
         by_trader: isTrader,
         palette_id: data.paletteId,
-        strip_color_id: data.stripColorId,
+        strip_id: data.stripId,
         passepartout: data.passepartout,
     }
 }
@@ -66,7 +66,7 @@ const validateData = (data: ImageConfigurationDatabaseData): { valid: boolean, e
         errors.push("Paletteauswahl fehlerhaft.");
     }
 
-    if (data.strip_color_id !== null && typeof data.strip_color_id !== 'string') {
+    if (data.strip_id !== null && typeof data.strip_id !== 'string') {
         errors.push("Leistenfarbeauswahl fehlerhaft.");
     }
 

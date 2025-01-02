@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-interface StripColor {
+interface Strip {
     id: string;
     name: string;
 }

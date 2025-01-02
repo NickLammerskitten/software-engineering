@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
 
     const supabaseClient = createClient();
     const { data, error } = await supabaseClient
-        .from('strip_color')
+        .from('strip')
         .select()
         .eq('id', stripColorId)
         .single();

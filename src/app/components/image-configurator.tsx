@@ -33,14 +33,14 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
     const [palettes, setPalettes] = useState<Palette[]>([]);
     const [selectedPalette, setSelectedPalette] = useState("");
 
-    const [loadingStripColors, setLoadingStripColors] = useState<boolean>(false);
-    const [stripColors, setStripColors] = useState<StripColor[]>([]);
-    const [selectedStripColor, setSelectedStripColor] = useState("");
+    const [loadingStrips, setLoadingStrips] = useState<boolean>(false);
+    const [strips, setStrips] = useState<Strip[]>([]);
+    const [selectedStrip, setSelectedStrip] = useState("");
 
     useEffect(() => {
         fetchPortfolios();
         fetchPalettes();
-        fetchStripColors();
+        fetchStrips();
     }, [])
 
     const fetchPortfolios = async () => {
@@ -85,24 +85,24 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
         }
     }
 
-    const fetchStripColors = async () => {
-        setLoadingStripColors(true);
+    const fetchStrips = async () => {
+        setLoadingStrips(true);
 
-        const response = await fetch(`/api/strip-color`);
+        const response = await fetch(`/api/strip`);
 
         const json = await response.json();
 
-        setLoadingStripColors(false);
+        setLoadingStrips(false);
 
         if (!response.ok) {
             enqueueSnackbar(json.message, { variant: "error" });
-            setStripColors([]);
+            setStrips([]);
             return;
         }
 
-        setStripColors(json["data"]);
+        setStrips(json["data"]);
         if (json["data"].length > 0) {
-            setSelectedStripColor("-1");
+            setSelectedStrip("-1");
         }
     }
 
@@ -111,7 +111,7 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
             imageId: imageId,
             portfolioId: selectedPortfolio,
             paletteId: selectedPalette === "-1" ? null : selectedPalette,
-            stripColorId: selectedStripColor === "-1" ? null : selectedStripColor,
+            stripId: selectedStrip === "-1" ? null : selectedStrip,
             passepartout: formData.get("passepartout") === "on",
         }
 
@@ -212,7 +212,7 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
                         </FormControl>
                     )}
 
-                    {loadingStripColors ? (<CircularProgress />) : (
+                    {loadingStrips ? (<CircularProgress />) : (
                         <FormControl fullWidth>
                             <InputLabel id="strip-color-select">Leistenfarbe</InputLabel>
                             <Select
@@ -222,16 +222,16 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
                                 autoFocus
                                 fullWidth
                                 required
-                                value={selectedStripColor}
+                                value={selectedStrip}
                                 onChange={(event => {
-                                    setSelectedStripColor(event.target.value);
+                                    setSelectedStrip(event.target.value);
                                 })}
                             >
                                 <MenuItem value="-1">
                                     <em>Keine Auswahl</em>
                                 </MenuItem>
 
-                                {stripColors.map((stripColor) => (
+                                {strips.map((stripColor) => (
                                     <MenuItem
                                         key={stripColor.id}
                                         value={stripColor.id}
