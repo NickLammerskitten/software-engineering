@@ -1,4 +1,18 @@
-# Changelog:
+# Changelog
+
+## [0.3.0](https://github.com/NickLammerskitten/software-engineering/compare/0.2.0...0.3.0) (2025-01-02)
+
+### Features
+
+* **#11:** implemented trader-managed portfolios ([#57](https://github.com/NickLammerskitten/software-engineering/issues/57)) ([232c46a](https://github.com/NickLammerskitten/software-engineering/commit/232c46a37fcf4824430f61fe0e997a0f5ef06584)), closes [#11](https://github.com/NickLammerskitten/software-engineering/issues/11)
+* **#13:** added distinction of trader added image configurations ([#68](https://github.com/NickLammerskitten/software-engineering/issues/68)) ([8729086](https://github.com/NickLammerskitten/software-engineering/commit/87290863e4e489c9d417dedb2f6d67f834b9d79e)), closes [#13](https://github.com/NickLammerskitten/software-engineering/issues/13)
+* **#36:** snackbar notifications ([#65](https://github.com/NickLammerskitten/software-engineering/issues/65)) ([b655fce](https://github.com/NickLammerskitten/software-engineering/commit/b655fce12219400036b785a1d2ea87a09e32f87a)), closes [#36](https://github.com/NickLammerskitten/software-engineering/issues/36)
+* **#38:** added edit page ([#53](https://github.com/NickLammerskitten/software-engineering/issues/53)) ([cd547b6](https://github.com/NickLammerskitten/software-engineering/commit/cd547b604ec450bf771e6cc6e1621ecc646f71e5)), closes [#38](https://github.com/NickLammerskitten/software-engineering/issues/38)
+* **#56:** implemented original filter for user gallery ([#66](https://github.com/NickLammerskitten/software-engineering/issues/66)) ([7f1568d](https://github.com/NickLammerskitten/software-engineering/commit/7f1568dcbb2a6b481613839b3d9cd569c3cd0714)), closes [#56](https://github.com/NickLammerskitten/software-engineering/issues/56)
+* **#59:** made images configurable ([#70](https://github.com/NickLammerskitten/software-engineering/issues/70)) ([c8da3f6](https://github.com/NickLammerskitten/software-engineering/commit/c8da3f6fc8df522150869ebb54886b9acf574f26)), closes [#59](https://github.com/NickLammerskitten/software-engineering/issues/59)
+* **#72:** added back button on image detail view ([#73](https://github.com/NickLammerskitten/software-engineering/issues/73)) ([84b8837](https://github.com/NickLammerskitten/software-engineering/commit/84b883724b69f102afe1e673043cf350b299784e)), closes [#72](https://github.com/NickLammerskitten/software-engineering/issues/72)
+
+:
 
 ## 0.2.0 (2024-12-26)
 
