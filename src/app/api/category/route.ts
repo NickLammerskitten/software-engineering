@@ -102,7 +102,7 @@ export async function GET() {
         .order('id');
 
     if (error) {
-        return NextResponse.json({ message: "Fehler beim Laden der Kategorien" }, {
+        return NextResponse.json({ message: "Fehler beim Laden der Kategorien" + error.message }, {
             status: 500,
         });
     }
