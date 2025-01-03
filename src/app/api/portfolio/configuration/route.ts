@@ -54,11 +54,11 @@ const postRequestDataToDatabaseData = (
 
 const validateData = (data: ImageConfigurationDatabaseData): { valid: boolean, errors: string[] } => {
     const errors: string[] = [];
-
+    console.log(data)
     if (typeof data.image_id !== 'string' || data.image_id.trim() === "") {
         errors.push("Bildauswahl fehlerhaft.");
     }
-    if (typeof data.portfolio_id !== 'string' || data.portfolio_id.trim() === "") {
+    if (data.portfolio_id !== null && (typeof data.portfolio_id !== 'string'|| data.portfolio_id.trim() === "")) {
         errors.push("Portfolioauswahl fehlerhaft.");
     }
 

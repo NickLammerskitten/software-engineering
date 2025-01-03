@@ -58,7 +58,7 @@ export default function AddImageForm() {
     const [expanded, setExpanded] = React.useState(false);
 
     const handleSubmit = async (formData: FormData) => {
-        const data = {
+        const imagePayload = {
             categoryId: formData.get("category-select"),
             title: formData.get("title"),
             artist: formData.get("artist"),
@@ -70,32 +70,54 @@ export default function AddImageForm() {
             price: formData.get("price"),
             annotations: formData.get("annotations"),
             image_url: image_url,
-            preconfiguration: {
-                strip: formData.get("strip-select"),
-                palette: formData.get("palette-select"),
-                passepartout: formData.get("passepartout"),
-            },
-        }
+        };
 
-        await fetch(`/api/image`, {
-            body: JSON.stringify({ formData: data }),
+        const response = await fetch(`/api/image`, {
+            body: JSON.stringify({ formData: imagePayload }),
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-        }).then(async (response) => {
-            const json = await response.json();
+        });
 
-            if (!response.ok) {
-                enqueueSnackbar(json.message, { variant: "error" });
+        const json = await response.json();
+
+        if (!response.ok) {
+            enqueueSnackbar(json.message, { variant: "error" });
+            return;
+        }
+
+        if (formData.get("palette-select") || formData.get("strip-select") || formData.get("passepartout")) {
+            console.log("preconfiguration", json.data.id, formData.get("palette-select"), formData.get("strip-select"), formData.get("passepartout"))
+            const configurationPayload = {
+                imageId: json.data.id,
+                portfolioId: null,
+                paletteId: !formData.get("palette-select") ? null : formData.get("palette-select"),
+                stripId: formData.get("strip-select") ?? null,
+                passepartout: formData.get("passepartout") ?? false,
+            };
+
+            const configurationResponse = await fetch("/api/portfolio/configuration", {
+                body: JSON.stringify({ formData: configurationPayload }),
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (!configurationResponse.ok) {
+                console.log(configurationResponse)
+                const tmp = await configurationResponse.json();
+                enqueueSnackbar(tmp.message, { variant: "error" });
                 return;
             }
+        }
 
-            const form = document.getElementById("add-image-form") as HTMLFormElement;
-            form.reset();
+        const form = document.getElementById("add-image-form") as HTMLFormElement;
+        form.reset();
 
-            enqueueSnackbar(json.message, { variant: "success" });
-        });
+        enqueueSnackbar(json.message, { variant: "success" });
+
     }
 
     return (
