@@ -4,7 +4,8 @@ import { UserRole } from "@/src/app/models/user-role";
 import { timestampToDate } from "@/src/app/utils/timestamp-to-date-formatter";
 import {Alert, Box, Button, Card, CircularProgress, Typography} from "@mui/material";
 import { User } from "@supabase/auth-js";
-import { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
+import {enqueueSnackbar} from "notistack";
 
 export function UserList() {
     const [loading, setLoading] = useState<boolean>(false);
@@ -16,9 +17,31 @@ export function UserList() {
         fetchUsers();
     }, []);
 
-    const deleteUser = async (userId: string)=> {
-        console.log(userId);
+    const deleteUser = async (user: User) => {
+        setLoading(true);
 
+        await fetch(`/api/user`, {
+            body: JSON.stringify({ formData: user }),
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }).then(async (response) => {
+            const json = await response.json();
+            setLoading(false);
+
+            if (!response.ok) {
+                enqueueSnackbar(json.message, { variant: "error" });
+                return;
+            }
+
+            // Entferne den Benutzer aus der Liste
+            setUsers((prevUsers) => prevUsers.filter((u) => u.id !== user.id));
+            enqueueSnackbar(json.message, { variant: "success" });
+        }).catch((error) => {
+            setLoading(false);
+            enqueueSnackbar("Fehler beim Löschen des Benutzers." + error.message, { variant: "error" });
+        });
     };
 
     const fetchUsers = async () => {
@@ -72,7 +95,7 @@ export function UserList() {
                                     { user.role == UserRole.Customer &&
                                         <Button
                                             variant={"text"}
-                                            onClick={deleteUser(user.id)}
+                                            onClick={() => deleteUser(user)}
                                         >
                                             Löschen
                                         </Button>
