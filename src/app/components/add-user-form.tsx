@@ -7,7 +7,10 @@ import * as React from "react";
 export default function AddUserForm() {
     const { enqueueSnackbar } = useSnackbar();
 
-    const handleSubmit = async (formData: FormData) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+
         const data = {
             email: formData.get("email"),
             password: formData.get("password"),
@@ -16,7 +19,7 @@ export default function AddUserForm() {
                 name: formData.get("name")
             }
         }
-
+        let json;
         await fetch(`/api/user`, {
             body: JSON.stringify({formData: data}),
             method: "POST",
@@ -24,24 +27,26 @@ export default function AddUserForm() {
                 "Content-Type": "application/json",
             },
         }).then(async (response) => {
-            const json = await response.json();
+            json = await response.json();
             console.log(response);
+
             if (!response.ok) {
                 enqueueSnackbar(json.message, {variant: "error"});
                 return;
             }
-
             const form = document.getElementById("add-user-form") as HTMLFormElement;
             form.reset();
 
             enqueueSnackbar(json.message, {variant: "success"});
         });
+
     }
+
     return (
         <form
             className={"form_container"}
             id={"add-user-form"}
-            action={(value) => handleSubmit(value)}
+            onSubmit={handleSubmit}
         >
             <FormControl>
                 <FormLabel htmlFor="email">Email *</FormLabel>
