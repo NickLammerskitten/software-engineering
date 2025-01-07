@@ -2,10 +2,11 @@
 
 import { UserRole } from "@/src/app/models/user-role";
 import { timestampToDate } from "@/src/app/utils/timestamp-to-date-formatter";
-import {Alert, Box, Button, Card, CircularProgress, Typography} from "@mui/material";
+import {Alert, Box, Button, Card, CircularProgress, IconButton, Typography} from "@mui/material";
 import { User } from "@supabase/auth-js";
 import React, { Fragment, useEffect, useState } from "react";
 import {enqueueSnackbar} from "notistack";
+import {Add, Delete} from "@mui/icons-material";
 
 export function UserList() {
     const [loading, setLoading] = useState<boolean>(false);
@@ -17,11 +18,10 @@ export function UserList() {
         fetchUsers();
     }, []);
 
-    const deleteUser = async (user: User) => {
+    const deleteUser = async (userId: string) => {
         setLoading(true);
 
-        await fetch(`/api/user`, {
-            body: JSON.stringify({ formData: user }),
+        await fetch(`/api/user/${userId}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -31,17 +31,14 @@ export function UserList() {
             setLoading(false);
 
             if (!response.ok) {
-                enqueueSnackbar(json.message, { variant: "error" });
+                setLoading(false);
+                enqueueSnackbar("Fehler beim Löschen des Benutzers." + json.message, { variant: "error" });
                 return;
             }
 
-            // Entferne den Benutzer aus der Liste
-            setUsers((prevUsers) => prevUsers.filter((u) => u.id !== user.id));
+            fetchUsers();
             enqueueSnackbar(json.message, { variant: "success" });
-        }).catch((error) => {
-            setLoading(false);
-            enqueueSnackbar("Fehler beim Löschen des Benutzers." + error.message, { variant: "error" });
-        });
+        })
     };
 
     const fetchUsers = async () => {
@@ -66,6 +63,13 @@ export function UserList() {
 
             {!loading && users.length > 0 && (
                 <Box className={"items_list"}>
+                    <Button
+                        startIcon={<Add />}
+                        className={"top_action_buttons"}
+                        href={`/settings/user/add`}
+                    >
+                        Benutzer Hinzufügen
+                    </Button>
                     {users.map((user) => (
                         <Fragment key={user.id}>
                             <Card
@@ -93,24 +97,14 @@ export function UserList() {
                                     </Typography>
 
                                     { user.role == UserRole.Customer &&
-                                        <Button
-                                            variant={"text"}
-                                            onClick={() => deleteUser(user)}
-                                        >
-                                            Löschen
-                                        </Button>
+                                        <IconButton onClick={() => deleteUser(user.id)}>
+                                          <Delete />
+                                        </IconButton>
                                     }
                                 </Box>
                             </Card>
                         </Fragment>
                     ))}
-
-                    <Button
-                        variant={"text"}
-                        href={`/settings/user/add`}
-                    >
-                        Benutzer Hinzufügen
-                    </Button>
                 </Box>
             )}
 

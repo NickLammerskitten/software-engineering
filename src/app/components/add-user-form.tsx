@@ -8,7 +8,6 @@ export default function AddUserForm() {
     const { enqueueSnackbar } = useSnackbar();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
         const formData = new FormData(event.currentTarget);
 
         const data = {
@@ -19,7 +18,7 @@ export default function AddUserForm() {
                 name: formData.get("name")
             }
         }
-        let json;
+
         await fetch(`/api/user`, {
             body: JSON.stringify({formData: data}),
             method: "POST",
@@ -27,8 +26,7 @@ export default function AddUserForm() {
                 "Content-Type": "application/json",
             },
         }).then(async (response) => {
-            json = await response.json();
-            console.log(response);
+            const json = await response.json();
 
             if (!response.ok) {
                 enqueueSnackbar(json.message, {variant: "error"});
@@ -70,7 +68,7 @@ export default function AddUserForm() {
                 />
             </FormControl>
             <FormControl>
-                <FormLabel htmlFor="name">name</FormLabel>
+                <FormLabel htmlFor="name">Name</FormLabel>
                 <TextField
                     id="name"
                     type="text"
