@@ -23,7 +23,7 @@ describe('AddUserForm Component', () => {
 
         expect(screen.getByLabelText('Email *')).toBeDefined();
         expect(screen.getByLabelText('Password *')).toBeDefined();
-        expect(screen.getByLabelText('name')).toBeDefined();
+        expect(screen.getByLabelText('Name')).toBeDefined();
 
 
         expect(screen.getByRole('link', { name: 'Abbrechen' })).toBeDefined();
@@ -41,7 +41,7 @@ describe('AddUserForm Component', () => {
 
         fireEvent.change(screen.getByLabelText('Email *'), { target: { value: 'test@example.com' } });
         fireEvent.change(screen.getByLabelText('Password *'), { target: { value: 'password123' } });
-        fireEvent.change(screen.getByLabelText('name'), { target: { value: 'Test User' } });
+        fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Test User' } });
 
 
         fireEvent.click(screen.getByRole('button', { name: 'Speichern' }));
@@ -76,7 +76,7 @@ describe('AddUserForm Component', () => {
 
         fireEvent.change(screen.getByLabelText('Email *'), { target: { value: 'test@example.com' } });
         fireEvent.change(screen.getByLabelText('Password *'), { target: { value: 'password123' } });
-        fireEvent.change(screen.getByLabelText('name'), { target: { value: 'Test User' } });
+        fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Test User' } });
 
 
         fireEvent.click(screen.getByRole('button', { name: 'Speichern' }));
