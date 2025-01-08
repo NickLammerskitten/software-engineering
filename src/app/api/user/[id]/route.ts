@@ -4,7 +4,7 @@ import {createAdminClient, IsTrader} from "@/src/utils/supabase/server";
 
 export async function DELETE(request: NextRequest) {
     const requestParams = request.url.split("/");
-    const UserId = requestParams[5];
+    const userId = requestParams[5];
 
     const supabaseClient = createAdminClient();
     const isTrader = await IsTrader(supabaseClient);
@@ -17,7 +17,7 @@ export async function DELETE(request: NextRequest) {
     const { data: { user }, error } = await supabaseClient
         .auth
         .admin
-        .deleteUser(UserId);
+        .deleteUser(userId);
 
     if (error) {
         return NextResponse.json({ message: "Fehler beim Löschen des Nutzers " + error.message }, {
