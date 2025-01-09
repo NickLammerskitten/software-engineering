@@ -20,7 +20,6 @@ export default async function AddImage() {
                     <Typography variant={"h1"}>
                         Bild hinzufügen
                     </Typography>
-
                     <AddImageForm />
                 </>
             ) : (
