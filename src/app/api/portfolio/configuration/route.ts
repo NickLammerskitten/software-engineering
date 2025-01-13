@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
         .from('image_configuration')
         .insert([parsedData]);
     if (error) {
-        return NextResponse.json({ message: "Fehler beim Hinzufügen der Konfiguration" }, {
+        return NextResponse.json({ message: "Fehler beim Hinzufügen der Konfiguration: " + error.message }, {
             status: 500,
         });
     }
@@ -54,11 +54,10 @@ const postRequestDataToDatabaseData = (
 
 const validateData = (data: ImageConfigurationDatabaseData): { valid: boolean, errors: string[] } => {
     const errors: string[] = [];
-
     if (typeof data.image_id !== 'string' || data.image_id.trim() === "") {
         errors.push("Bildauswahl fehlerhaft.");
     }
-    if (typeof data.portfolio_id !== 'string' || data.portfolio_id.trim() === "") {
+    if (data.portfolio_id !== null && (typeof data.portfolio_id !== 'string'|| data.portfolio_id.trim() === "")) {
         errors.push("Portfolioauswahl fehlerhaft.");
     }
 

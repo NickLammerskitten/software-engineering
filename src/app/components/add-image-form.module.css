@@ -4,3 +4,9 @@
     border: 1px solid #4b4b4b;
     border-radius: 4px;
 }
+
+.preconfig_expand {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

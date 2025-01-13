@@ -27,9 +27,11 @@ export async function POST(request: NextRequest) {
         });
     }
 
-    const { error } = await supabaseClient
+    const { data: result, error } = await supabaseClient
         .from('image')
-        .insert([parsedData]);
+        .insert(parsedData)
+        .select()
+        .single();
 
     if (error) {
         return NextResponse.json({ message: `Fehler beim Hinzufügen des Bildes, ${error.details}` }, {
@@ -39,6 +41,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
         message: "Bild erfolgreich hinzugefügt",
+        data: result,
     });
 }
 
