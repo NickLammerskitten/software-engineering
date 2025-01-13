@@ -6,7 +6,6 @@ import {
     CircularProgress,
     FormControl,
     FormControlLabel,
-    FormLabel,
     InputLabel,
     MenuItem,
     Select,
