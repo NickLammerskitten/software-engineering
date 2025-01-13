@@ -93,8 +93,8 @@ export default function AddImageForm() {
                 imageId: json.data.id,
                 portfolioId: null,
                 paletteId: !formData.get("palette-select") ? null : formData.get("palette-select"),
-                stripId: formData.get("strip-select") ?? null,
-                passepartout: formData.get("passepartout") ?? false,
+                stripId: !formData.get("strip-select") ? null : formData.get("strip-select"),
+                passepartout: !formData.get("passepartout") ? false : formData.get("passepartout") === "on",
             };
 
             const configurationResponse = await fetch("/api/portfolio/configuration", {
