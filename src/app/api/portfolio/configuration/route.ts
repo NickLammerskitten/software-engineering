@@ -54,7 +54,6 @@ const postRequestDataToDatabaseData = (
 
 const validateData = (data: ImageConfigurationDatabaseData): { valid: boolean, errors: string[] } => {
     const errors: string[] = [];
-    console.log(data)
     if (typeof data.image_id !== 'string' || data.image_id.trim() === "") {
         errors.push("Bildauswahl fehlerhaft.");
     }

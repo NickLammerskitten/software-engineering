@@ -26,6 +26,8 @@ import { useEffect, useState } from "react";
 import { PaletteSelector } from "./palette-selector";
 import { StripSelector } from "./strip-selector";
 
+import styles from "./add-image-form.module.css";
+
 export default function AddImageForm() {
     const { enqueueSnackbar } = useSnackbar();
 
@@ -88,7 +90,6 @@ export default function AddImageForm() {
         }
 
         if (formData.get("palette-select") || formData.get("strip-select") || formData.get("passepartout")) {
-            console.log("preconfiguration", json.data.id, formData.get("palette-select"), formData.get("strip-select"), formData.get("passepartout"))
             const configurationPayload = {
                 imageId: json.data.id,
                 portfolioId: null,
@@ -106,9 +107,8 @@ export default function AddImageForm() {
             });
 
             if (!configurationResponse.ok) {
-                console.log(configurationResponse)
-                const tmp = await configurationResponse.json();
-                enqueueSnackbar(tmp.message, { variant: "error" });
+                const responseJson = await configurationResponse.json();
+                enqueueSnackbar(responseJson.message, { variant: "error" });
                 return;
             }
         }
@@ -261,7 +261,7 @@ export default function AddImageForm() {
                 />
             </FormControl>
 
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <div className={styles.preconfig_expand}>
                 <Typography variant="h5">
                     Vorkonfiguration
                 </Typography>

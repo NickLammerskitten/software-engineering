@@ -31,7 +31,6 @@ export async function POST(request: NextRequest) {
         .from('image')
         .insert(parsedData)
         .select()
-        .limit(1)
         .single();
 
     if (error) {
