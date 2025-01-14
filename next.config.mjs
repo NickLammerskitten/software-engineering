@@ -17,7 +17,8 @@ const nextConfig = {
                 search: "",
             },
         ]
-    }
+    },
+    output: "standalone"
 };
 
 export default nextConfig;
