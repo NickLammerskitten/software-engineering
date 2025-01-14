@@ -48,7 +48,7 @@ describe('edit category form', () => {
     afterAll(() => server.close())
 
     test('renders', () => {
-        render(<EditItemForm />)
+        render(<EditItemForm apiPath={"/api/category"} cancelPath={"/settings/category"} />)
 
         expect(screen.findByText('Name *')).toBeDefined();
     });

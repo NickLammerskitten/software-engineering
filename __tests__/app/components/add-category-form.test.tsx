@@ -42,7 +42,7 @@ describe('add category form', () => {
     afterAll(() => server.close())
 
     test('renders', () => {
-        render(<AddItemForm />)
+        render(<AddItemForm apiPath={"/api/category"} cancelPath={"/settings/category"} />)
 
         expect(screen.getByText('Name *')).toBeDefined();
     });
