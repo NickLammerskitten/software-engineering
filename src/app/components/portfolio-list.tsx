@@ -3,11 +3,11 @@
 import { Portfolio } from "@/src/app/models/portfolio";
 import { useConfirmDialog } from "@/src/app/utils/confirm-dialog-hook";
 import { Delete, Edit } from "@mui/icons-material";
-import { Alert, Box, Card, CircularProgress, IconButton } from "@mui/material";
+import { Alert, Box, Card, CircularProgress, IconButton, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { Fragment, useEffect, useState } from "react";
 
-export function PortfolioList() {
+export function PortfolioList({ traderPortfolios, userId }: { traderPortfolios: boolean, userId: string }) {
     const { enqueueSnackbar } = useSnackbar();
     const [loading, setLoading] = useState<boolean>(false);
     const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
@@ -21,7 +21,7 @@ export function PortfolioList() {
     const fetchPortfolios = async () => {
         setLoading(true);
 
-        const response = await fetch(`/api/portfolio/my`);
+        const response = await fetch(`/api/portfolio`);
 
         const json = await response.json();
 
@@ -32,7 +32,13 @@ export function PortfolioList() {
             return;
         }
 
-        setPortfolios(json["data"]);
+        const portfolios = json["data"] as Portfolio[];
+
+        if (traderPortfolios) {
+            setPortfolios(portfolios.filter((portfolio) => portfolio.owner_id === userId));
+        } else {
+            setPortfolios(portfolios.filter((portfolio) => portfolio.owner_id !== userId));
+        }
     }
 
     const deletePortfolio = async (id: string) => {
@@ -81,9 +87,11 @@ export function PortfolioList() {
                                         <Edit />
                                     </IconButton>
 
-                                    <IconButton onClick={() => handleDelete(portfolio.id)}>
-                                        <Delete />
-                                    </IconButton>
+                                    {traderPortfolios && (
+                                        <IconButton onClick={() => handleDelete(portfolio.id)}>
+                                            <Delete />
+                                        </IconButton>
+                                    )}
                                 </Box>
                             </Card>
                         </Fragment>
