@@ -7,7 +7,7 @@ import WrongUserRole from "@/src/app/utils/wrong-user-role";
 import {EditItemForm} from "@/src/app/components/edit-item-form";
 import { ArrowBack } from "@mui/icons-material";
 
-export default async function EditStrip() {
+export default async function EditPalette() {
     const supabase = createClient();
 
     const {
@@ -16,14 +16,14 @@ export default async function EditStrip() {
 
     return (
         <div>
-            <Button href="/settings/strip" startIcon={<ArrowBack />} variant={"text"} style={{marginBottom: "5px"}}>Zurück</Button>
+            <Button href="/settings/palette" startIcon={<ArrowBack />} variant={"text"} style={{marginBottom: "5px"}}>Zurück</Button>
             {user?.role === UserRole.Trader ? (
                 <>
                     <Typography variant={"h1"}>
-                        Leiste bearbeiten
+                        Palette bearbeiten
                     </Typography>
 
-                    <EditItemForm apiPath={"/api/strip"} cancelPath={"/settings/strip"}/>
+                    <EditItemForm apiPath={"/api/palette"} cancelPath={"/settings/palette"}/>
                 </>
             ) : (
                 <WrongUserRole />
