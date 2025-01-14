@@ -8,7 +8,7 @@ import {EditItemForm} from "@/src/app/components/edit-item-form";
 import { ArrowBack } from "@mui/icons-material";
 
 export default async function EditCategory() {
-    const supabase = await createClient();
+    const supabase = createClient();
 
     const {
         data: { user },
@@ -23,7 +23,7 @@ export default async function EditCategory() {
                         Kategorie bearbeiten
                     </Typography>
 
-                    <EditItemForm />
+                    <EditItemForm apiPath={"/api/category"} cancelPath={"/settings/category"} />
                 </>
             ) : (
                 <WrongUserRole />
