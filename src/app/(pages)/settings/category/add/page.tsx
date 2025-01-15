@@ -2,7 +2,7 @@ import {createClient} from "@/src/utils/supabase/server";
 import {UserRole} from "@/src/app/models/user-role";
 import {Button, Typography} from "@mui/material";
 import WrongUserRole from "@/src/app/utils/wrong-user-role";
-import AddCategoryForm from "@/src/app/components/add-category-form";
+import AddItemForm from "@/src/app/components/add-item-form";
 import { ArrowBack } from "@mui/icons-material";
 
 export default async function AddCategory() {
@@ -21,7 +21,7 @@ export default async function AddCategory() {
                         Kategorie hinzufügen
                     </Typography>
 
-                    <AddCategoryForm />
+                    <AddItemForm apiPath={"/api/category"} cancelPath={"/settings/category"} />
                 </>
             ) : (
                 <WrongUserRole />

@@ -1,4 +1,4 @@
-import AddCategoryForm from "@/src/app/components/add-category-form";
+import AddItemForm from "@/src/app/components/add-item-form";
 import { render, screen } from "@testing-library/react";
 import { http } from "msw";
 import { setupServer } from "msw/node";
@@ -42,7 +42,7 @@ describe('add category form', () => {
     afterAll(() => server.close())
 
     test('renders', () => {
-        render(<AddCategoryForm />)
+        render(<AddItemForm apiPath={"/api/category"} cancelPath={"/settings/category"} />)
 
         expect(screen.getByText('Name *')).toBeDefined();
     });
