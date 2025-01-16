@@ -12,6 +12,11 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
     steps:
     - uses: actions/checkout@v4
     
@@ -21,8 +26,18 @@ jobs:
         registry: ghcr.io
         username: ${{github.actor}}
         password: ${{secrets.GITHUB_TOKEN}}
+
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ghcr.io/${{ github.repository }}
       
-    - name: Build the Docker image
-      run: |
-        docker build . --file Dockerfile --tag ghcr.io/NickLammerskitten/einfachkunst:latest
-        docker push ghcr.io/NickLammerskitten/einfachkunst:latest
+    - name: Build and push Docker images
+      id: push
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
