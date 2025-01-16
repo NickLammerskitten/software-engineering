@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 const fallbackImageUrl = "/images/no-photo.jpg";
 
-interface ImageConfiguration {
+interface MinimalImageConfiguration {
     id: string;
     byTrader: boolean;
     imageId: string;
@@ -19,7 +19,7 @@ export function ImageConfigurationList({ portfolioId }: { portfolioId: string })
     const router = useRouter();
 
     const [loadingImageConfigurations, setLoadingImageConfigurations] = useState<boolean>(true);
-    const [imageConfigurations, setImageConfigurations] = useState<ImageConfiguration[]>([]);
+    const [imageConfigurations, setImageConfigurations] = useState<MinimalImageConfiguration[]>([]);
     const [imageConfigurationsErrorMessages, setImageConfigurationsErrorMessages] = useState<{
         [id: string]: string
     }>({})
@@ -41,7 +41,7 @@ export function ImageConfigurationList({ portfolioId }: { portfolioId: string })
 
                 return json;
             })
-            .then((data: { data: ImageConfiguration[] }) => {
+            .then((data: { data: MinimalImageConfiguration[] }) => {
                 setImageConfigurations(data.data);
                 setLoadingImageConfigurations(false);
             });
@@ -99,7 +99,7 @@ export function ImageConfigurationList({ portfolioId }: { portfolioId: string })
                             title={image.title}
                             addedByTrader={image.byTrader}
                             onClick={() => {
-                                router.push(`/image/${image.imageId}`)
+                                router.push(`/portfolio/${portfolioId}/configuration/${image.id}`);
                             }}
                             subactionIcon={<Remove />}
                             subactionTooltip={"Entfernen"}

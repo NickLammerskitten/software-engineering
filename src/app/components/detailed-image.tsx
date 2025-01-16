@@ -3,39 +3,35 @@
 import styles from "@/src/app/components/detailed-image.module.css";
 import { ImageConfigurator } from "@/src/app/components/image-configurator";
 import { Image } from "@/src/app/models/image";
+import { ImageConfiguration } from "@/src/app/models/portfolio";
 import { numberToCurrency } from "@/src/app/utils/number-to-currency";
-import {Box, Button, CircularProgress, Divider, Typography} from "@mui/material";
-import {usePathname} from "next/navigation";
-import { useEffect, useState } from "react";
+import { Box, Button, CircularProgress, Divider, Typography } from "@mui/material";
 import * as React from "react";
+import { useEffect, useState } from "react";
 
-export function DetailedImage({ isTrader }: { isTrader: boolean }) {
-    const pathname = usePathname();
+interface DetailedImageProps {
+    isTrader: boolean;
+    imageId: string | null;
+    configurationId: string | null;
+}
 
-    const [loading, setLoading] = useState<boolean>(true);
-    const [imageId, setImageId] = useState<string | null>(null);
-
+export function DetailedImage({ isTrader, imageId, configurationId }: DetailedImageProps) {
+    const [loadingImage, setLoadingImage] = useState<boolean>(true);
     const [image, setImage] = useState<Image | null>(null);
     const [category, setCategory] = useState<Category | null>(null);
 
-    useEffect(() => {
-        setLoading(true);
+    const [loadingConfiguration, setLoadingConfiguration] = useState<boolean>(true);
+    const [configuration, setConfiguration] = useState<ImageConfiguration | null>(null);
 
-        const imageId = pathname.split('/').pop() as string;
-        setImageId(imageId);
+    const fetchImage = async (imageId: string) => {
+        setLoadingImage(true);
 
-        if (imageId == null) {
-            setLoading(false);
-            setImage(null);
-            return;
-        }
-
-        fetch(`/api/image/${imageId}`)
+        return fetch(`/api/image/${imageId}`)
             .then(async (response) => {
                 const json = await response.json();
 
                 if (!response.ok) {
-                    setLoading(false);
+                    setLoadingImage(false);
                     throw new Error(`Error while fetching image (${response.status}): ${json["message"]}`);
                 }
 
@@ -43,9 +39,56 @@ export function DetailedImage({ isTrader }: { isTrader: boolean }) {
             })
             .then((data: { data: Image }) => {
                 setImage(data.data);
-                setLoading(false);
+                setLoadingImage(false);
+                return data.data;
             });
-    }, [pathname]);
+    }
+
+    const fetchConfiguration = async (configurationId: string) => {
+        setLoadingConfiguration(true);
+
+        return fetch(`/api/portfolio/configuration/${configurationId}`)
+            .then(async (response) => {
+                const json = await response.json();
+
+                if (!response.ok) {
+                    setLoadingConfiguration(false);
+                    throw new Error(`Error while fetching configuration (${response.status}): ${json["message"]}`);
+                }
+
+                return json;
+            })
+            .then((data: { data: ImageConfiguration | null }) => {
+                setConfiguration(data.data);
+                setLoadingConfiguration(false);
+                return data.data;
+            });
+    }
+
+    useEffect(() => {
+        if (configurationId == null && imageId == null) {
+            throw new Error("Either imageId or configurationId must be set");
+        }
+
+        if (configurationId == null) {
+            // when configurationId is not set, fetch image directly
+            fetchImage(imageId as string).then((image) => {
+                // fetch standard configuration if set
+                if (image.standardConfigurationId == null) {
+                    setLoadingConfiguration(false);
+                    return;
+                }
+
+                fetchConfiguration(image.standardConfigurationId);
+            });
+
+        } else {
+            // when configurationId is set, fetch configuration and then image
+            fetchConfiguration(configurationId).then((imageConfiguration) => {
+                fetchImage(imageConfiguration!.imageId);
+            })
+        }
+    }, [imageId, configurationId]);
 
     useEffect(() => {
         if (image == null) {
@@ -57,7 +100,7 @@ export function DetailedImage({ isTrader }: { isTrader: boolean }) {
                 const json = await response.json();
 
                 if (!response.ok) {
-                    setLoading(false);
+                    setLoadingImage(false);
                     throw new Error(`Error while fetching category (${response.status}): ${json["message"]}`);
                 }
 
@@ -68,11 +111,17 @@ export function DetailedImage({ isTrader }: { isTrader: boolean }) {
             });
     }, [image]);
 
+    if (imageId == null && configurationId == null) {
+        return (
+            <>Es ist kein Bild, als auch keine Bildkonfiguration vorhanden</>
+        );
+    }
+
     return (
         <div>
-            {loading && (<CircularProgress />)}
+            {loadingImage && (<CircularProgress />)}
 
-            {!loading && image && category && (
+            {!loadingImage && image && category && (
                 <Box>
                     <Box className={"actions_container"}>
                         {isTrader && (
@@ -160,10 +209,14 @@ export function DetailedImage({ isTrader }: { isTrader: boolean }) {
                                 {numberToCurrency(image.price)}
                             </Typography>
 
-                            <ImageConfigurator
-                                imageId={image.id}
-                                isTrader={isTrader}
-                            />
+                            {loadingConfiguration ? (<CircularProgress />) : (
+                                <ImageConfigurator
+                                    imageId={image.id}
+                                    configurationId={configurationId}
+                                    imageConfiguration={configuration}
+                                    isTrader={isTrader}
+                                />
+                            )}
 
                             <Divider className={"divider_spacing"} />
 

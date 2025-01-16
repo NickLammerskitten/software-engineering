@@ -1,4 +1,4 @@
-import { Portfolio } from "@/src/app/models/portfolio";
+import { ImageConfiguration, Portfolio } from "@/src/app/models/portfolio";
 import {
     Box,
     Button,
@@ -22,18 +22,55 @@ const traderPortfolioRoute: string = "/api/portfolio";
 
 interface ImageConfiguratorProps {
     isTrader: boolean;
+    configurationId: string | null;
     imageId: string;
+    imageConfiguration: ImageConfiguration | null;
 }
 
-export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps) {
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+const handleCreateConfiguration = async (data) => {
+    return await fetch(`/api/portfolio/configuration`, {
+        method: "POST",
+        body: JSON.stringify({
+            formData: data,
+        }),
+    });
+}
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+const handleSaveConfiguration = async (data) => {
+    return await fetch(`/api/portfolio/configuration`, {
+        method: "PUT",
+        body: JSON.stringify({
+            formData: data,
+        }),
+    });
+}
+
+export function ImageConfigurator({ isTrader, configurationId, imageId, imageConfiguration }: ImageConfiguratorProps) {
     const { enqueueSnackbar } = useSnackbar();
     const [loadingPortfolios, setLoadingPortfolios] = useState<boolean>(false);
     const [portfolios, setPortfolios] = useState<Portfolio[]>([]);
-    const [selectedPortfolio, setSelectedPortfolio] = useState<number | undefined>(undefined);
+    const [selectedPortfolio, setSelectedPortfolio] = useState<string | undefined>(undefined);
+
+    const [paletteId, setPaletteId] = useState<string | undefined>(undefined);
+    const [stripId, setStripId] = useState<string | undefined>(undefined);
+    const [passepartout, setPassepartout] = useState<boolean>(false);
 
     useEffect(() => {
         fetchPortfolios();
     }, [])
+
+    useEffect(() => {
+        if (imageConfiguration) {
+            setSelectedPortfolio(imageConfiguration.portfolioId ?? undefined);
+            setPaletteId(imageConfiguration.paletteId ?? undefined);
+            setStripId(imageConfiguration.stripId ?? undefined);
+            setPassepartout(imageConfiguration.passepartout);
+        }
+    }, [imageConfiguration]);
 
     const fetchPortfolios = async () => {
         setLoadingPortfolios(true);
@@ -51,7 +88,7 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
         }
 
         setPortfolios(json["data"]);
-        if (json["data"].length > 0) {
+        if (json["data"].length > 0 && !selectedPortfolio) {
             setSelectedPortfolio(json["data"][0].id);
         }
     }
@@ -65,12 +102,16 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
             passepartout: formData.get("passepartout") === "on",
         }
 
-        const response = await fetch(`/api/portfolio/configuration`, {
-            method: "POST",
-            body: JSON.stringify({
-                formData: data,
-            }),
-        });
+        let response: Response;
+        if (configurationId) {
+            const putData = {
+                ...data,
+                id: configurationId,
+            }
+            response = await handleSaveConfiguration(putData);
+        } else {
+            response = await handleCreateConfiguration(data);
+        }
 
         const json = await response.json();
 
@@ -90,7 +131,7 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
         >
             {loadingPortfolios ? (<CircularProgress />) : portfolios && portfolios.length > 0 ? (
                 <>
-                    {isTrader && (
+                    {isTrader && !configurationId && (
                         <FormControl fullWidth>
                             <InputLabel id="portfolio-select">Mappe</InputLabel>
                             <Select
@@ -102,7 +143,7 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
                                 required
                                 value={selectedPortfolio}
                                 onChange={(event => {
-                                    setSelectedPortfolio(event.target.value as number);
+                                    setSelectedPortfolio(event.target.value as string);
                                 })}
                             >
                                 {portfolios.map((portfolio) => (
@@ -133,33 +174,53 @@ export function ImageConfigurator({ isTrader, imageId }: ImageConfiguratorProps)
 
             {portfolios.length > 0 && (
                 <>
-                    <PaletteSelector />
-                    <StripSelector />
+                    <PaletteSelector
+                        onChange={(e) => setPaletteId(e.target.value)}
+                        selectedPalette={paletteId}
+                    />
+                    <StripSelector
+                        onChange={(e) => setStripId(e.target.value)}
+                        selectedStrip={stripId}
+                    />
                     <FormControlLabel
                         name={"passepartout"}
                         control={<Checkbox />}
+                        checked={passepartout}
                         label="Passepartout"
                     />
                 </>
             )}
 
-            <Box>
-                {portfolios.length > 0 ? (
-                    <Button
-                        variant={"contained"}
-                        type={"submit"}
-                    >
-                        Zu Mappe hinzufügen
-                    </Button>
-                ) : isTrader && (
-                    <Button
-                        variant={"contained"}
-                        href={"/portfolio/add"}
-                    >
-                        Neue Mappe erstellen
-                    </Button>
+            <>
+                {configurationId ? (
+                    <Box>
+                        <Button
+                            variant={"contained"}
+                            type={"submit"}
+                        >
+                            Speichern
+                        </Button>
+                    </Box>
+                ) : (
+                    <Box>
+                        {portfolios.length > 0 ? (
+                            <Button
+                                variant={"contained"}
+                                type={"submit"}
+                            >
+                                Zu Mappe hinzufügen
+                            </Button>
+                        ) : isTrader && (
+                            <Button
+                                variant={"contained"}
+                                href={"/portfolio/add"}
+                            >
+                                Neue Mappe erstellen
+                            </Button>
+                        )}
+                    </Box>
                 )}
-            </Box>
+            </>
         </form>
     )
 }
