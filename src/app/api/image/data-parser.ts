@@ -1,15 +1,20 @@
-import { getSignedUrl } from "@/src/utils/supabase/public-image-url-fetcher";
 import {
     ImageData,
     ImageDatabaseData,
     ImageDatabaseResponseData,
     ImageResponseData,
 } from "@/src/app/api/models/image.model";
+import { getSignedUrl } from "@/src/utils/supabase/public-image-url-fetcher";
 
 export const databaseDataToResponseData = async (data: ImageDatabaseResponseData): Promise<ImageResponseData> => {
     let publicImageUrl = null;
     if (data.image_path) {
         publicImageUrl = await getSignedUrl(data.image_path);
+    }
+
+    let standardConfigurationId = null;
+    if (data.image_configuration && data.image_configuration.length > 0) {
+        standardConfigurationId = data.image_configuration[0].id;
     }
 
     return {
@@ -25,7 +30,7 @@ export const databaseDataToResponseData = async (data: ImageDatabaseResponseData
         price: data.price,
         annotations: data.annotations,
         image_url: publicImageUrl,
-        standardConfigurationId: data.standard_configuration_id,
+        standardConfigurationId: standardConfigurationId,
     }
 }
 
@@ -59,6 +64,6 @@ export const putRequestDataToDatabaseData = (data: ImageResponseData): ImageData
         price: parseFloat(data.price.toString()),
         annotations: data.annotations,
         image_path: data.image_url,
-        standard_configuration_id: data.standardConfigurationId,
+        image_configuration: [{ id: data.standardConfigurationId }],
     }
 }

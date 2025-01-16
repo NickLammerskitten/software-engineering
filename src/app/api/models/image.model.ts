@@ -33,5 +33,5 @@ export interface ImageDatabaseData {
 
 export interface ImageDatabaseResponseData extends ImageDatabaseData {
     id: string;
-    standard_configuration_id: string | null;
+    image_configuration: [{id: string | null}];
 }
