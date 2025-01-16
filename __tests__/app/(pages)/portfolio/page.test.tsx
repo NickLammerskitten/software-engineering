@@ -13,7 +13,7 @@ describe('Portfolio page for trader', () => {
     ];
 
     const restHandlers = [
-        http.get("api/portfolio/my", () => {
+        http.get("api/portfolio", () => {
             return NextResponse.json({ data: portfolios });
         }),
     ];
