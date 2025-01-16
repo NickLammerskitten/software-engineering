@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
     const userId = userData.user.id as string;
     const role = userData.user.role as string;
 
-    if (role === "customer" && data.owner_id !== userId) {
+    if (role === "authenticated" && data.owner_id !== userId) {
         return NextResponse.json({ message: "Keine Berechtigung" }, {
             status: 403,
         });
