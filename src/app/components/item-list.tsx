@@ -6,20 +6,25 @@ import { Box, Card, CircularProgress, IconButton } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 import { useConfirmDialog } from "../utils/confirm-dialog-hook";
 
-export function CategoryList() {
+interface ItemListProps {
+    apiPath: string;
+    editPath: string;
+}
+
+export function ItemList({ apiPath, editPath }: ItemListProps) {
     const { enqueueSnackbar } = useSnackbar();
     const [loading, setLoading] = useState<boolean>(false);
-    const [categories, setCategories] = useState<Category[]>([]);
+    const [items, setItems] = useState<Category[]>([]);
     const {showConfirm, ConfirmDialogComponent} = useConfirmDialog();
 
     useEffect(() => {
-        fetchCategories();
+        fetchItems();
     }, []);
 
-    const fetchCategories = async () => {
+    const fetchItems = async () => {
         setLoading(true);
 
-        const response = await fetch(`/api/category`);
+        const response = await fetch(apiPath);
 
         const json = await response.json();
 
@@ -30,11 +35,11 @@ export function CategoryList() {
             return;
         }
 
-        setCategories(json["data"]);
+        setItems(json["data"]);
     };
 
-    const deleteCategory = async (id: number) => {
-        const response = await fetch(`/api/category/${id}`, {
+    const deleteItem = async (id: number) => {
+        const response = await fetch(`${apiPath}/${id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -48,15 +53,15 @@ export function CategoryList() {
             return;
         }
 
-        await fetchCategories();
+        await fetchItems();
     };
 
     const handleDelete = (id: number) => {
         showConfirm(
-            "Möchtest du diese Kategorie wirklich löschen?",
+            "Möchtest du dieses Element wirklich löschen?",
             "",
             () => {
-                deleteCategory(id);
+                deleteItem(id);
             }
         );
     };
@@ -65,20 +70,20 @@ export function CategoryList() {
         <div>
             {loading && (<CircularProgress />)}
 
-            {!loading && categories.length > 0 && (
+            {!loading && items.length > 0 && (
                 <Box className={"items_list"}>
-                    {categories.map((category) => (
-                        <Fragment key={category.id}>
-                            <Card key={category.id}
+                    {items.map((item) => (
+                        <Fragment key={item.id}>
+                            <Card key={item.id}
                                 className={"item"}
                             >
-                                {category.name}
+                                {item.name}
 
                                 <Box>
-                                    <IconButton href={`category/edit?id=${category.id}`}>
+                                    <IconButton href={`${editPath}?id=${item.id}`}>
                                         <Edit />
                                     </IconButton>
-                                    <IconButton onClick={() => handleDelete(category.id)}>
+                                    <IconButton onClick={() => handleDelete(item.id)}>
                                         <Delete />
                                     </IconButton>
                                 </Box>

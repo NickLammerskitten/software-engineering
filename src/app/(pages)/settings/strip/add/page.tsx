@@ -1,14 +1,12 @@
-"use server";
-
 import {createClient} from "@/src/utils/supabase/server";
 import {UserRole} from "@/src/app/models/user-role";
 import {Button, Typography} from "@mui/material";
 import WrongUserRole from "@/src/app/utils/wrong-user-role";
-import {EditItemForm} from "@/src/app/components/edit-item-form";
+import AddItemForm from "@/src/app/components/add-item-form";
 import { ArrowBack } from "@mui/icons-material";
 
-export default async function EditCategory() {
-    const supabase = createClient();
+export default async function AddStrip() {
+    const supabase = await createClient();
 
     const {
         data: { user },
@@ -16,14 +14,14 @@ export default async function EditCategory() {
 
     return (
         <div>
-            <Button href="/settings/category" startIcon={<ArrowBack />} variant={"text"} style={{marginBottom: "5px"}}>Zurück</Button>
+            <Button href="/settings/strip" startIcon={<ArrowBack />} variant={"text"} style={{marginBottom: "5px"}}>Zurück</Button>
             {user?.role === UserRole.Trader ? (
                 <>
                     <Typography variant={"h1"}>
-                        Kategorie bearbeiten
+                        Leiste hinzufügen
                     </Typography>
 
-                    <EditItemForm apiPath={"/api/category"} cancelPath={"/settings/category"} />
+                    <AddItemForm apiPath={"/api/strip"} cancelPath={"/settings/strip"}/>
                 </>
             ) : (
                 <WrongUserRole />

@@ -6,29 +6,34 @@ import { useEffect, useRef, useState } from "react";
 
 const nameRegEx = new RegExp('^[\u00C0-\u017Fa-zA-Z0-9 ]{3,30}$')
 
-export default function AddCategoryForm() {
+interface AddItemFormProps {
+    apiPath: string;
+    cancelPath: string;
+}
+
+export default function AddItemForm({ apiPath, cancelPath }: AddItemFormProps) {
     const { enqueueSnackbar } = useSnackbar();
 
-    const [categoryNameValid, setCategoryNameValid] = useState<boolean>(true);
-    const [categoryName, setCategoryName] = useState<string>("");
+    const [itemNameValid, setItemNameValid] = useState<boolean>(true);
+    const [itemName, setItemName] = useState<string>("");
     const formRef = useRef<HTMLFormElement>(null);
 
     useEffect(() => {
-        if (categoryName == null || categoryName == "") {
-            setCategoryNameValid(true);
+        if (itemName == null || itemName == "") {
+            setItemNameValid(true);
             return;
         }
 
-        const valid = nameRegEx.test(categoryName);
-        setCategoryNameValid(valid);
-    }, [categoryName]);
+        const valid = nameRegEx.test(itemName);
+        setItemNameValid(valid);
+    }, [itemName]);
 
     const handleSubmit = async (formData: FormData) => {
         const data = {
             name: formData.get("name"),
         }
 
-        await fetch('/api/category', {
+        await fetch(apiPath, {
             body: JSON.stringify({ formData: data }),
             method: "POST",
             headers: {
@@ -49,7 +54,7 @@ export default function AddCategoryForm() {
     return (
         <form
             className={"form_container"}
-            id={"add-category-form"}
+            id={"add-item-form"}
             action={(value) => handleSubmit(value)}
             ref={formRef}
         >
@@ -62,12 +67,12 @@ export default function AddCategoryForm() {
                     required
                     fullWidth
                     variant="outlined"
-                    value={categoryName}
-                    onChange={(e) => setCategoryName(e.target.value)}
-                    helperText={categoryNameValid
+                    value={itemName}
+                    onChange={(e) => setItemName(e.target.value)}
+                    helperText={itemNameValid
                         ? ""
                         : "Der Name muss zwischen 3 und 30 Zeichen lang sein und darf Zeichen von a bis z, sowie Zahlen von 0 bis 9 enthalten."}
-                    error={!categoryNameValid}
+                    error={!itemNameValid}
                 />
             </FormControl>
 
@@ -75,7 +80,7 @@ export default function AddCategoryForm() {
                 <Button
                     variant={"text"}
                     type={"reset"}
-                    href="/settings/category"
+                    href={cancelPath}
                 >
                     Abbrechen
                 </Button>

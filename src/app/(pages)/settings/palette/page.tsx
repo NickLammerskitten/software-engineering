@@ -17,17 +17,17 @@ export default async function Categories() {
             {user?.role === UserRole.Trader ? (
                 <>
                     <Typography variant={"h1"}>
-                        Kategorien verwalten
+                        Paletten verwalten
                     </Typography>
 
                     <Button startIcon={<Add/>}
-                            href="/settings/category/add"
+                            href="/settings/palette/add"
                             className={"top_action_buttons"}
                     >
-                        Kategorie hinzufügen
+                        Palette hinzufügen
                     </Button>
 
-                    <ItemList apiPath={"/api/category"} editPath={"category/edit"} />
+                    <ItemList apiPath={"/api/palette"} editPath={"palette/edit"} />
                 </>
             ) : (
                 <WrongUserRole/>
