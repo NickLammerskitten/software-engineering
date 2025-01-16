@@ -3,7 +3,7 @@
 import { Portfolio } from "@/src/app/models/portfolio";
 import { useConfirmDialog } from "@/src/app/utils/confirm-dialog-hook";
 import { Delete, Edit } from "@mui/icons-material";
-import { Alert, Box, Card, CircularProgress, IconButton, Typography } from "@mui/material";
+import { Alert, Box, Card, CircularProgress, IconButton } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { Fragment, useEffect, useState } from "react";
 
