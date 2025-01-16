@@ -72,6 +72,10 @@ export function ImageConfigurator({ isTrader, configurationId, imageId, imageCon
         }
     }, [imageConfiguration]);
 
+    const handleCheckPassepartout = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setPassepartout(event.target.checked);
+    };
+
     const fetchPortfolios = async () => {
         setLoadingPortfolios(true);
 
@@ -184,8 +188,7 @@ export function ImageConfigurator({ isTrader, configurationId, imageId, imageCon
                     />
                     <FormControlLabel
                         name={"passepartout"}
-                        control={<Checkbox />}
-                        checked={passepartout}
+                        control={<Checkbox checked={passepartout} onChange={handleCheckPassepartout} />}
                         label="Passepartout"
                     />
                 </>
