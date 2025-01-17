@@ -22,6 +22,7 @@ export interface ImageConfigurationResponseData {
     title: string;
     artist: string;
     imageUrl: string | null;
+    imagePrice: number;
 }
 
 export interface ImageConfigurationPutData {
