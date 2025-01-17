@@ -5,6 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 interface ImageConfigurationDatabaseData {
     id: string;
     by_trader: boolean;
+    palette_id: string;
     image: {
         id: string;
         title: string;
@@ -48,6 +49,7 @@ export async function GET(request: NextRequest) {
         .select(`
             id,
             by_trader,
+            palette_id,
             image (
                 id,
                 title,
@@ -86,6 +88,11 @@ const databaseDataToResponseData = async (data: ImageConfigurationDatabaseData):
         publicImageUrl = await getSignedUrl(data.image.image_path);
     }
 
+    let price = data.image.price;
+    if (data.palette_id !== null) {
+        price = price * 1.15;
+    }
+
     return {
         id: data.id,
         byTrader: data.by_trader,
@@ -93,6 +100,6 @@ const databaseDataToResponseData = async (data: ImageConfigurationDatabaseData):
         title: data.image.title,
         artist: data.image.artist,
         imageUrl: publicImageUrl,
-        imagePrice: data.image.price,
+        imagePrice: price,
     }
 }
