@@ -98,9 +98,14 @@ export function ImageConfigurator({ isTrader, configurationId, imageId, imageCon
     }
 
     const handleSubmit = async (formData: FormData) => {
+        let portfolioId = selectedPortfolio;
+        if (imageConfiguration && imageConfiguration.portfolioId) {
+            portfolioId = imageConfiguration.portfolioId;
+        }
+
         const data = {
             imageId: imageId,
-            portfolioId: selectedPortfolio,
+            portfolioId: portfolioId,
             paletteId: !formData.get("palette-select") ? null : formData.get("palette-select"),
             stripId: !formData.get("strip-select") ? null : formData.get("strip-select"),
             passepartout: formData.get("passepartout") === "on",
@@ -188,7 +193,10 @@ export function ImageConfigurator({ isTrader, configurationId, imageId, imageCon
                     />
                     <FormControlLabel
                         name={"passepartout"}
-                        control={<Checkbox checked={passepartout} onChange={handleCheckPassepartout} />}
+                        control={<Checkbox
+                            checked={passepartout}
+                            onChange={handleCheckPassepartout}
+                        />}
                         label="Passepartout"
                     />
                 </>
