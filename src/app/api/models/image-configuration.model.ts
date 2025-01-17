@@ -14,3 +14,22 @@ export interface ImageConfigurationDatabaseData {
     strip_id: string | null;
     passepartout: boolean;
 }
+
+export interface ImageConfigurationResponseData {
+    id: string;
+    byTrader: boolean;
+    imageId: string;
+    title: string;
+    artist: string;
+    imageUrl: string | null;
+    imagePrice: number;
+}
+
+export interface ImageConfigurationPutData {
+    id: string;
+    imageId: string;
+    portfolioId: string;
+    paletteId: string | null;
+    stripId: string | null;
+    passepartout: boolean;
+}

@@ -31,6 +31,16 @@ export default async function Settings() {
                         >
                             Benutzer
                         </Button>
+                        <Button variant={"outlined"}
+                                href={"settings/strip"}
+                        >
+                            Leisten
+                        </Button>
+                        <Button variant={"outlined"}
+                                href={"settings/palette"}
+                        >
+                            Paletten
+                        </Button>
                     </Box>
                 </>
             ) : (

@@ -7,59 +7,64 @@ import { useEffect, useState } from "react";
 
 const nameRegEx = new RegExp('^[\u00C0-\u017Fa-zA-Z0-9 ]{3,30}$')
 
-export function EditCategoryForm() {
+interface EditItemFormProps {
+    apiPath: string;
+    cancelPath: string;
+}
+
+export function EditItemForm({ apiPath, cancelPath }: EditItemFormProps) {
     const { enqueueSnackbar } = useSnackbar();
     const searchParams = useSearchParams();
 
     const [loading, setLoading] = useState(true);
-    const [categoryId, setCategoryId] = useState<number | null>(null);
-    const [categoryName, setCategoryName] = useState<string | null>(null)
-    const [categoryNameValid, setCategoryNameValid] = useState<boolean>(true)
+    const [itemId, setItemId] = useState<number | null>(null);
+    const [itemName, setItemName] = useState<string | null>(null)
+    const [itemNameValid, setItemNameValid] = useState<boolean>(true)
 
     useEffect(() => {
         setLoading(true);
 
-        const categoryId = searchParams.get('id') as number | null;
-        setCategoryId(categoryId);
+        const itemId = searchParams.get('id') as number | null;
+        setItemId(itemId);
 
-        if (categoryId == null) {
+        if (itemId == null) {
             setLoading(false);
-            setCategoryName(null);
+            setItemName(null);
             return;
         }
 
-        fetch(`/api/category/${categoryId}`)
+        fetch(`${apiPath}/${itemId}`)
             .then((res) => {
                 if (!res.ok) {
                     setLoading(false);
-                    throw new Error("Error fetching category");
+                    throw new Error("Error fetching item");
                 }
 
                 return res.json();
             })
-            .then((data: { data: Category }) => {
+            .then((data: { data: {name: string} }) => {
                 setLoading(false);
-                setCategoryName(data.data.name);
+                setItemName(data.data.name);
             });
     }, [searchParams]);
 
     useEffect(() => {
-        if (categoryName == null || categoryName == "") {
-            setCategoryNameValid(true);
+        if (itemName == null || itemName == "") {
+            setItemNameValid(true);
             return;
         }
 
-        const valid = nameRegEx.test(categoryName);
-        setCategoryNameValid(valid);
-    }, [categoryName]);
+        const valid = nameRegEx.test(itemName);
+        setItemNameValid(valid);
+    }, [itemName]);
 
     const handleSubmit = async (formData: FormData) => {
         const data = {
-            id: categoryId,
+            id: itemId,
             name: formData.get("name"),
         }
 
-        await fetch('/api/category', {
+        await fetch(apiPath, {
             body: JSON.stringify({ formData: data }),
             method: "PUT",
             headers: {
@@ -72,7 +77,7 @@ export function EditCategoryForm() {
                 return;
             }
 
-            const form = document.getElementById("edit-category-form") as HTMLFormElement;
+            const form = document.getElementById("edit-item-form") as HTMLFormElement;
             form.reset();
 
             enqueueSnackbar(json.message, { variant: "success" });
@@ -82,10 +87,10 @@ export function EditCategoryForm() {
     return (
         <>
             {loading ? (<CircularProgress />)
-                : categoryName !== null ? (
+                : itemName !== null ? (
                     <form
                         className={"form_container"}
-                        id={"edit-category-form"}
+                        id={"edit-item-form"}
                         action={(value) => handleSubmit(value)}
                     >
                         <FormControl>
@@ -97,12 +102,12 @@ export function EditCategoryForm() {
                                 required
                                 fullWidth
                                 variant="outlined"
-                                value={categoryName}
-                                onChange={(e) => setCategoryName(e.target.value)}
-                                helperText={categoryNameValid
+                                value={itemName}
+                                onChange={(e) => setItemName(e.target.value)}
+                                helperText={itemNameValid
                                     ? ""
                                     : "Der Name muss zwischen 3 und 30 Zeichen lang sein und darf Zeichen von a bis z, sowie Zahlen von 0 bis 9 enthalten."}
-                                error={!categoryNameValid}
+                                error={!itemNameValid}
                             />
                         </FormControl>
 
@@ -110,7 +115,7 @@ export function EditCategoryForm() {
                             <Button
                                 variant={"text"}
                                 type={"reset"}
-                                href="/settings/category"
+                                href={cancelPath}
                             >
                                 Abbrechen
                             </Button>

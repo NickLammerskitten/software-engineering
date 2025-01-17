@@ -17,8 +17,9 @@ export async function GET(request: NextRequest) {
     const supabaseClient = createClient();
     const { data, error } = await supabaseClient
         .from('image')
-        .select()
+        .select('*, image_configuration(id)')
         .eq('id', imageId)
+        .is('image_configuration.portfolio_id', null)
         .single();
 
     if (error) {

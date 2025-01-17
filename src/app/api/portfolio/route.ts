@@ -48,11 +48,16 @@ export async function POST(request: NextRequest) {
             status: 401,
         });
     }
+    const portfolioDatabaseData = (await request.json()).formData as PortfolioDatabaseData;
+        let userId;
 
-    const userId = userData.user.id as string;
+    if (portfolioDatabaseData.owner_id) {
+         userId = portfolioDatabaseData.owner_id;
+    } else {
+         userId = userData.user.id as string;
+    }
 
-    const portfolioData = (await request.json()).formData as PortfolioData;
-    const parsedData = parsePostData(userId, portfolioData);
+    const parsedData = parsePostData(userId, portfolioDatabaseData);
 
     const { valid, errors } = validateData(parsedData);
     if (!valid) {

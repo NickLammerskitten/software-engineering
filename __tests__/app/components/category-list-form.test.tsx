@@ -1,4 +1,4 @@
-import { CategoryList } from "@/src/app/components/category-list";
+import { ItemList } from "@/src/app/components/item-list";
 import { render, screen } from "@testing-library/react";
 import { http } from "msw";
 import { setupServer } from 'msw/node'
@@ -43,7 +43,7 @@ describe('Display categories for trader', () => {
     afterAll(() => server.close())
 
     test('Category Page', () => {
-        render(<CategoryList/>)
+        render(<ItemList apiPath={"/api/category"} editPath={"/settings/category"}/>)
 
         expect(screen.findByText('Original')).toBeDefined();
         expect(screen.findByText('Reproduktion')).toBeDefined();

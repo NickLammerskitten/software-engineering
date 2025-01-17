@@ -4,11 +4,11 @@ import {createClient} from "@/src/utils/supabase/server";
 import {UserRole} from "@/src/app/models/user-role";
 import {Button, Typography} from "@mui/material";
 import WrongUserRole from "@/src/app/utils/wrong-user-role";
-import {EditCategoryForm} from "@/src/app/components/edit-category-form";
+import {EditItemForm} from "@/src/app/components/edit-item-form";
 import { ArrowBack } from "@mui/icons-material";
 
 export default async function EditCategory() {
-    const supabase = await createClient();
+    const supabase = createClient();
 
     const {
         data: { user },
@@ -23,7 +23,7 @@ export default async function EditCategory() {
                         Kategorie bearbeiten
                     </Typography>
 
-                    <EditCategoryForm />
+                    <EditItemForm apiPath={"/api/category"} cancelPath={"/settings/category"} />
                 </>
             ) : (
                 <WrongUserRole />

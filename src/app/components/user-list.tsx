@@ -2,9 +2,11 @@
 
 import { UserRole } from "@/src/app/models/user-role";
 import { timestampToDate } from "@/src/app/utils/timestamp-to-date-formatter";
-import { Alert, Box, Card, CircularProgress, Typography } from "@mui/material";
+import {Alert, Box, Button, Card, CircularProgress, IconButton, Typography} from "@mui/material";
 import { User } from "@supabase/auth-js";
-import { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
+import {enqueueSnackbar} from "notistack";
+import {Add, Delete} from "@mui/icons-material";
 
 export function UserList() {
     const [loading, setLoading] = useState<boolean>(false);
@@ -15,6 +17,29 @@ export function UserList() {
         setUserListError("");
         fetchUsers();
     }, []);
+
+    const deleteUser = async (userId: string) => {
+        setLoading(true);
+
+        await fetch(`/api/user/${userId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }).then(async (response) => {
+            const json = await response.json();
+            setLoading(false);
+
+            if (!response.ok) {
+                setLoading(false);
+                enqueueSnackbar("Fehler beim Löschen des Benutzers." + json.message, { variant: "error" });
+                return;
+            }
+
+            fetchUsers();
+            enqueueSnackbar(json.message, { variant: "success" });
+        })
+    };
 
     const fetchUsers = async () => {
         setLoading(true);
@@ -38,6 +63,13 @@ export function UserList() {
 
             {!loading && users.length > 0 && (
                 <Box className={"items_list"}>
+                    <Button
+                        startIcon={<Add />}
+                        className={"top_action_buttons"}
+                        href={`/settings/user/add`}
+                    >
+                        Benutzer Hinzufügen
+                    </Button>
                     {users.map((user) => (
                         <Fragment key={user.id}>
                             <Card
@@ -45,6 +77,7 @@ export function UserList() {
                                 className={"item"}
                             >
                                 <Box>
+
                                     <Typography variant={"body1"}>
                                         Email: {user.email}
                                     </Typography>
@@ -62,9 +95,14 @@ export function UserList() {
                                         ? timestampToDate(user.last_sign_in_at)
                                         : 'Nie'}
                                     </Typography>
+
+                                    { user.role == UserRole.Customer &&
+                                        <IconButton onClick={() => deleteUser(user.id)}>
+                                          <Delete />
+                                        </IconButton>
+                                    }
                                 </Box>
                             </Card>
-
                         </Fragment>
                     ))}
                 </Box>
