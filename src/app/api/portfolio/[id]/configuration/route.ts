@@ -10,6 +10,7 @@ interface ImageConfigurationDatabaseData {
         title: string;
         artist: string;
         image_path: string | null;
+        price: number;
     }
 }
 
@@ -20,6 +21,7 @@ interface ImageConfigurationResponseData {
     title: string;
     artist: string;
     imageUrl: string | null;
+    imagePrice: number;
 }
 
 export async function GET(request: NextRequest) {
@@ -50,7 +52,8 @@ export async function GET(request: NextRequest) {
                 id,
                 title,
                 artist,
-                image_path
+                image_path,
+                price
             )
         `)
         .eq('portfolio_id', portfolioId);
@@ -90,5 +93,6 @@ const databaseDataToResponseData = async (data: ImageConfigurationDatabaseData):
         title: data.image.title,
         artist: data.image.artist,
         imageUrl: publicImageUrl,
+        imagePrice: data.image.price,
     }
 }
