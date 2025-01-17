@@ -1,11 +1,10 @@
 import { DetailedImage } from "@/src/app/components/detailed-image";
 import { UserRole } from "@/src/app/models/user-role";
 import { createClient } from "@/src/utils/supabase/server";
-import { ArrowBackIosNew } from "@mui/icons-material";
-import { Box, Button } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { headers } from "next/headers";
 
-export default async function DetailPage() {
+export default async function EditConfigurationPage() {
     const supabaseClient = await createClient();
 
     const { data: { user } } = await supabaseClient
@@ -13,25 +12,23 @@ export default async function DetailPage() {
         .getUser();
 
     const pathname = headers().get("x-current-path");
-    const imageId = pathname?.split("/")[2];
+    const configurationId = pathname?.split("/")[4];
 
     return (
         <>
-            <Box>
-                <Button
-                    href="/gallery"
-                    startIcon={<ArrowBackIosNew />}
-                >Zurück</Button>
-            </Box>
-            {user && imageId ? (
+            <Typography variant={"h1"}>
+                Bildkonfiguration bearbeiten
+            </Typography>
+
+            {user && configurationId ? (
                 <DetailedImage
                     isTrader={user.role === UserRole.Trader}
-                    imageId={imageId}
-                    configurationId={null}
+                    imageId={null}
+                    configurationId={configurationId}
                 />
             ) : (
                 <Box>
-                    <p>Kein Bild gefunden</p>
+                    <p>Keine Bildkonfiguration gefunden</p>
                 </Box>
             )}
         </>

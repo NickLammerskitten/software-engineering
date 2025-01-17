@@ -11,4 +11,5 @@ export interface Image {
     price: number;
     artist: string | null;
     image_url: string | null;
+    standardConfigurationId: string | null;
 }

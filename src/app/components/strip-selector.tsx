@@ -12,11 +12,13 @@ import { useEffect, useState } from "react";
 interface StripSelectorProps {
     required?: boolean;
     onChange?: (event: SelectChangeEvent<string>) => void;
+    selectedStrip?: string | undefined;
 }
 
 export function StripSelector({
     required = false,
-    onChange
+    onChange,
+    selectedStrip
 }: StripSelectorProps) {
     const [loading, setLoading] = useState<boolean>(true);
     const [strips, setStrips] = useState<Strip[]>([]);
@@ -52,6 +54,7 @@ export function StripSelector({
                 required={required}
                 displayEmpty
                 defaultValue={""}
+                value={selectedStrip}
                 onChange={onChange}
             >
                 <MenuItem value={""}>
