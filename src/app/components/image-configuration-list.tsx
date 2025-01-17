@@ -95,6 +95,7 @@ export function ImageConfigurationList({ portfolioId }: { portfolioId: string })
             <Grid2
                 container
                 spacing={3}
+                className={"top_space"}
             >
                 {imageConfigurations.map((image, index) => {
                     return <Grid2
