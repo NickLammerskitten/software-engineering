@@ -23,6 +23,8 @@ Der `development`-branch ist der Entwicklungsbranch. Neue Featurebranches werden
 
 Featurebranches werden immer vom `development`-branch ausgecheckt und sollten möglichst ein Issue referenzieren (durch Conventional Commits). Sie werden, wenn das Feature fertig ist, mit einer PR wieder in den `development`-branch gemerged. Diese PR muss von mind. einer anderen Person reviewed werden.
 
+Im Falle von Hotfixes wird für jeden Hotfix ein Branch vom `main`-Branch erstellt und der Hotfix in diesem implementiert. Dann wird dieser Branch in den `main`-Branch gemerged und ein Release erstellt. Um auch in den anderen Branches den Hotfix einzubauen wird dann der Hotfix-Branch auch noch jeweils in den `deployment`- und den `development`-Branch gemerged. Wenn der Hotfix in den drei Branches vorhanden ist, wird der initiale Hotfix-Branch gelöscht.
+
 Die App braucht Zugangsdaten um auf Supabase zugreifen zu können. Diese werden bei Vercel über die Web-Konsole konfiguriert und dann automatisch in die Umgebungsvariablen der App geschrieben. So müssen die sensiblen Zugangsdaten nicht in das Repository committet werden. Lokal sind die Zugangsdaten dementsprechend jedoch nicht verfügbar. Stattdessen wird eine `.env`-Datei im root Verzeichnis des Projekts angelegt. Diese wird, durch den Eintrag in der `.gitignore`, automatisch von git ignoriert und hat folgenden Aufbau:
 ```sh
 # .env
@@ -33,7 +35,17 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=<supabase anon key>
 
 **DEV**: Die Werte werden aus der Konsole kopiert, wenn der `npx supabase start` Befehl ausgeführt wurde. So wird die lokale supabase Instanz verwendet.
 
-### Local Supabase Setup
+## Testen
+
+Das Projekt wird lokal, sowie bei jeder PR getestet. Dazu können die Tests lokal mit dem Befehl
+```sh
+npm run test
+```
+ausgeführt werden. 
+
+Die Tests befinden sich im Projekt im `__tests__`-Ordner und sollten der Ordnerstruktur des `src`-Ordners möglichst genau folgen, um die Tests übersichtlich zu gestalten. Wenn neue Funktionen hinzugefügt werden, sollten, unter Berücksichtigung des kurzen Zeitraums des Projekts und dem relativ gesehen geringen Nutzen einer möglichst hohen Testabdeckung, nur kritische bzw. Sicherheitsrelevante Komponenten und Funktionen getestet werden. 
+
+### Lokales Supabase Setup
 
 Supabase ist ein Teil des lokalen Setups. Die Vorgehensweise ist dabei relevant. 
 
@@ -112,6 +124,8 @@ Es folgt eine interaktive Führung durch den Release, wobei jede der Abfragen an
 ```
 **Wichtig**: Releases werden nur vom aktuellen Stand im `main`-Branch erstellt!
 
+Immer wenn ein Tag auf dem main-Branch erstellt wird, wird automatisch von GitHub ein Release erstellt. Gleichzeitig wird bei jedem Tag, der dem Muster 'v*' entspricht, über die GitHub Pipelines der aktuelle Stand des Projekts in einem Docker Image gebaut und in das GitHub Container Registry (ghcr.io) hochgeladen. Die Images mit dem Tag `ghcr.io/nicklammerskitten/software-engineering:<tag>` können dann mit docker heruntergeladen und ausgeführt werden. Dabei müssen nur die Umgebungsvariablen, die für die Verbindung mit Supabase notwendig sind und bei der Entwicklung in der `.env`-Datei hinterlegt werden, über Parameter in den Container eingeben werden.
+ 
 ## Getting Started
 
 First, install all required packages with
