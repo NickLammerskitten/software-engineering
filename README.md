@@ -44,9 +44,9 @@ Installation der Supabase CLI (wenn nicht schon durch `npm i` installiert):
 npm install supabase --save-dev
 ```
 
-Der 'npx supabase init' command wurde bereits durchgeführt in dem Repository.
+Der `npx supabase init` command wurde bereits durchgeführt in dem Repository.
 
-Führe diesen Befehl in dem Projektordner aus und führe das DB Seeding aus:
+Führe diesen Befehl in dem Projektordner um die Datenbank zum ersten Mal einzurichten:
 
 ```bash
 # (falls noch nicht angemeldet)
@@ -78,6 +78,12 @@ Ist die Migration-File fertig und funktionsfähig, so kann weiter mithilfe von G
 
 Wichtig: führe niemals subabase db Push aus. Das führt zu einem Produktiven Deployment, was laut unseren CI/CD Vorschriften strengstens verboten ist aus einem feature Branch heraus. Dieser Befehl wird erst im Produktiven Deployment auf den main Branch durchgeführt!
 
+#### [Supabase Seeding](https://supabase.com/docs/guides/local-development/seeding-your-database)
+
+Seeding erfolgt über den Inhalt in der `supabase/seed.sql` Datei. Beim Ausführen von `npx supabase start` oder 
+`npx supabase db reset` wird der gesamte Inhalt der Seeding-Datei auf die lokale Datenbank angewandt. 
+
+Um die Seeding-Datei zu erweitern, müssen nur weitere SQL Statements angefügt werden.
 
 ## Release Management
 Für das Release Management werden [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) verwendet. So ist eine gute Organisation der Standard und Changelogs können einfach generiert werden.
