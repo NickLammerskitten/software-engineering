@@ -229,7 +229,7 @@ export function DetailedImage({ isTrader, imageId, configurationId }: DetailedIm
                             </Typography>
 
                             <Typography variant={"body1"}>
-                                {"Kennung: " + imageId}
+                                {"Kennung: " + image.id}
                             </Typography>
                         </Box>
                     </Box>
