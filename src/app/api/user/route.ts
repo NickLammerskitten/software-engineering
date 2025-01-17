@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
     const { data: { user }, error } = await supabaseClient
         .auth
         .admin
-        .createUser(data);
+        .createUser({ ...data, email_confirm: true });
 
     if (error) {
         return NextResponse.json({ message: "Fehler beim Erstellen des Nutzers " + error.message }, {
