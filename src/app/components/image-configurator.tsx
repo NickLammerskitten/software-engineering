@@ -140,7 +140,7 @@ export function ImageConfigurator({ isTrader, configurationId, imageId, imageCon
         >
             {loadingPortfolios ? (<CircularProgress />) : portfolios && portfolios.length > 0 ? (
                 <>
-                    {isTrader && selectedPortfolio && (
+                    {isTrader && !configurationId && (
                         <FormControl fullWidth>
                             <InputLabel id="portfolio-select">Mappe</InputLabel>
                             <Select
