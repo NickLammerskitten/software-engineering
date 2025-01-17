@@ -1,50 +1,68 @@
 'use client'
-import {useSnackbar} from "notistack";
-import {Box, Button, FormControl, FormLabel, TextField} from "@mui/material";
+import { Box, Button, FormControl, FormLabel, TextField } from "@mui/material";
+import { useSnackbar } from "notistack";
 import * as React from "react";
-
 
 export default function AddUserForm() {
     const { enqueueSnackbar } = useSnackbar();
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        const formData = new FormData(event.currentTarget);
-
+    const handleSubmit = async (formData: FormData) => {
         const data = {
             email: formData.get("email"),
             password: formData.get("password"),
             role: "authenticated",
             user_metadata: {
-                name: formData.get("name")
-            }
+                name: formData.get("name"),
+            },
         }
 
         await fetch(`/api/user`, {
-            body: JSON.stringify({formData: data}),
+            body: JSON.stringify({ formData: data }),
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
         }).then(async (response) => {
-            const json = await response.json();
+            const userJson = await response.json();
 
             if (!response.ok) {
-                enqueueSnackbar(json.message, {variant: "error"});
+                enqueueSnackbar(userJson.message, { variant: "error" });
                 return;
             }
-            const form = document.getElementById("add-user-form") as HTMLFormElement;
-            form.reset();
 
-            enqueueSnackbar(json.message, {variant: "success"});
+            enqueueSnackbar(userJson.message, { variant: "success" });
+            return userJson;
+        }).then(async (userJson) => {
+            await fetch('/api/portfolio', {
+                body: JSON.stringify({
+                    formData: {
+                        name: "Portfolio von " + data.user_metadata.name ? data.user_metadata.name : data.email,
+                        description: null,
+                        owner_id: userJson.data.id,
+                    },
+                }),
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }).then(async (response) => {
+                const portfolioJson = await response.json();
+
+                if (!response.ok) {
+                    enqueueSnackbar(portfolioJson.message, { variant: "error" });
+                    return;
+                }
+
+                enqueueSnackbar(portfolioJson.message, { variant: "success" });
+            })
         });
-
     }
 
     return (
         <form
             className={"form_container"}
             id={"add-user-form"}
-            onSubmit={handleSubmit}
+            action={(value) => handleSubmit(value)}
         >
             <FormControl>
                 <FormLabel htmlFor="email">Email *</FormLabel>
