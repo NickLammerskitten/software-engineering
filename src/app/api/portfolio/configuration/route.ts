@@ -1,4 +1,8 @@
-import { ImageConfigurationData, ImageConfigurationDatabaseData } from "@/src/app/api/models/image-configuration.model";
+import {
+    ImageConfigurationData,
+    ImageConfigurationDatabaseData,
+    ImageConfigurationPutData,
+} from "@/src/app/api/models/image-configuration.model";
 import { UserRole } from "@/src/app/models/user-role";
 import { createClient } from "@/src/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
@@ -15,7 +19,7 @@ export async function POST(request: NextRequest) {
 
     const isTrader = user.role === UserRole.Trader;
     const data = (await request.json()).formData as ImageConfigurationData;
-    const parsedData = postRequestDataToDatabaseData(data, isTrader);
+    const parsedData = requestDataToDatabaseData(data, isTrader);
 
     const { valid, errors } = validateData(parsedData);
     if (!valid) {
@@ -38,8 +42,46 @@ export async function POST(request: NextRequest) {
     });
 }
 
-const postRequestDataToDatabaseData = (
-    data: ImageConfigurationData,
+export async function PUT(request: Request) {
+    const supabaseClient = createClient()
+
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (user == null) {
+        return NextResponse.json({ message: "Benutzer nicht gefunden." }, {
+            status: 404,
+        });
+    }
+
+    const isTrader = user.role === UserRole.Trader;
+    const data = (await request.json()).formData as ImageConfigurationPutData;
+    const parsedData = requestDataToDatabaseData(data, isTrader);
+
+    const { valid, errors } = validateData(parsedData);
+    if (!valid) {
+        return NextResponse.json({ message: errors.join("\n") }, {
+            status: 400,
+        });
+    }
+
+    const { error } = await supabaseClient
+        .from('image_configuration')
+        .update([parsedData])
+        .eq('id', data.id);
+
+
+    if (error) {
+        return NextResponse.json({ message: "Fehler beim Speichern der Konfiguration: " + error.message }, {
+            status: 500,
+        });
+    }
+
+    return NextResponse.json({
+        message: "Konfiguration erfolgreich gespeichert",
+    });
+}
+
+const requestDataToDatabaseData = (
+    data: ImageConfigurationData | ImageConfigurationPutData,
     isTrader: boolean,
 ): ImageConfigurationDatabaseData => {
     return {

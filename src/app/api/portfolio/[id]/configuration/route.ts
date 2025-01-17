@@ -1,3 +1,4 @@
+import { ImageConfigurationResponseData } from "@/src/app/api/models/image-configuration.model";
 import { getSignedUrl } from "@/src/utils/supabase/public-image-url-fetcher";
 import { createClient } from "@/src/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
@@ -11,15 +12,6 @@ interface ImageConfigurationDatabaseData {
         artist: string;
         image_path: string | null;
     }
-}
-
-interface ImageConfigurationResponseData {
-    id: string;
-    byTrader: boolean;
-    imageId: string;
-    title: string;
-    artist: string;
-    imageUrl: string | null;
 }
 
 export async function GET(request: NextRequest) {

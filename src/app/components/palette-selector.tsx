@@ -1,22 +1,17 @@
-import {
-    CircularProgress,
-    FormControl,
-    InputLabel,
-    MenuItem,
-    Select,
-    SelectChangeEvent
-} from "@mui/material";
+import { CircularProgress, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 
 interface PaletteSelectorProps {
     required?: boolean;
     onChange?: (event: SelectChangeEvent<string>) => void;
+    selectedPalette?: string | undefined;
 }
 
 export function PaletteSelector({
     required = false,
-    onChange
+    onChange,
+    selectedPalette,
 }: PaletteSelectorProps) {
     const [loading, setLoading] = useState<boolean>(true);
     const [palettes, setPalettes] = useState<Palette[]>([]);
@@ -43,7 +38,10 @@ export function PaletteSelector({
 
     return loading ? <CircularProgress /> : (
         <FormControl fullWidth>
-            <InputLabel id="palette-select" shrink>Palette</InputLabel>
+            <InputLabel
+                id="palette-select"
+                shrink
+            >Palette</InputLabel>
             <Select
                 label={"Palette"}
                 id={"palette-select"}
@@ -52,6 +50,7 @@ export function PaletteSelector({
                 required={required}
                 displayEmpty
                 defaultValue={""}
+                value={selectedPalette}
                 onChange={onChange}
             >
                 <MenuItem value={""}>
