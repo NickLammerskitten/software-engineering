@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.0.1](https://github.com/NickLammerskitten/software-engineering/compare/1.0.0...1.0.1) (2025-01-17)
+
+### Features
+
+* added npm command for sbom generation ([#103](https://github.com/NickLammerskitten/software-engineering/issues/103)) ([caec9e7](https://github.com/NickLammerskitten/software-engineering/commit/caec9e74c78c91567b28651657dbd14d8c24dd9d))
+
+### Bug Fixes
+
+* **#101:** user erstellung fuehrt zu keiner erstellung einer auswahlmappe ([#102](https://github.com/NickLammerskitten/software-engineering/issues/102)) ([25ebd3a](https://github.com/NickLammerskitten/software-engineering/commit/25ebd3ae2a4ea1db22408f6c2a3c88c25effa4ab)), closes [#101](https://github.com/NickLammerskitten/software-engineering/issues/101)
+* removed multiplatform build instruction ([#100](https://github.com/NickLammerskitten/software-engineering/issues/100)) ([7e7cbe1](https://github.com/NickLammerskitten/software-engineering/commit/7e7cbe16eca8b22372dd4d41ba08a4d158d3955e))
+
 ## [1.0.0](https://github.com/NickLammerskitten/software-engineering/compare/0.3.0...1.0.0) (2025-01-17)
 
 ### Features
