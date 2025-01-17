@@ -26,13 +26,10 @@ export async function GET(request: NextRequest) {
         });
     }
 
-    const userId = userData.user.id as string;
-
     const { data, error } = await supabaseClient
         .from('portfolio')
         .select()
         .eq('id', portfolioId)
-        .eq('owner_id', userId)
         .single();
 
     if (error) {
@@ -44,6 +41,15 @@ export async function GET(request: NextRequest) {
     if (!data) {
         return NextResponse.json({ message: "Kein Portfolio gefunden" }, {
             status: 404,
+        });
+    }
+
+    const userId = userData.user.id as string;
+    const role = userData.user.role as string;
+
+    if (role === "authenticated" && data.owner_id !== userId) {
+        return NextResponse.json({ message: "Keine Berechtigung" }, {
+            status: 403,
         });
     }
 

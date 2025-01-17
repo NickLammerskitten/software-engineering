@@ -2,11 +2,11 @@ import {Button, Typography} from "@mui/material";
 import {createClient} from "@/src/utils/supabase/server";
 import {UserRole} from "@/src/app/models/user-role";
 import WrongUserRole from "@/src/app/utils/wrong-user-role";
-import {CategoryList} from "@/src/app/components/category-list";
+import {ItemList} from "@/src/app/components/item-list";
 import {Add} from "@mui/icons-material";
 
 export default async function Categories() {
-    const supabase = await createClient();
+    const supabase = createClient();
 
     const {
         data: {user},
@@ -27,7 +27,7 @@ export default async function Categories() {
                         Kategorie hinzufügen
                     </Button>
 
-                    <CategoryList />
+                    <ItemList apiPath={"/api/category"} editPath={"category/edit"} />
                 </>
             ) : (
                 <WrongUserRole/>

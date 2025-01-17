@@ -1,5 +1,34 @@
 # Changelog
 
+## [1.0.0](https://github.com/NickLammerskitten/software-engineering/compare/0.3.0...1.0.0) (2025-01-17)
+
+### Features
+
+* **#16:** add total price to portfolio ([#89](https://github.com/NickLammerskitten/software-engineering/issues/89)) ([b234871](https://github.com/NickLammerskitten/software-engineering/commit/b23487193de76ab5320a55b537396e7ce640c960)), closes [#16](https://github.com/NickLammerskitten/software-engineering/issues/16)
+* **#42:** added page component for adding users ([a70935e](https://github.com/NickLammerskitten/software-engineering/commit/a70935e3d992f11bf34d536e53fe860e00523fc5)), closes [#42](https://github.com/NickLammerskitten/software-engineering/issues/42)
+* **#42:** added submit button ([e90bcdb](https://github.com/NickLammerskitten/software-engineering/commit/e90bcdb0bd4975b7dce6d46ffbf2229f4425b6ef)), closes [#42](https://github.com/NickLammerskitten/software-engineering/issues/42)
+* **#42:** delete user api funktion hinzugefügt und implementiert ([9f988e6](https://github.com/NickLammerskitten/software-engineering/commit/9f988e65d729da83c53108af017ff722efbba979)), closes [#42](https://github.com/NickLammerskitten/software-engineering/issues/42)
+* **#42:** delete user api funktion hinzugefügt und implementiert. ([2206a12](https://github.com/NickLammerskitten/software-engineering/commit/2206a120b395f3d69df4ca69e9c40e719661868d)), closes [#42](https://github.com/NickLammerskitten/software-engineering/issues/42)
+* **#42:** delete user function angefangen ([71a8714](https://github.com/NickLammerskitten/software-engineering/commit/71a871499dce5db10ca8d9875daee109bfccabc0)), closes [#42](https://github.com/NickLammerskitten/software-engineering/issues/42)
+* **#61:** Anzeige der Auswahlmappen der Kunden fuer Haendler + Editierbarkeit ([#80](https://github.com/NickLammerskitten/software-engineering/issues/80)) ([60c56f4](https://github.com/NickLammerskitten/software-engineering/commit/60c56f4ac1f95933f53d9f202adaccec415ffc9f)), closes [#61](https://github.com/NickLammerskitten/software-engineering/issues/61)
+* **#69:** implemented management of strips and palettes ([#84](https://github.com/NickLammerskitten/software-engineering/issues/84)) ([0d58655](https://github.com/NickLammerskitten/software-engineering/commit/0d586559ca36ca0c51988249a9bc6ba088b7fdee)), closes [#69](https://github.com/NickLammerskitten/software-engineering/issues/69)
+* **#71:** bildkonfiguration detailansicht ([#88](https://github.com/NickLammerskitten/software-engineering/issues/88)) ([8815d41](https://github.com/NickLammerskitten/software-engineering/commit/8815d4109b00fd136df6716aa9bd630c66b01285)), closes [#71](https://github.com/NickLammerskitten/software-engineering/issues/71)
+* **#82:** prepare for application packaging ([#81](https://github.com/NickLammerskitten/software-engineering/issues/81)) ([611f892](https://github.com/NickLammerskitten/software-engineering/commit/611f8926bbc0702564585fb1d75ae6eb18361383)), closes [#82](https://github.com/NickLammerskitten/software-engineering/issues/82)
+* **#83:** created docker-image.yml ([#85](https://github.com/NickLammerskitten/software-engineering/issues/85)) ([f1b341d](https://github.com/NickLammerskitten/software-engineering/commit/f1b341d86ae9f2bb8046622831073736ee0696e0)), closes [#83](https://github.com/NickLammerskitten/software-engineering/issues/83)
+* **#83:** implemented docker image pipeline for prod ([#87](https://github.com/NickLammerskitten/software-engineering/issues/87)) ([199bb79](https://github.com/NickLammerskitten/software-engineering/commit/199bb79dc1ee166bc07508066b7cbf7f85c6c18a)), closes [#83](https://github.com/NickLammerskitten/software-engineering/issues/83)
+* **#83:** update docker-image.yml ([#86](https://github.com/NickLammerskitten/software-engineering/issues/86)) ([a8ffb8b](https://github.com/NickLammerskitten/software-engineering/commit/a8ffb8be8bda0c29cfb90146bcde976d3d760e51)), closes [#83](https://github.com/NickLammerskitten/software-engineering/issues/83)
+* **#90:** added tests for trader only component ([#92](https://github.com/NickLammerskitten/software-engineering/issues/92)) ([40a81fc](https://github.com/NickLammerskitten/software-engineering/commit/40a81fc23c30f28ff373d0ffc70a3601b4c36057)), closes [#90](https://github.com/NickLammerskitten/software-engineering/issues/90)
+* **#90:** added unit tests for admin client in api ([#91](https://github.com/NickLammerskitten/software-engineering/issues/91)) ([c18bf09](https://github.com/NickLammerskitten/software-engineering/commit/c18bf095ab59fe3fb793906ddce2f09d81c0b2c8)), closes [#90](https://github.com/NickLammerskitten/software-engineering/issues/90)
+
+### Bug Fixes
+
+* **#96:** Sichere PortfolioId bei Edit ([#97](https://github.com/NickLammerskitten/software-engineering/issues/97)) ([c1fd9d1](https://github.com/NickLammerskitten/software-engineering/commit/c1fd9d1ba4c1c6112c399fb4bb0c158223e90ed0)), closes [#96](https://github.com/NickLammerskitten/software-engineering/issues/96)
+
+### Documentation
+
+* added section for database seeding ([#94](https://github.com/NickLammerskitten/software-engineering/issues/94)) ([507b887](https://github.com/NickLammerskitten/software-engineering/commit/507b887d6393f85d37cbd306f0828cb40ba78ad8))
+* added test docs; added pipeline docs ([#93](https://github.com/NickLammerskitten/software-engineering/issues/93)) ([9b68360](https://github.com/NickLammerskitten/software-engineering/commit/9b6836019a0450ed9c553f74503989cb4043fba4))
+
 ## [0.3.0](https://github.com/NickLammerskitten/software-engineering/compare/0.2.0...0.3.0) (2025-01-02)
 
 ### Features

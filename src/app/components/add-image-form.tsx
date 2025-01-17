@@ -1,22 +1,32 @@
 "use client"
 
 import { ImageUpload } from "@/src/app/utils/image-upload";
+import { ExpandMore } from "@mui/icons-material";
 import {
     Box,
     Button,
     CircularProgress,
+    Collapse,
     FormControl,
+    FormControlLabel,
     FormLabel,
+    IconButton,
     InputAdornment,
     InputLabel,
     MenuItem,
     OutlinedInput,
     Select,
     TextField,
+    Typography,
+    Checkbox
 } from "@mui/material";
 import { useSnackbar } from "notistack";
 import * as React from "react";
 import { useEffect, useState } from "react";
+import { PaletteSelector } from "./palette-selector";
+import { StripSelector } from "./strip-selector";
+
+import styles from "./add-image-form.module.css";
 
 export default function AddImageForm() {
     const { enqueueSnackbar } = useSnackbar();
@@ -47,10 +57,10 @@ export default function AddImageForm() {
             });
     }, []);
 
-
+    const [expanded, setExpanded] = React.useState(false);
 
     const handleSubmit = async (formData: FormData) => {
-        const data = {
+        const imagePayload = {
             categoryId: formData.get("category-select"),
             title: formData.get("title"),
             artist: formData.get("artist"),
@@ -62,27 +72,52 @@ export default function AddImageForm() {
             price: formData.get("price"),
             annotations: formData.get("annotations"),
             image_url: image_url,
-        }
+        };
 
-        await fetch(`/api/image`, {
-            body: JSON.stringify({ formData: data }),
+        const response = await fetch(`/api/image`, {
+            body: JSON.stringify({ formData: imagePayload }),
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-        }).then(async (response) => {
-            const json = await response.json();
+        });
 
-            if (!response.ok) {
-                enqueueSnackbar(json.message, { variant: "error" });
+        const json = await response.json();
+
+        if (!response.ok) {
+            enqueueSnackbar(json.message, { variant: "error" });
+            return;
+        }
+
+        if (formData.get("palette-select") || formData.get("strip-select") || formData.get("passepartout")) {
+            const configurationPayload = {
+                imageId: json.data.id,
+                portfolioId: null,
+                paletteId: !formData.get("palette-select") ? null : formData.get("palette-select"),
+                stripId: !formData.get("strip-select") ? null : formData.get("strip-select"),
+                passepartout: !formData.get("passepartout") ? false : formData.get("passepartout") === "on",
+            };
+
+            const configurationResponse = await fetch("/api/portfolio/configuration", {
+                body: JSON.stringify({ formData: configurationPayload }),
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (!configurationResponse.ok) {
+                const responseJson = await configurationResponse.json();
+                enqueueSnackbar(responseJson.message, { variant: "error" });
                 return;
             }
+        }
 
-            const form = document.getElementById("add-image-form") as HTMLFormElement;
-            form.reset();
+        const form = document.getElementById("add-image-form") as HTMLFormElement;
+        form.reset();
 
-            enqueueSnackbar(json.message, { variant: "success" });
-        });
+        enqueueSnackbar(json.message, { variant: "success" });
+
     }
 
     return (
@@ -93,28 +128,26 @@ export default function AddImageForm() {
         >
             {loadingCategories ? (<CircularProgress />)
                 : (
-                    <>
-                        <FormControl fullWidth>
-                            <InputLabel id="category-select">Kategorie *</InputLabel>
-                            <Select
-                                label={"Kategorie *"}
-                                id={"category-select"}
-                                name={"category-select"}
-                                autoFocus
-                                fullWidth
-                                required
-                                value={selectedCategory}
-                                onChange={(event => setSelectedCategory(event.target.value as number))}
-                            >
-                                {categories.map((category) => (
-                                    <MenuItem
-                                        key={category.id}
-                                        value={category.id}
-                                    >{category.name}</MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </>
+                    <FormControl fullWidth>
+                        <InputLabel id="category-select">Kategorie *</InputLabel>
+                        <Select
+                            label={"Kategorie *"}
+                            id={"category-select"}
+                            name={"category-select"}
+                            autoFocus
+                            fullWidth
+                            required
+                            value={selectedCategory}
+                            onChange={(event => setSelectedCategory(event.target.value as number))}
+                        >
+                            {categories.map((category) => (
+                                <MenuItem
+                                    key={category.id}
+                                    value={category.id}
+                                >{category.name}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
                 )}
 
             <FormControl>
@@ -227,6 +260,26 @@ export default function AddImageForm() {
                     variant="outlined"
                 />
             </FormControl>
+
+            <div className={styles.preconfig_expand}>
+                <Typography variant="h5">
+                    Vorkonfiguration
+                </Typography>
+                <IconButton onClick={() => setExpanded(!expanded)}>
+                    <ExpandMore style={{ transform: expanded ? "rotate(180deg)" : "rotate(0deg)", transition: "all 0.2s" }} />
+                </IconButton>
+            </div>
+            <Collapse in={expanded} timeout="auto" className={"form_container"} unmountOnExit >
+                <div className={"form_container"}>
+                    <PaletteSelector />
+                    <StripSelector />
+                    <FormControlLabel
+                        name={"passepartout"}
+                        control={<Checkbox />}
+                        label="Passepartout"
+                    />
+                </div>
+            </Collapse>
 
             <ImageUpload setImageUrl={setImageUrl} />
 

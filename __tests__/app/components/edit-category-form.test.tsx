@@ -1,4 +1,4 @@
-import { EditCategoryForm } from "@/src/app/components/edit-category-form";
+import { EditItemForm } from "@/src/app/components/edit-item-form";
 import { render, screen } from "@testing-library/react";
 import { http } from "msw";
 import { setupServer } from "msw/node";
@@ -48,7 +48,7 @@ describe('edit category form', () => {
     afterAll(() => server.close())
 
     test('renders', () => {
-        render(<EditCategoryForm />)
+        render(<EditItemForm apiPath={"/api/category"} cancelPath={"/settings/category"} />)
 
         expect(screen.findByText('Name *')).toBeDefined();
     });

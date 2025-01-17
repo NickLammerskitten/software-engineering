@@ -1,4 +1,5 @@
 import { ImageCard } from "@/src/app/components/image-card";
+import { numberToCurrency } from "@/src/app/utils/number-to-currency";
 import { Remove } from "@mui/icons-material";
 import { Alert, CircularProgress, Grid2, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
@@ -6,27 +7,35 @@ import { useEffect, useState } from "react";
 
 const fallbackImageUrl = "/images/no-photo.jpg";
 
-interface ImageConfiguration {
+interface MinimalImageConfiguration {
     id: string;
     byTrader: boolean;
     imageId: string;
     title: string;
     artist: string;
     imageUrl: string | null;
+    imagePrice: number;
 }
 
 export function ImageConfigurationList({ portfolioId }: { portfolioId: string }) {
     const router = useRouter();
 
     const [loadingImageConfigurations, setLoadingImageConfigurations] = useState<boolean>(true);
-    const [imageConfigurations, setImageConfigurations] = useState<ImageConfiguration[]>([]);
+    const [imageConfigurations, setImageConfigurations] = useState<MinimalImageConfiguration[]>([]);
     const [imageConfigurationsErrorMessages, setImageConfigurationsErrorMessages] = useState<{
         [id: string]: string
     }>({})
 
+    const [totalPrice, setTotalPrice] = useState<number | null>(null)
+
     useEffect(() => {
         fetchData();
     }, [portfolioId]);
+
+    useEffect(() => {
+        const totalPrice = imageConfigurations.reduce((acc, image) => acc + image.imagePrice, 0);
+        setTotalPrice(totalPrice);
+    }, [imageConfigurations]);
 
     const fetchData = async () => {
         setLoadingImageConfigurations(true);
@@ -41,7 +50,7 @@ export function ImageConfigurationList({ portfolioId }: { portfolioId: string })
 
                 return json;
             })
-            .then((data: { data: ImageConfiguration[] }) => {
+            .then((data: { data: MinimalImageConfiguration[] }) => {
                 setImageConfigurations(data.data);
                 setLoadingImageConfigurations(false);
             });
@@ -86,6 +95,7 @@ export function ImageConfigurationList({ portfolioId }: { portfolioId: string })
             <Grid2
                 container
                 spacing={3}
+                className={"top_space"}
             >
                 {imageConfigurations.map((image, index) => {
                     return <Grid2
@@ -99,7 +109,7 @@ export function ImageConfigurationList({ portfolioId }: { portfolioId: string })
                             title={image.title}
                             addedByTrader={image.byTrader}
                             onClick={() => {
-                                router.push(`/image/${image.imageId}`)
+                                router.push(`/portfolio/${portfolioId}/configuration/${image.id}`);
                             }}
                             subactionIcon={<Remove />}
                             subactionTooltip={"Entfernen"}
@@ -110,6 +120,12 @@ export function ImageConfigurationList({ portfolioId }: { portfolioId: string })
                     </Grid2>;
                 })}
             </Grid2>
+
+            <Typography
+                variant={"h5"}
+                className={"top_space"}>
+                Gesamtpreis: {numberToCurrency(totalPrice ?? 0)}
+            </Typography>
         </>
     )
 }
